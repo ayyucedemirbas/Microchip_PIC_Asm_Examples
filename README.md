@@ -8,4 +8,4 @@ Now you are ready to write your super cool programs. Open your favorite text edi
 
 <img width="960" alt="2019-09-13 (4)" src="https://user-images.githubusercontent.com/8023150/64895093-6606b280-d630-11e9-899b-e0e2488ef810.png">
 
-And yes you sholud use Windows for MPLAB. (My machine is dualboot I also use Ubuntu)
+And yes you should use Windows for MPLAB. (My machine is dualboot I also use Ubuntu)
