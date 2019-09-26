@@ -1,0 +1,79 @@
+Warning[205] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 4 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 5 : Found opcode in column 1. (GOTO)
+Warning[205] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 6 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 18 : Found opcode in column 1. (BTFSS)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 19 : Found opcode in column 1. (RETFIE)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 20 : Found opcode in column 1. (BCF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 22 : Found opcode in column 1. (call)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 23 : Found opcode in column 1. (CLRF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 24 : Found opcode in column 1. (CLRF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 25 : Found opcode in column 1. (CLRF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 26 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 27 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 30 : Found opcode in column 1. (BCF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 31 : Found opcode in column 1. (RETFIE)
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 37 : Using default destination of 1 (file).
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 42 : Using default destination of 1 (file).
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 48 : Using default destination of 1 (file).
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 53 : Using default destination of 1 (file).
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 69 : Using default destination of 1 (file).
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 75 : Using default destination of 1 (file).
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 84 : Using default destination of 1 (file).
+Message[305] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 90 : Using default destination of 1 (file).
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 111 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 119 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 129 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 139 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 156 : Found opcode in column 1. (ADDWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 157 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 158 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 159 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 160 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 161 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 162 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 163 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 164 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 165 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 166 : Found opcode in column 1. (RETLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 169 : Found opcode in column 1. (MOVLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 170 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 172 : Found opcode in column 1. (MOVLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 173 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 175 : Found opcode in column 1. (DECFSZ)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 176 : Found opcode in column 1. (GOTO)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 177 : Found opcode in column 1. (DECFSZ)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 178 : Found opcode in column 1. (GOTO)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 179 : Found opcode in column 1. (RETURN)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 189 : Found opcode in column 1. (RETURN)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 197 : Found opcode in column 1. (MOVLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 198 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 199 : Found opcode in column 1. (MOVLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 200 : Found opcode in column 1. (MOVWF)
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 203 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 216 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 217 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 218 : Found opcode in column 1. (CLRF)
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 218 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 219 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 225 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 227 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 229 : Found opcode in column 1. (MOVLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 230 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 231 : Found opcode in column 1. (MOVF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 232 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 234 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 236 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 238 : Found opcode in column 1. (MOVLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 239 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 240 : Found opcode in column 1. (MOVF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 241 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 243 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 245 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 247 : Found opcode in column 1. (MOVLW)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 248 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 249 : Found opcode in column 1. (MOVF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 250 : Found opcode in column 1. (CALL)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 252 : Found opcode in column 1. (MOVWF)
+Warning[203] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 255 : Found opcode in column 1. (GOTO)
+Warning[205] C:\USERS\GENCO\DESKTOP\ODEV6\ODEV6.ASM 257 : Found directive in column 1. (END)

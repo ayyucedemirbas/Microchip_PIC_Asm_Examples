@@ -1,0 +1,14 @@
+Warning[205] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 1 : Found directive in column 1. (LIST)
+Warning[205] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 3 : Found directive in column 1. (__CONFIG)
+Warning[205] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 4 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 5 : Found opcode in column 1. (GOTO)
+Warning[205] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 6 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 10 : Found opcode in column 1. (RETFIE)
+Message[302] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 14 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 15 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 16 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 17 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 20 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 22 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[207] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 31 : Found label after column 1. (DONGU)
+Warning[205] C:\USERS\HP\DESKTOP\DENEME\MFA.ASM 33 : Found directive in column 1. (END)

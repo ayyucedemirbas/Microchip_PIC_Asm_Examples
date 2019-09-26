@@ -1,0 +1,6 @@
+Warning[207] C:\877_PROGRAMLAR\PROG_6_11_2.ASM 14 : Found label after column 1. (temp)
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_2.ASM 41 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_2.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_2.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_2.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_2.ASM 62 : Register in operand not in bank 0.  Ensure that bank bits are correct.

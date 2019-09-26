@@ -1,0 +1,23 @@
+Warning[205] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 2 : Found directive in column 1. (include)
+Warning[205] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 3 : Found directive in column 1. (__config)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 8 : Found opcode in column 1. (clrf)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 9 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 11 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 16 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 19 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 27 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 30 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 32 : Found opcode in column 1. (goto)
+Message[302] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 39 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 42 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 52 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 55 : Found opcode in column 1. (goto)
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 57 : Found opcode in column 1. (goto)
+Message[302] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 68 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 73 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 74 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 87 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 89 : Found opcode in column 1. (return)
+Warning[205] C:\USERS\HP\DESKTOP\öDEVLERLE ILGILI\öDEV2\BüNYAMIN ODEV\IKINCIODEV.ASM 94 : Found directive in column 1. (end)

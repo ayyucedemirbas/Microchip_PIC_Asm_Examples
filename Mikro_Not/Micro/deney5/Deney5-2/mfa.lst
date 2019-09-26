@@ -1,0 +1,498 @@
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002         list p=16F877A          
+                      00003         include "p16F877A.inc"  
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00400         LIST
+2007   3F31           00004         __config H'3F31'        
+                      00005                                 
+                      00006 
+                      00007 ;-------------------------------------------------------------------
+                      00008 
+  00000020            00009 say     equ             0x20
+  00000021            00010 say1    equ             0x21
+  00000022            00011 say2    equ             0x22
+  00000023            00012 say3    equ             0x23    
+  00000024            00013 dur     equ             0x24                                    
+0000                  00014         org     0
+0000   2813           00015         goto    ana_program
+0004                  00016         org     4
+                      00017 ;-------------------------------------------------------------------
+0004                  00018 kesme   
+0004   1D8B           00019         btfss INTCON,3
+0005   2811           00020         goto bitir                              
+0006   1C0B           00021         btfss INTCON,0
+0007   2811           00022         goto bitir
+0008   100B           00023         bcf INTCON, 0
+0009   1A06           00024         btfsc PORTB,4
+Message[305]: Using default destination of 1 (file).
+000A   0AA0           00025         incf    say     
+000B   1A86           00026         btfsc PORTB,5
+Message[305]: Using default destination of 1 (file).
+000C   0AA1           00027         incf    say1    
+000D   1B06           00028         btfsc PORTB,6
+Message[305]: Using default destination of 1 (file).
+000E   0AA2           00029         incf    say2
+000F   1B86           00030         btfsc PORTB,7
+Message[305]: Using default destination of 1 (file).
+0010   0AA3           00031         incf    say3    
+0011                  00032 bitir
+0011   100B           00033         bcf INTCON, 0
+0012   0009           00034     retfie
+                      00035 
+0013                  00036 ana_program
+0013   1683 1303      00037         banksel TRISB   
+0015   3080           00038         movlw b'10000000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0016   0081           00039         movwf OPTION_REG
+0017   3088           00040         movlw b'10001000'
+0018   008B           00041         movwf INTCON
+0019   30FF           00042         movlw b'11111111'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001A   0086           00043         movwf TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001B   0185           00044         clrf  TRISA     
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001C   0188           00045         clrf    TRISD   
+001D   1283 1303      00046         banksel PORTB
+001F   30FA           00047         movlw D'250'
+0020   00A4           00048         movwf dur
+0021   0186           00049         clrf PORTB
+0022   0185           00050         clrf PORTA
+0023   0188           00051         clrf PORTD
+0024   01A0           00052         clrf    say     
+0025   01A1           00053         clrf    say1    
+0026   01A2           00054         clrf    say2    
+0027   01A3           00055         clrf    say3
+0028   2863           00056         goto    dongu
+                      00057 ;-------------------------------------------------------------------
+0029                  00058 DS0
+0029   1405           00059         bsf PORTA,0
+002A   0820           00060         movf    say, W
+002B   2058           00061         call    tablo
+002C   0088           00062         movwf   PORTD
+002D   300A           00063         movlw   D'10'
+002E   0220           00064         subwf   say ,W
+002F   1903           00065         btfsc   STATUS, Z
+0030   01A0           00066         clrf    say     
+0031   1005           00067         bcf PORTA,0 
+0032   0008           00068         return
+                      00069 ;-------------------------------------------------------------------
+0033                  00070 DS1
+0033   1485           00071         bsf PORTA,1
+0034   0821           00072         movf    say1, W
+0035   2058           00073         call    tablo
+0036   0088           00074         movwf   PORTD
+0037   300A           00075         movlw   D'10'
+0038   0221           00076         subwf   say1 ,W
+0039   1903           00077         btfsc   STATUS, Z
+003A   01A1           00078         clrf    say1 
+003B   1085           00079         bcf PORTA,1
+003C   0008           00080         return
+                      00081 ;-------------------------------------------------------------------
+003D                  00082 DS2
+003D   1505           00083         bsf PORTA,2
+003E   0822           00084         movf    say2, W
+003F   2058           00085         call    tablo   
+0040   0088           00086         movwf   PORTD
+0041   300A           00087         movlw   D'10'
+0042   0222           00088         subwf   say2 ,W
+0043   1903           00089         btfsc   STATUS, Z
+0044   01A2           00090         clrf    say2
+0045   1105           00091         bcf PORTA,2      
+0046   0008           00092         return
+                      00093 ;-------------------------------------------------------------------
+0047                  00094 DS3
+0047   1585           00095         bsf PORTA,3
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0048   0823           00096         movf    say3, W
+0049   2058           00097         call    tablo
+004A   0088           00098         movwf   PORTD
+004B   300A           00099         movlw   D'10'
+004C   0223           00100         subwf   say3 ,W
+004D   1903           00101         btfsc   STATUS, Z
+004E   01A3           00102         clrf    say3
+004F   1185           00103         bcf PORTA,3 
+0050   0008           00104         return
+0051                  00105 bekle
+0051   0000           00106         nop
+0052   0000           00107         nop
+0053   0BA4           00108         decfsz dur,1
+0054   2851           00109         goto bekle
+0055   30FA           00110         movlw D'250'
+0056   00A4           00111         movwf dur
+0057   0008           00112         return
+                      00113 ;-------------------------------------------------------------------
+0058                  00114 tablo
+0058   0782           00115         addwf   PCL, F
+0059   343F           00116         retlw   0x3F            ; 0 rakamý için segment deðeri.
+005A   3406           00117         retlw   0x06            ; 1 rakamý için segment deðeri.
+005B   345B           00118         retlw   0x5B            ; 2 rakamý için segment deðeri.
+005C   344F           00119         retlw   0x4F            ; 3 rakamý için segment deðeri.
+005D   3466           00120         retlw   0x66            ; 4 rakamý için segment deðeri.
+005E   346D           00121         retlw   0x6D            ; 5 rakamý için segment deðeri.
+005F   347D           00122         retlw   0x7D            ; 6 rakamý için segment deðeri.
+0060   3407           00123         retlw   0x07            ; 7 rakamý için segment deðeri.
+0061   347F           00124         retlw   0x7F            ; 8 rakamý için segment deðeri.
+0062   346F           00125         retlw   0x6F            ; 9 rakamý için segment deðeri.
+0063                  00126 dongu
+0063   2029           00127         call DS0
+0064   2051           00128         call bekle
+0065   2033           00129         call DS1
+0066   2051           00130         call bekle
+0067   203D           00131         call DS2
+0068   2051           00132         call bekle
+0069   2047           00133         call DS3
+006A   2051           00134         call bekle
+006B   2863           00135         goto    dongu
+                      00136         end
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DS0                               00000029
+DS1                               00000033
+DS2                               0000003D
+DS3                               00000047
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+MPASM  5.20                           MFA.ASM   11-21-2011  19:33:45         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+__16F877A                         00000001
+__DEBUG                           1
+ana_program                       00000013
+bekle                             00000051
+bitir                             00000011
+dongu                             00000063
+dur                               00000024
+kesme                             00000004
+say                               00000020
+say1                              00000021
+say2                              00000022
+say3                              00000023
+tablo                             00000058
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXX---- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   105
+Program Memory Words Free:  8087
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     8 reported,     0 suppressed
+
+

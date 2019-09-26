@@ -1,0 +1,515 @@
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*******************************************************************
+                      00002 ;       Dosya Adý               : 9_1.asm
+                      00003 ;       Programýn Amacý         :eeprom belleðe veri yazma
+                      00004 ;       PIC DK2.1a              : PORTC Çýkýþ ==> LED
+                      00005 ;                               : XT ==> 4Mhz
+                      00006 ;*******************************************************************
+                      00007         list p=16F877A
+                      00008         include "p16F877A.inc"  
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00400         LIST
+2007   3F39           00009         __config H'3F39'                ;Tüm program sigortalarý kapalý, 
+                      00010                                         ;Osilatör XT ve 4Mhz
+  00000020            00011 say     equ             0x20
+  00000024            00012 dur     equ             0x24
+0000                  00013         ORG     0                       ;Reset vektör adresi.
+0000   018A           00014         clrf    PCLATH                  ;0. Program sayfasý seçildi.
+0001   2866           00015         goto    ana_program             ;ana_programa'a git.
+                      00016         
+0004                  00017         ORG     4                       ;Kesme vektör adresi.
+0004                  00018 Kesmeler
+0004   1283 1303      00019         banksel PIR2
+0006   1A0D           00020     btfsc PIR2,EEIF     
+0007   120D           00021         bcf PIR2,EEIF                                                           
+0008   1C0B           00022         btfss INTCON,0
+0009   2813           00023         goto bitir
+000A   100B           00024         bcf INTCON, 0
+000B   1A06           00025         btfsc PORTB,4   
+000C   281B           00026         goto bir111
+000D   1A86           00027         btfsc PORTB,5   
+000E   2828           00028         goto iki222
+000F   1B06           00029         btfsc PORTB,6   
+0010   2835           00030         goto uc333
+0011   1B86           00031         btfsc PORTB,7   
+0012   2842           00032         goto dort444
+0013                  00033 bitir   
+0013   100B           00034         bcf INTCON,0
+0014   3004           00035         movlw D'4'
+0015   0220           00036         subwf say,W
+0016   1903           00037         btfsc STATUS,Z
+0017   118B           00038         bcf INTCON,3
+0018   178B           00039         bsf     INTCON,GIE
+0019   120D           00040         bcf PIR2,EEIF
+001A   0009           00041         retfie
+001B                  00042 bir111
+001B   1283 1703      00043         banksel EEADR
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001D   0A8D           00044         incf EEADR,F            
+001E   3001           00045         movlw   D'1'                    
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001F   008C           00046         movwf   EEDATA  
+0020   204F           00047         call EEPROM_yaz
+0021   1283 1303      00048         banksel PORTC
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0023   0AA0           00049         incf say,F
+Message[305]: Using default destination of 1 (file).
+0024   0C87           00050         rrf PORTC
+0025   205F           00051     call bekle
+0026   100B           00052         bcf INTCON,0
+0027   2813           00053         goto bitir
+0028                  00054 iki222
+0028   1283 1703      00055         banksel EEADR
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002A   0A8D           00056         incf EEADR,F            
+002B   3002           00057         movlw   D'2'                    
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002C   008C           00058         movwf   EEDATA  
+002D   204F           00059         call EEPROM_yaz
+002E   1283 1303      00060         banksel PORTC
+0030   0AA0           00061         incf say,F
+Message[305]: Using default destination of 1 (file).
+0031   0C87           00062         rrf PORTC
+0032   205F           00063     call bekle
+0033   100B           00064         bcf INTCON,0
+0034   2813           00065         goto bitir
+0035                  00066 uc333
+0035   1283 1703      00067         banksel EEADR
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0037   0A8D           00068         incf EEADR,F            
+0038   3003           00069         movlw   D'3'                    
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0039   008C           00070         movwf   EEDATA  
+003A   204F           00071         call EEPROM_yaz
+003B   1283 1303      00072         banksel PORTC
+003D   0AA0           00073         incf say,F
+Message[305]: Using default destination of 1 (file).
+003E   0C87           00074         rrf PORTC
+003F   205F           00075     call bekle
+0040   100B           00076         bcf INTCON,0
+0041   2813           00077         goto bitir
+0042                  00078 dort444
+0042   1283 1703      00079         banksel EEADR
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0044   0A8D           00080         incf EEADR,F            
+0045   3004           00081         movlw   D'4'                    
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0046   008C           00082         movwf   EEDATA  
+0047   204F           00083         call EEPROM_yaz
+0048   1283 1303      00084         banksel PORTC
+004A   0AA0           00085         incf say,F
+Message[305]: Using default destination of 1 (file).
+004B   0C87           00086         rrf PORTC
+004C   205F           00087     call bekle
+004D   100B           00088         bcf INTCON,0
+004E   2813           00089         goto bitir
+004F                  00090 EEPROM_yaz
+004F   1683 1703      00091         banksel EECON1                  ;EECON1'in bulunduðu BANK seçildi.
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0051   138B           00092     bcf INTCON, GIE
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0052   150C           00093         bsf     EECON1, WREN            ;Yazma etkinleþtirme bit’i set edildi.
+0053   3055           00094     movlw       0x55                    ;Yazma için buradan itibaren 5 satýr aynen korunmalý.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0054   008D           00095         movwf   EECON2
+0055   30AA           00096         movlw   0xAA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0056   008D           00097         movwf   EECON2
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0057   148C           00098         bsf     EECON1, WR              ;Yaz komutu verildi.
+0058   2859           00099         goto ee_j1
+0059                  00100 ee_j1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0059   188C           00101         btfsc   EECON1, WR              ;Yazma iþlemi tamamlanana kadar bekle (WR=0 olana kadar).
+005A   2859           00102         goto  ee_j1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005B   110C           00103         bcf     EECON1, WREN    ;Yazma izni kaldýrýldý.
+005C   1283 1303      00104         banksel PORTB
+005E   0008           00105         return 
+005F                  00106 bekle
+005F   0000           00107         nop
+0060   0000           00108         nop
+0061   0BA4           00109         decfsz dur,F
+0062   285F           00110         goto bekle
+0063   30FA           00111         movlw D'250'
+0064   00A4           00112         movwf dur
+0065   0008           00113         return
+0066                  00114 ana_program
+0066   1683           00115         bsf STATUS,RP0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0067   0187           00116         clrf    TRISC
+0068   30F0           00117         movlw b'11110000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0069   0086           00118         movwf TRISB     
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006A   120D           00119         bcf PIE2,4
+006B   3080           00120         movlw b'10000000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+006C   0081           00121         movwf OPTION_REG
+006D   30C8           00122         movlw b'11001000'
+006E   008B           00123         movwf INTCON
+006F   1283 1303      00124         banksel PORTC
+0071   300F           00125         movlw h'0F'
+0072   0087           00126         movwf PORTC
+0073   01A0           00127         clrf say
+0074   3000           00128     movlw       0x00                    ;Yazýlacak Dahili EEPROM adresi
+0075   1283 1703      00129         banksel EEADR                   ;EEADR kaydedicisi için BANK seçildi.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0077   008D           00130         movwf   EEADR
+0078   1283 1303      00131         banksel PORTB
+007A                  00132 ana_j1
+007A   287A           00133         goto    ana_j1                  ;Sistem kapatýlana yada resetlenenekadar boþ döngü.
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00134         END
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+EEPROM_yaz                        0000004F
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+Kesmeler                          00000004
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+MPASM  5.20                           YAZ.ASM   12-12-2011  22:53:37         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ana_j1                            0000007A
+ana_program                       00000066
+bekle                             0000005F
+bir111                            0000001B
+bitir                             00000013
+dort444                           00000042
+dur                               00000024
+ee_j1                             00000059
+iki222                            00000028
+say                               00000020
+uc333                             00000035
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XX--XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXX-----
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   121
+Program Memory Words Free:  8071
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :    23 reported,     0 suppressed
+
+

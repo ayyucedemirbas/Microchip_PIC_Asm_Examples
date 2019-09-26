@@ -1,0 +1,9 @@
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 3 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 4 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 5 : Found directive in column 1. (ORG)
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 9 : Using default destination of 1 (file).
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 17 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 19 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 20 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\6_RB0 KESMESI\PROGRAM.ASM 24 : Found directive in column 1. (END)

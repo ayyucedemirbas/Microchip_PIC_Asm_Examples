@@ -1,0 +1,11 @@
+Warning[205] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 7 : Found directive in column 1. (list)
+Warning[215] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 7 : Processor superseded by command line.  Verify processor symbol.
+Message[301] D:\PROGRAM FILES\MICROCHIP\MPASM SUITE\P16F877A.INC 36 : MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+Message[305] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 26 : Using default destination of 1 (file).
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 45 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 48 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 53 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_11_1.ASM 55 : Register in operand not in bank 0.  Ensure that bank bits are correct.

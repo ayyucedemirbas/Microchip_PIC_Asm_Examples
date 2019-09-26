@@ -1,0 +1,669 @@
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (list)
+                      00001 list p=16f877a
+                      00002 #INCLUDE <P16F877A.INC>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2011 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00555         LIST
+  00000023            00003 SAYAC1 EQU 0x23
+  00000024            00004 SAYAC2 EQU 0x24
+  00000025            00005 SAYAC EQU 0x25
+  00000026            00006 SAYAC4 EQU 0x26
+                      00007 
+Warning[205]: Found directive in column 1. (ORG)
+0000                  00008 ORG 0
+Warning[203]: Found opcode in column 1. (GOTO)
+0000   282F           00009 GOTO ANA
+Warning[205]: Found directive in column 1. (ORG)
+0004                  00010 ORG 4
+Warning[203]: Found opcode in column 1. (GOTO)
+0004   2805           00011 GOTO KESME
+0005                  00012 KESME:
+Warning[203]: Found opcode in column 1. (BTFSS)
+0005   1C0B           00013 BTFSS INTCON,0
+Warning[203]: Found opcode in column 1. (RETFIE)
+0006   0009           00014 RETFIE
+Warning[203]: Found opcode in column 1. (BCF)
+0007   100B           00015 BCF INTCON,0
+Warning[203]: Found opcode in column 1. (BTFSS)
+0008   1E06           00016 BTFSS PORTB,4
+Warning[203]: Found opcode in column 1. (GOTO)
+0009   280D           00017 GOTO YAZ23
+Warning[203]: Found opcode in column 1. (BTFSS)
+000A   1E86           00018 BTFSS PORTB,5
+Warning[203]: Found opcode in column 1. (GOTO)
+000B   2817           00019 GOTO YAZ40
+Warning[203]: Found opcode in column 1. (RETFIE)
+000C   0009           00020 RETFIE
+000D                  00021 YAZ23:
+                      00022 
+Warning[203]: Found opcode in column 1. (BCF)
+000D   100B           00023 BCF INTCON,0
+Warning[205]: Found directive in column 1. (BANKSEL)
+000E   1283 1303      00024 BANKSEL SAYAC
+Warning[203]: Found opcode in column 1. (MOVLW)
+0010   3000           00025 MOVLW D'0'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0011   00A5           00026 MOVWF SAYAC
+Warning[205]: Found directive in column 1. (BANKSEL)
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0012   1283 1303      00027 BANKSEL SAYAC
+Warning[203]: Found opcode in column 1. (MOVLW)
+0014   3001           00028 MOVLW D'1'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0015   00A6           00029 MOVWF SAYAC4
+Warning[203]: Found opcode in column 1. (RETFIE)
+0016   0009           00030 RETFIE
+0017                  00031 YAZ40:
+                      00032 
+Warning[203]: Found opcode in column 1. (BCF)
+0017   100B           00033 BCF INTCON,0
+Warning[205]: Found directive in column 1. (BANKSEL)
+0018   1283 1303      00034 BANKSEL SAYAC
+Warning[203]: Found opcode in column 1. (MOVLW)
+001A   3002           00035 MOVLW D'2'
+Warning[203]: Found opcode in column 1. (MOVWF)
+001B   00A5           00036 MOVWF SAYAC
+Warning[205]: Found directive in column 1. (BANKSEL)
+001C   1283 1303      00037 BANKSEL SAYAC
+Warning[203]: Found opcode in column 1. (MOVLW)
+001E   3003           00038 MOVLW D'3'
+Warning[203]: Found opcode in column 1. (MOVWF)
+001F   00A6           00039 MOVWF SAYAC4
+Warning[203]: Found opcode in column 1. (RETFIE)
+0020   0009           00040 RETFIE
+                      00041 
+                      00042 
+                      00043 
+                      00044 
+                      00045 
+0021                  00046 TABLO:
+Warning[203]: Found opcode in column 1. (ADDWF)
+0021   0782           00047 ADDWF PCL,F
+Warning[203]: Found opcode in column 1. (RETLW)
+0022   344F           00048 RETLW H'4F'
+Warning[203]: Found opcode in column 1. (RETLW)
+0023   345B           00049 RETLW H'5B'
+Warning[203]: Found opcode in column 1. (RETLW)
+0024   343F           00050 RETLW  H'3F'
+Warning[203]: Found opcode in column 1. (RETLW)
+0025   3466           00051 RETLW  H'66'
+0026                  00052 GECIK:
+Warning[203]: Found opcode in column 1. (MOVLW)
+0026   30FF           00053 MOVLW H'FF'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0027   00A3           00054 MOVWF SAYAC1
+0028                  00055 DON:
+Warning[203]: Found opcode in column 1. (MOVLW)
+0028   30FF           00056 MOVLW H'FF'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0029   00A4           00057 MOVWF SAYAC2
+002A                  00058 DON1:
+Warning[203]: Found opcode in column 1. (DECFSZ)
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+002A   0BA4           00059 DECFSZ SAYAC2,F
+Warning[203]: Found opcode in column 1. (GOTO)
+002B   282A           00060 GOTO DON1
+Warning[203]: Found opcode in column 1. (DECFSZ)
+002C   0BA3           00061 DECFSZ SAYAC1,F
+Warning[203]: Found opcode in column 1. (GOTO)
+002D   2828           00062 GOTO DON
+Warning[203]: Found opcode in column 1. (RETURN)
+002E   0008           00063 RETURN
+                      00064 
+                      00065 
+                      00066 
+                      00067 
+                      00068 
+002F                  00069 ANA:
+Warning[205]: Found directive in column 1. (BANKSEL)
+002F   1683 1303      00070 BANKSEL TRISA
+Warning[203]: Found opcode in column 1. (CLRF)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0031   0185           00071 CLRF TRISA
+Warning[205]: Found directive in column 1. (BANKSEL)
+0032   1283 1303      00072 BANKSEL PORTA
+Warning[203]: Found opcode in column 1. (MOVLW)
+0034   3000           00073 MOVLW H'00'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0035   0085           00074 MOVWF PORTA
+Warning[205]: Found directive in column 1. (BANKSEL)
+0036   1683 1303      00075 BANKSEL TRISB
+Warning[203]: Found opcode in column 1. (MOVLW)
+0038   30FF           00076 MOVLW H'FF'
+Warning[203]: Found opcode in column 1. (MOVWF)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0039   0086           00077 MOVWF TRISB
+Warning[205]: Found directive in column 1. (BANKSEL)
+003A   1283 1303      00078 BANKSEL PORTB
+Warning[203]: Found opcode in column 1. (CLRF)
+003C   0186           00079 CLRF PORTB
+Warning[205]: Found directive in column 1. (BANKSEL)
+003D   1683 1303      00080 BANKSEL TRISD
+Warning[203]: Found opcode in column 1. (CLRF)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003F   0188           00081 CLRF TRISD
+Warning[205]: Found directive in column 1. (BANKSEL)
+0040   1283 1303      00082 BANKSEL PORTD
+Warning[203]: Found opcode in column 1. (CLRF)
+0042   0188           00083 CLRF PORTD
+                      00084 
+Warning[205]: Found directive in column 1. (BANKSEL)
+0043   1283 1303      00085 BANKSEL INTCON
+Warning[203]: Found opcode in column 1. (MOVLW)
+0045   30C8           00086 MOVLW B'11001000'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0046   008B           00087 MOVWF INTCON
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (BANKSEL)
+0047   1683 1303      00088 BANKSEL OPTION_REG
+Warning[203]: Found opcode in column 1. (MOVLW)
+0049   3000           00089 MOVLW H'00'
+Warning[203]: Found opcode in column 1. (MOVWF)
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004A   0081           00090 MOVWF OPTION_REG
+                      00091 
+Warning[205]: Found directive in column 1. (BANKSEL)
+004B   1283 1303      00092 BANKSEL SAYAC1
+Warning[203]: Found opcode in column 1. (CLRF)
+004D   01A3           00093 CLRF SAYAC1
+Warning[203]: Found opcode in column 1. (CLRF)
+004E   01A4           00094 CLRF SAYAC2
+Warning[203]: Found opcode in column 1. (MOVLW)
+004F   3006           00095 MOVLW D'6'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0050   00A6           00096 MOVWF SAYAC4
+Warning[203]: Found opcode in column 1. (MOVWF)
+0051   00A5           00097 MOVWF SAYAC
+                      00098 
+0052                  00099 DONGU:
+Warning[205]: Found directive in column 1. (BANKSEL)
+0052   1283 1303      00100 BANKSEL PORTA
+Warning[203]: Found opcode in column 1. (MOVLW)
+0054   3001           00101 MOVLW H'01'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0055   0085           00102 MOVWF PORTA
+Warning[205]: Found directive in column 1. (BANKSEL)
+0056   1283 1303      00103 BANKSEL SAYAC
+Warning[203]: Found opcode in column 1. (MOVF)
+0058   0825           00104 MOVF SAYAC,0
+Warning[203]: Found opcode in column 1. (CALL)
+0059   2021           00105 CALL TABLO
+Warning[205]: Found directive in column 1. (BANKSEL)
+005A   1283 1303      00106 BANKSEL PORTD
+Warning[203]: Found opcode in column 1. (MOVWF)
+005C   0088           00107 MOVWF PORTD
+Warning[203]: Found opcode in column 1. (MOVWF)
+005D   0088           00108 MOVWF PORTD
+                      00109 
+Warning[203]: Found opcode in column 1. (CLRF)
+005E   0188           00110 CLRF PORTD
+                      00111 
+Warning[205]: Found directive in column 1. (BANKSEL)
+005F   1283 1303      00112 BANKSEL PORTA
+Warning[203]: Found opcode in column 1. (MOVLW)
+0061   3002           00113 MOVLW H'02'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0062   0085           00114 MOVWF PORTA
+Warning[205]: Found directive in column 1. (BANKSEL)
+0063   1283 1303      00115 BANKSEL SAYAC4
+Warning[203]: Found opcode in column 1. (MOVF)
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0065   0826           00116 MOVF SAYAC4,0
+Warning[203]: Found opcode in column 1. (CALL)
+0066   2021           00117 CALL TABLO
+Warning[205]: Found directive in column 1. (BANKSEL)
+0067   1283 1303      00118 BANKSEL PORTD
+Warning[203]: Found opcode in column 1. (MOVWF)
+0069   0088           00119 MOVWF PORTD
+Warning[203]: Found opcode in column 1. (MOVWF)
+006A   0088           00120 MOVWF PORTD
+                      00121 
+Warning[203]: Found opcode in column 1. (CLRF)
+006B   0188           00122 CLRF PORTD
+Warning[203]: Found opcode in column 1. (GOTO)
+006C   2852           00123 GOTO DONGU 
+                      00124 
+Warning[205]: Found directive in column 1. (END)
+                      00125 END
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+ANA                               0000002F
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DON                               00000028
+DON1                              0000002A
+DONGU                             00000052
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GECIK                             00000026
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+KESME                             00000005
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SAYAC                             00000025
+SAYAC1                            00000023
+SAYAC2                            00000024
+SAYAC4                            00000026
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TABLO                             00000021
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+YAZ23                             0000000D
+MPASM  5.42                            RB.ASM   12-30-2012  0:33:58         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+YAZ40                             00000017
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXX--- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   106
+Program Memory Words Free:  8086
+
+
+Errors   :     0
+Warnings :    91 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
+
+

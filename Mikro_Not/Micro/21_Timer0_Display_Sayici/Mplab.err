@@ -1,0 +1,11 @@
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 2 : Found directive in column 1. (include)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 6 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 7 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 9 : Found directive in column 1. (ORG)
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 19 : Using default destination of 1 (file).
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 25 : Using default destination of 1 (file).
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 43 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\21_TIMER0_DISPLAY_SAYICI\MPLAB.ASM 75 : Found directive in column 1. (end)

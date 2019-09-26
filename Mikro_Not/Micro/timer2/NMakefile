@@ -1,0 +1,19 @@
+# MPLAB IDE generated this makefile for use with Microsoft `nmake'.
+# Project: timer2.mcp
+# Date: Mon Oct 31 22:36:42 2011
+
+AS = MPASMWIN.exe
+CC = 
+LD = mplink.exe
+AR = mplib.exe
+RM = del
+
+"timer2.cof" : "TMR2.o"
+	$(CC) /p16F877A "TMR2.o" /z__MPLAB_BUILD=1 /o"timer2.cof" /M"timer2.map" /W
+
+"TMR2.o" : "TMR2.asm" "C:\Program Files\Microchip\MPASM Suite\P16F877A.inc"
+	$(AS) /q /p16F877A "TMR2.asm" /l"TMR2.lst" /e"TMR2.err" /o"TMR2.o"
+
+"clean" : 
+	$(CC) "TMR2.o" "TMR2.err" "TMR2.lst" "timer2.cof" "timer2.hex"
+

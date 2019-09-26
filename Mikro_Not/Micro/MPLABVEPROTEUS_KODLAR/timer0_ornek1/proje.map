@@ -1,0 +1,46 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Tue Oct 11 15:46:56 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000046
+   .config_2007_PROGRAM.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000026      
+                            0x002007    0x002007      
+            39 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                  ANA_PRO   0x000026    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+              ANA_PROGRAM   0x000025    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+             ILK_ISLEMLER   0x000019    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+                    KESME   0x000004    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+              KESME_BITIR   0x000018    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+                      SAY   0x000017    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    KESME   0x000004    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+                      SAY   0x000017    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+              KESME_BITIR   0x000018    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+             ILK_ISLEMLER   0x000019    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+              ANA_PROGRAM   0x000025    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+                  ANA_PRO   0x000026    program     static D:\PICORNEKLER\timer0_ornek1\program.asm
+
+

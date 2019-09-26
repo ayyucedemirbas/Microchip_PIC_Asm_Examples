@@ -1,0 +1,4 @@
+Message[302] C:\877_PROGRAMLAR\PROG_3_6.ASM 24 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_3_6.ASM 27 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_3_6.ASM 30 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\877_PROGRAMLAR\PROG_3_6.ASM 70 : Using default destination of 1 (file).

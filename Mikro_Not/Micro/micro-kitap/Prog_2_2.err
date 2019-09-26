@@ -1,0 +1,7 @@
+Warning[205] C:\877_PROGRAMLAR\PROG_2_2.ASM 10 : Found directive in column 1. (list)
+Warning[205] C:\877_PROGRAMLAR\PROG_2_2.ASM 13 : Found directive in column 1. (__config)
+Warning[205] C:\877_PROGRAMLAR\PROG_2_2.ASM 16 : Found directive in column 1. (ORG)
+Message[302] C:\877_PROGRAMLAR\PROG_2_2.ASM 25 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_2_2.ASM 27 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_2_2.ASM 29 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_2_2.ASM 31 : Register in operand not in bank 0.  Ensure that bank bits are correct.

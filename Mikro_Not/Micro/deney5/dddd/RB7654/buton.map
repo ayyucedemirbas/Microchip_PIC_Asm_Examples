@@ -1,0 +1,50 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Nov 21 10:55:42 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000104
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000085      
+            133 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ANA_PROGRAM   0x00004b    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   BINLER   0x000031    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   BIRLER   0x000010    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   DONGU1   0x000061    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                    KESME   0x000004    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+              KESME_BITIR   0x000049    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                    ONLAR   0x00001b    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                    TABLO   0x00003c    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   YUZLER   0x000026    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    KESME   0x000004    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   BIRLER   0x000010    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                    ONLAR   0x00001b    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   YUZLER   0x000026    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   BINLER   0x000031    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                    TABLO   0x00003c    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+              KESME_BITIR   0x000049    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+              ANA_PROGRAM   0x00004b    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+                   DONGU1   0x000061    program     static C:\Users\uluzman\Desktop\mikroproje\RB7654\buton.asm
+
+

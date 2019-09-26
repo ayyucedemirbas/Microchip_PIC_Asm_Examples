@@ -1,0 +1,6 @@
+Warning[205] D:\PICORNEKLER\TIMER0_ORNEK1\PROGRAM.ASM 1 : Found directive in column 1. (list)
+Warning[205] D:\PICORNEKLER\TIMER0_ORNEK1\PROGRAM.ASM 3 : Found directive in column 1. (__config)
+Message[305] D:\PICORNEKLER\TIMER0_ORNEK1\PROGRAM.ASM 29 : Using default destination of 1 (file).
+Message[302] D:\PICORNEKLER\TIMER0_ORNEK1\PROGRAM.ASM 36 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\PICORNEKLER\TIMER0_ORNEK1\PROGRAM.ASM 37 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\PICORNEKLER\TIMER0_ORNEK1\PROGRAM.ASM 49 : Found directive in column 1. (END)

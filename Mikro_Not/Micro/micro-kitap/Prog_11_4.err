@@ -1,0 +1,4 @@
+Warning[224] C:\877_PROGRAMLAR\PROG_11_4.ASM 161 : Use of this instruction is not recommended.
+Message[302] C:\877_PROGRAMLAR\PROG_11_4.ASM 163 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_4.ASM 164 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_4.ASM 167 : Register in operand not in bank 0.  Ensure that bank bits are correct.

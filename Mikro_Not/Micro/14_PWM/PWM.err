@@ -1,0 +1,8 @@
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 1 : Found directive in column 1. (LIST)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 9 : Found directive in column 1. (org)
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 13 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 19 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 23 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 34 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\14_PWM\PWM.ASM 121 : Found directive in column 1. (end)

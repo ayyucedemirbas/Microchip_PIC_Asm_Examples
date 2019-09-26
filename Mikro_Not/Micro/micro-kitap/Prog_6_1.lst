@@ -1,0 +1,494 @@
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*******************************************************************
+                      00002 ;       Dosya Adý               : 6_1.asm
+                      00003 ;       Programýn Amacý         : SFR’siz Asenkron Seri veri Ýletiþimi.
+                      00004 ;       PIC DK2.1a              : Çýkýþ ==> RS232’den PC’ye
+                      00005 ;                               : XT ==> 20Mhz
+                      00006 ;*******************************************************************
+                      00007         list p=16F877A          
+                      00008         include "p16F877A.inc"  
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F3A           00009         __config H'3F3A'        ;Tüm program sigortalarý kapalý, 
+                      00010                                 ;Osilatör HS ve 20Mhz
+                      00011 ;-------------------------------------------------------------------
+                      00012 ; PORT tanýmlamalarý ve deðiþken tanýmlarý yapýlýyor.
+                      00013 ;-------------------------------------------------------------------
+                      00014 #define RS_Port PORTC
+                      00015 #define RS_Tris TRISC
+                      00016 #define RS_TX   6
+                      00017 #define RS_RX   7
+                      00018 
+  00000020            00019 rs232_data      equ     0x20            ;Rs232'den okunan verinin 
+                      00020                                         ;kaydedildiði ve gönderilirken ;kullanýlan deðiþken.
+  00000021            00021 sayac           equ     0x21            ;8 bit sayacý.
+  00000022            00022 delay_sayac     equ     0x22            ;delay sayacý.
+                      00023 
+0000                  00024         org     0
+0000   2837           00025         goto    ana_program
+                      00026 ;-------------------------------------------------------------------
+                      00027 ; 9600 baud rate iletiþim hýzýnda her bir bit’in süresi 104.2 us'dir. 
+                      00028 ; 20MHz'de 104.2 us gecikme saðlar.
+                      00029 ;-------------------------------------------------------------------
+0001                  00030 rs232_delay1
+0001   30AB           00031         movlw   .171            
+0002   1283 1303      00032         banksel delay_sayac
+0004   00A2           00033         movwf   delay_sayac
+0005   0BA2           00034         decfsz  delay_sayac, F
+0006   2805           00035         goto    $-1
+0007   0000           00036         nop
+0008   0008           00037         return
+                      00038 ;-------------------------------------------------------------------
+                      00039 ; 9600 baud rate iletiþim hýzýnda 20MHz'de 50 us gecikme saðlar.
+                      00040 ;-------------------------------------------------------------------
+0009                  00041 rs232_delay2
+0009   3051           00042         movlw   .81
+000A   1283 1303      00043         banksel delay_sayac
+000C   00A2           00044         movwf   delay_sayac
+000D   0BA2           00045         decfsz  delay_sayac, F
+000E   280D           00046         goto    $-1
+000F   0008           00047         return
+                      00048 ;-------------------------------------------------------------------
+                      00049 ; Port yönlendirme ve TX için ilk durum belirleme için kullanýldý.
+                      00050 ;-------------------------------------------------------------------
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0010                  00051 rs232_init
+0010   1683 1303      00052         banksel RS_Tris
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   1307           00053         bcf     RS_Tris, RS_TX       ;TX pini çýkýþa,
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0013   1787           00054         bsf     RS_Tris, RS_RX       ;RX pini giriþe yönlendirildi.
+0014   1283 1303      00055         banksel RS_Port
+0016   1707           00056         bsf     RS_Port, RS_TX       ;TX pininin ilk durumu HIGH.
+0017   0008           00057         return
+                      00058 ;-------------------------------------------------------------------
+                      00059 ; LOW seviyesi oluþturmak için kullanýldý. 
+                      00060 ;-------------------------------------------------------------------
+0018                  00061 low_level
+0018   1307           00062         bcf     RS_Port, RS_TX       ;TX = 0
+0019   2001           00063         call    rs232_delay1
+001A   0008           00064         return
+                      00065 ;-------------------------------------------------------------------
+                      00066 ; HIGH seviyesi oluþturmak için kullanýldý.
+                      00067 ;-------------------------------------------------------------------
+001B                  00068 high_level
+001B   1707           00069         bsf     RS_Port, RS_TX       ;TX = 1
+001C   2001           00070         call    rs232_delay1
+001D   0008           00071         return
+                      00072 ;-------------------------------------------------------------------
+                      00073 ; rs232'den veri okumak için kullanýldý.
+                      00074 ;-------------------------------------------------------------------
+001E                  00075 rs232_read
+001E   1B87           00076         btfsc   RS_Port, RS_RX          ;START bit’i gelene kadar bekle.
+001F   281E           00077         goto    rs232_read
+0020   2009           00078         call    rs232_delay2            ;50 us bekle (start bit’inin 
+                      00079                                         ;ortasýna konumlan).
+0021   3008           00080         movlw   0x08
+0022   00A1           00081         movwf   sayac                   ;8 bit alýmý için sayacý kur.
+0023                  00082 rs_read_tekrar
+0023   2001           00083         call    rs232_delay1            ;104 us bekle (ilk anda 0. bit’in 
+                      00084                                         ;ortasýna konumlan (hata ihtimalini 
+                      00085                                         ;en aza indirmek için bit zamanýnýn 
+                      00086                                         ;ortasýnda örnekleme yap).
+0024   1003           00087         bcf     STATUS, C               ;rrf komutunda verinin MSB bit’ine
+                      00088                                         ;0 aktarmak için C bit’ini sýfýrla.
+0025   1B87           00089         btfsc   RS_Port, RS_RX          ;0 bilgisi geldi ise komut atla, 
+                      00090                                         ;deðilse..
+0026   1403           00091         bsf     STATUS, C               ;rrf komutunda verinin MSB bit’ine
+                      00092                                         ; 1 aktarmak için C bit’ini set et.
+0027   0CA0           00093         rrf     rs232_data, F           ;Veriyi saða 1 bit kaydýr 
+                      00094                                         ;(MSB'de ELDE bit’i var).
+0028   0BA1           00095         decfsz  sayac, F                ;Sayacý bir azalt, 8 bit’te alýndý 
+                      00096                                         ;ise döngüden çýk.
+0029   2823           00097         goto    rs_read_tekrar          ;Tüm bit’ler okunana kadar iþleme 
+                      00098                                         ;devam et.
+002A   0008           00099         return                          ;Veri alýndý, alt programdan çýk.
+                      00100 ;-------------------------------------------------------------------
+                      00101 ; rs232'ye veri yazmak için kullanýldý.
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00102 ;-------------------------------------------------------------------
+002B                  00103 rs232_write
+002B   3008           00104         movlw   0x08
+002C   00A1           00105         movwf   sayac                   ;8 bit yazma için sayacý kur.
+002D   2018           00106         call    low_level               ;Start bit’i oluþturuldu 
+                      00107                                         ;(104 us'lik low seviye).
+002E                  00108 rs_write_tekrar
+002E   1820           00109         btfsc   rs232_data, 0           ;Veriyi LSB bit’i 0 ise komut atla, 
+                      00110                                         ;deðilse..
+002F   201B           00111         call    high_level              ;HIGH seviyesi oluþtur (lojik 1).
+0030   1C20           00112         btfss   rs232_data, 0           ;Veriyi LSB bit’i 1 ise komut atla, 
+                      00113                                         ;deðilse..
+0031   2018           00114         call    low_level               ;LOW seviyesi oluþtur (lojik 0).
+0032   0CA0           00115         rrf     rs232_data, F           ;Verinin tüm bit’lerini kaydýrarak 
+                      00116                                         ;sonraki bit’i LSB'ye al.
+0033   0BA1           00117         decfsz  sayac, F                ;8 bit’te transfer edilene kadar 
+                      00118                                         ;iþleme devam et.
+0034   282E           00119         goto    rs_write_tekrar
+0035   201B           00120         call    high_level              ;Stop bit’i oluþtur 
+                      00121                                         ;(104 us'lik high seviye).
+0036   0008           00122         return
+                      00123 ;-------------------------------------------------------------------
+                      00124 ; Ana program bloðu RS232 üzerinden aldýðý veriyi tekrar 
+                      00125 ; RS232 üzerinden terminale gönderir.
+                      00126 ;-------------------------------------------------------------------
+0037                  00127 ana_program
+0037   2010           00128         call    rs232_init              ;SFR'siz asenkron iletiþim ilk 
+                      00129                                         ;iþlemleri çaðýr.
+0038                  00130 devam
+0038   201E           00131         call    rs232_read              ;RS232 portundan veri oku, okunan 
+                      00132                                         ;veri rs232_data deðiþkeninde.
+0039   202B           00133         call    rs232_write             ;rs232_data deðiþkenindeki daha 
+                      00134                                         ;önce okunan veriyi tekrar RS232 
+                      00135                                         ;terminaline gönder.
+003A   2838           00136         goto    devam                   ;Sonsuz döngü kuruldu.
+                      00137 
+                      00138         END                             ;Program sonu.
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RS_Port                           PORTC
+RS_RX                             7
+RS_TX                             6
+RS_Tris                           TRISC
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+MPASM  4.02 Released                             PROG_6_1.ASM   8-10-2006  14:16:29         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ana_program                       00000037
+delay_sayac                       00000022
+devam                             00000038
+high_level                        0000001B
+low_level                         00000018
+rs232_data                        00000020
+rs232_delay1                      00000001
+rs232_delay2                      00000009
+rs232_init                        00000010
+rs232_read                        0000001E
+rs232_write                       0000002B
+rs_read_tekrar                    00000023
+rs_write_tekrar                   0000002E
+sayac                             00000021
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXX-----
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    59
+Program Memory Words Free:  8133
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     2 reported,     0 suppressed
+
+

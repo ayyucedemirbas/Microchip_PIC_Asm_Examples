@@ -1,0 +1,40 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Wed Jan 02 00:36:09 2013
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000048
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000027      
+            39 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+               ANAPROGRAM   0x00000f    program     static D:\hazirlik\timer1\timer1.asm
+                    DONGU   0x000027    program     static D:\hazirlik\timer1\timer1.asm
+                    KESME   0x000005    program     static D:\hazirlik\timer1\timer1.asm
+                  LED_YAK   0x00000a    program     static D:\hazirlik\timer1\timer1.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    KESME   0x000005    program     static D:\hazirlik\timer1\timer1.asm
+                  LED_YAK   0x00000a    program     static D:\hazirlik\timer1\timer1.asm
+               ANAPROGRAM   0x00000f    program     static D:\hazirlik\timer1\timer1.asm
+                    DONGU   0x000027    program     static D:\hazirlik\timer1\timer1.asm
+
+

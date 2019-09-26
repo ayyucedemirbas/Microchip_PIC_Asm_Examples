@@ -1,0 +1,4 @@
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\25_CIFTLERIN_SORUSU\UNTITLED.ASM 3 : Found label after column 1. (Sayac)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\25_CIFTLERIN_SORUSU\UNTITLED.ASM 4 : Found label after column 1. (Durum)
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\25_CIFTLERIN_SORUSU\UNTITLED.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\25_CIFTLERIN_SORUSU\UNTITLED.ASM 43 : Register in operand not in bank 0.  Ensure that bank bits are correct.

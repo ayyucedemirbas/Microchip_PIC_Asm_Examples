@@ -1,0 +1,5 @@
+Warning[205] D:\PICORNEKLER\TUSPORT\PROGRAM.ASM 1 : Found directive in column 1. (list)
+Warning[205] D:\PICORNEKLER\TUSPORT\PROGRAM.ASM 3 : Found directive in column 1. (__config)
+Message[302] D:\PICORNEKLER\TUSPORT\PROGRAM.ASM 11 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\PICORNEKLER\TUSPORT\PROGRAM.ASM 13 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\PICORNEKLER\TUSPORT\PROGRAM.ASM 23 : Found directive in column 1. (END)

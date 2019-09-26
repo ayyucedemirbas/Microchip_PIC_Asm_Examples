@@ -1,0 +1,1 @@
+RB0 pinine bağlı olan bir tuşa her basıldığında kesme üreten ve PD0-PD7 pinlerine bağlı olan 8 adet ilk başta sönük ledlerde ilk tuşa basmada ilk ledi yakan ve her tuşa basıldığında yanan ledi bir sola kaydıran bir devreyi tasarlayarak çalıştırınız.

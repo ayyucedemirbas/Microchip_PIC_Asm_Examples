@@ -1,0 +1,8 @@
+Warning[215] C:\877_PROGRAMLAR\PROG_7_2.ASM 7 : Processor superseded by command line.  Verify processor symbol.
+Message[301] D:\PROGRAM FILES\MICROCHIP\MPASM SUITE\P16F877A.INC 36 : MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+Warning[205] C:\877_PROGRAMLAR\PROG_7_2.ASM 14 : Found directive in column 1. (CBLOCK)
+Message[312] C:\877_PROGRAMLAR\PROG_7_2.ASM 26 : Page or Bank selection not needed for this device.  No code generated.
+Message[302] C:\877_PROGRAMLAR\PROG_7_2.ASM 64 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[224] C:\877_PROGRAMLAR\PROG_7_2.ASM 154 : Use of this instruction is not recommended.
+Message[302] C:\877_PROGRAMLAR\PROG_7_2.ASM 156 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_7_2.ASM 158 : Register in operand not in bank 0.  Ensure that bank bits are correct.

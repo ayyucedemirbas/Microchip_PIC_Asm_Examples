@@ -1,0 +1,5 @@
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\5_TIMER0_VE_TIMER1\TIMER0_VE_TIMER1.ASM 4 : Found label after column 1. (Tmr0Sayaci)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\5_TIMER0_VE_TIMER1\TIMER0_VE_TIMER1.ASM 5 : Found label after column 1. (Tmr1Sayaci)
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\5_TIMER0_VE_TIMER1\TIMER0_VE_TIMER1.ASM 58 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\5_TIMER0_VE_TIMER1\TIMER0_VE_TIMER1.ASM 60 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\5_TIMER0_VE_TIMER1\TIMER0_VE_TIMER1.ASM 69 : Register in operand not in bank 0.  Ensure that bank bits are correct.

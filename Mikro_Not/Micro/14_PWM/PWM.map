@@ -1,0 +1,42 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Tue Dec 28 15:07:17 2010
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x0000ba
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x00005c      
+            93 out of 8453 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   AYARLA   0x00003b    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                    BEKLE   0x000051    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                BEKLE_SUB   0x00005a    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                   HIZLAN   0x000029    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+              TUS_KONTROL   0x000022    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                  YAVASLA   0x000032    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              TUS_KONTROL   0x000022    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                   HIZLAN   0x000029    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                  YAVASLA   0x000032    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                   AYARLA   0x00003b    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                    BEKLE   0x000051    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+                BEKLE_SUB   0x00005a    program     static C:\Users\Google\Desktop\Mikro\14_PWM\PWM.asm
+
+

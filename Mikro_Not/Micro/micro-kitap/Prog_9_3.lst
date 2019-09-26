@@ -1,0 +1,791 @@
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*****************************************************************
+                      00002 ;       Dosya Adý               : 9_3.asm
+                      00003 ;       Programýn Amacý         : Seri eeprom ile iletiþim.
+                      00004 ;       PIC DK2.1a              : PORTB Çýkýþ ==> 7 Segment Display
+                      00005 ;                               : XT ==> 20Mhz
+                      00006 ;*******************************************************************
+                      00007         list p = 16F877A
+                      00008         include "p16F877A.inc"
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F3A           00009         __config H'3F3A'                ;Tüm program sigortalarý kapalý, 
+                      00010                                         ;Osilatör HS ve 20Mhz.
+                      00011 ;-------------------------------------------------------------------
+                      00012 ; Genel deðiþken tanýmlamalarý.
+                      00013 ;-------------------------------------------------------------------
+                      00014 #define OKU     1               ;Okuma butonunun baðlý olduðu pin.
+                      00015 #define YAZ     2               ;Yazma butonunun baðlý olduðu pin.
+                      00016 #define WP      3               ;Seri EEPROM yazma korumasý için 
+                      00017                                 ;iþlemci çýkýþ pini.
+  00000070            00018 delay_ms_data   equ     0x70    ;Delay için 2 byte'lýk deðiþken.
+  00000072            00019 I2CSend_Data    equ     0x72    ;Geçici deðiþken.
+  00000073            00020 I2C_Device      equ     0x73    ;I2C cihazý donaným adresi 
+                      00021                                 ;deðiþkeni (0-7).
+  00000074            00022 I2C_AdrH        equ     0x74    ;I2C cihazý veri adresinin üst 
+                      00023                                 ;byte'ý.
+  00000075            00024 I2C_AdrL        equ     0x75    ;I2C cihazý veri adresinin alt 
+                      00025                                 ;byte'ý.
+  00000076            00026 I2C_Data        equ     0x76    ;I2C cihazý veri deðiþkeni.
+                      00027 
+0000                  00028         ORG     0
+0000   018A           00029         clrf    PCLATH
+0001   28B5           00030         goto    Ana_Program
+                      00031 ;-------------------------------------------------------------------
+                      00032 ; MSSP modülünü I2C Master iletiþim için hazýrlar.
+                      00033 ;-------------------------------------------------------------------
+0002                  00034 I2C_init
+0002   1683 1303      00035         banksel   SSPSTAT               ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0004   0194           00036         clrf    SSPSTAT                 ;Tüm durum bit’leri siliniyor.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0005   1794           00037         bsf     SSPSTAT, SMP            ;SMP = 1 SLEW Rate Control pasif, 
+                      00038                                         ;Standart speed mod.
+0006   3031           00039         movlw   B'00110001'             ;Fosc = 20MHz için BitRate = 100kHz 
+                      00040                                         ;seçersek formülden
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0007   0093           00041         movwf   SSPADD                  ;SSPADD=49 bulunur.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0008   0191           00042         clrf    SSPCON2                 ;Kontrol bit’lerini sil.
+0009   3098           00043         movlw   B'10011000'             ;Usart için RX ve I2C için SCL ve 
+                      00044                                         ;SDA giriþe ayarlandý.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000A   0087           00045         movwf   TRISC                   
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000B   3028           00046         movlw   B'00101000'             ;SSPEN=1, I2C Master Fosc based 
+                      00047                                         ;clock mod seçiliyor.
+000C   1283           00048         bcf     STATUS, RP0             ;BANK0
+000D   0094           00049         movwf   SSPCON
+000E   0187           00050         clrf    PORTC
+000F   0008           00051         return
+                      00052 ;-------------------------------------------------------------------
+                      00053 ; I2C Start bit’i gönderen alt program.
+                      00054 ;-------------------------------------------------------------------
+0010                  00055 I2CStart
+0010   1283 1303      00056         banksel PIR1                    ;BANK0
+0012   118C           00057         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+0013   1683           00058         bsf     STATUS, RP0             ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0014   1411           00059         bsf     SSPCON2, SEN            ;Start bit Enable edildi.
+0015                  00060 I2CStart_j1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0015   1811           00061         btfsc   SSPCON2, SEN            ;SEN bit’i silinene kadar bekle.
+0016   2815           00062         goto    I2CStart_j1
+0017   1283 1303      00063         banksel PIR1                    ;BANK0
+0019                  00064 I2CStart_j2
+0019   1D8C           00065         btfss   PIR1, SSPIF
+001A   2819           00066         goto    I2CStart_j2             ;Ýþlemin tamamlandýðýna dair kesme 
+                      00067                                         ;oluþana kadar bekle.
+001B   118C           00068         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+001C   0008           00069         return
+                      00070 ;-------------------------------------------------------------------
+                      00071 ; I2C ReStart bit’i gönderen alt program.
+                      00072 ;-------------------------------------------------------------------
+001D                  00073 I2CReStart
+001D   0000           00074         nop
+001E   0000           00075         nop
+001F   0000           00076         nop
+0020   0000           00077         nop
+0021   0000           00078         nop                             ;Kýsa bir süre bekle.
+0022   1683 1303      00079         banksel SSPCON2                 ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0024   1491           00080         bsf     SSPCON2, RSEN           ;ReStart bit Enable edildi.
+0025                  00081 I2CReStart_j1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0025   1891           00082         btfsc   SSPCON2, RSEN           ;ReStart bit silinene kadar bekle.
+0026   2825           00083         goto    I2CReStart_j1
+0027   0008           00084         return
+                      00085 ;-------------------------------------------------------------------
+                      00086 ; I2C cihazýna SSPBUF kaydedicisindeki veriyi gönderen alt program.
+                      00087 ;-------------------------------------------------------------------
+0028                  00088 I2CSend
+0028   1283 1303      00089         banksel PIR1                    ;BANK0
+002A   118C           00090         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+002B   0872           00091         movf    I2CSend_Data, W
+002C   0093           00092         movwf   SSPBUF                  ;Gönderilecek byte SSP buffer 
+                      00093                                         ;kaydedicisine yüklendi.
+002D   0008           00094         return
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00095 ;-------------------------------------------------------------------
+                      00096 ; I2C cihazýndan SSPBUF kaydedicisine veri okuma alt programý.
+                      00097 ;-------------------------------------------------------------------
+002E                  00098 I2CRead
+002E   1683 1303      00099         banksel SSPCON2                 ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0030   1591           00100         bsf     SSPCON2, RCEN           ;Receive Enable bit’i set edildi.
+0031                  00101 I2CRead_j1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0031   1991           00102         btfsc   SSPCON2, RCEN           ;Receive Enable bit’i silinene
+Warning[203]: Found opcode in column 1. (goto)
+0032   2831           00103 goto    I2CRead_j1                      ;kadar bekle.
+                      00104 
+0033   1283 1303      00105         banksel PIR1                    ;BANK0
+0035                  00106 I2CRead_j2
+0035   1D8C           00107         btfss   PIR1, SSPIF
+0036   2835           00108         goto    I2CRead_j2              ;Ýþlemin tamamlandýðýna dair kesme 
+                      00109                                         ;oluþana kadar bekle.
+0037   118C           00110         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+0038   0813           00111         movf    SSPBUF, W               ;Okunan veri SSPBUF'den W 
+                      00112                                         ;kaydedisine aktarýldý.
+0039   0008           00113         return
+                      00114 ;-------------------------------------------------------------------
+                      00115 ; I2C Stop bit’i gönderen alt program.
+                      00116 ;-------------------------------------------------------------------
+003A                  00117 I2CStop
+003A   1683 1303      00118         banksel SSPCON2                 ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003C   1511           00119         bsf     SSPCON2, PEN            ;Stop bit enable yapýldý.
+003D                  00120 I2CStop_j1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003D   1911           00121         btfsc   SSPCON2, PEN    
+003E   283D           00122         goto    I2CStop_j1              ;Stop bit’i silinene (gönderilene) 
+                      00123                                         ;kadar bekle.
+003F   1283 1303      00124         banksel PIR1                    ;BANK0
+0041                  00125 I2CStop_j2
+0041   1D8C           00126         btfss   PIR1, SSPIF             
+0042   2841           00127         goto    I2CStop_j2              ;Ýþlemin tamamlandýðýna dair kesme 
+                      00128                                         ;oluþana kadar bekle.
+0043   118C           00129         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+0044   0008           00130         return
+                      00131 ;-------------------------------------------------------------------
+                      00132 ; I2C cihazýndan Ack bilgisi alan alt program.
+                      00133 ;-------------------------------------------------------------------
+0045                  00134 I2CAck
+0045   1683 1303      00135         banksel SSPCON2                 ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0047   1291           00136         bcf     SSPCON2, ACKDT          ;ACK bilgisi için LOW seviye 
+                      00137                                         ;seçiliyor.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0048   1711           00138         bsf     SSPCON2, ACKSTAT        ;ACKSTAT set ediliyor. Bu bit I2C 
+                      00139                                         ;cihazý tarafýndan
+0049                  00140 I2CAck_j1                               ;silindiðinde ACK LOW bilgisi 
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00141                                         ;gelmiþ ve iþlem I2C
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0049   1B11           00142         btfsc   SSPCON2, ACKSTAT        ;cihazý tarafýndan onaylanmýþ 
+                      00143                                         ;demektir.
+004A   2849           00144         goto    I2CAck_j1               ;ACKSTAT LOW olana kadar bekle (ACK 
+                      00145                                         ;gelene kadar).
+004B   1283 1303      00146         banksel PIR1                    ;BANK0
+004D                  00147 I2CAck_j2
+004D   1D8C           00148         btfss   PIR1, SSPIF
+004E   284D           00149         goto    I2CAck_j2               ;Ýþlemin tamamlandýðýna dair kesme 
+                      00150                                         ;oluþana kadar bekle.
+004F   118C           00151         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+0050   0008           00152         return
+                      00153 ;-------------------------------------------------------------------
+                      00154 ; I2C cihazýndan Not Ack bilgisi alan alt program.
+                      00155 ;-------------------------------------------------------------------
+0051                  00156 I2CNak
+0051   1683 1303      00157         banksel SSPCON2                 ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0053   1691           00158         bsf     SSPCON2, ACKDT          ;NOT ACK bilgisi için HIGH seviye 
+                      00159                                         ;seçiliyor.
+0054                  00160 I2CNak_j1                                               
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0054   1B11           00161         btfsc   SSPCON2, ACKSTAT        ;ACKSTAT LOW olana kadar bekle (NOT 
+                      00162                                         ;ACK gelene kadar).
+0055   2854           00163         goto    I2CNak_j1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0056   1611           00164         bsf     SSPCON2, ACKEN          ;ACKEN set edilir.
+0057   1283           00165         bcf     STATUS, RP0             ;BANK0
+0058   118C           00166         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+0059                  00167 I2CNak_j2
+0059   1683 1303      00168         banksel SSPCON2                 ;BANK1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005B   1A11           00169         btfsc   SSPCON2, ACKEN          ;ACKEN silinene kadar bekle.
+005C   2859           00170         goto    I2CNak_j2
+005D   1283 1303      00171         banksel PIR1                    ;BANK0
+005F                  00172 I2CNak_j3
+005F   1D8C           00173         btfss   PIR1, SSPIF
+0060   285F           00174         goto    I2CNak_j3               ;Ýþlemin tamamlandýðýna dair kesme 
+                      00175                                         ;oluþana kadar bekle.
+0061   118C           00176         bcf     PIR1, SSPIF             ;SSPIF kesme bayraðýný sil.
+0062   0008           00177         return
+                      00178 ;-------------------------------------------------------------------
+                      00179 ; Seri EEPROM'a I2C_Data deðiþkenindeki veriyi yazan alt program.
+                      00180 ;-------------------------------------------------------------------
+0063                  00181 I2C_WriteEE
+0063   2010           00182         call    I2CStart                ;Start bilgisi gönderiliyor.
+0064   0D73           00183         rlf     I2C_Device, W           ;EEPROM donaným adresi (A2,A1,A0) 
+                      00184                                         ;ayarlanýyor.
+0065   39FE           00185         andlw   0xFE
+0066   38A0           00186         iorlw   0xA0                    ;Donaným adresi ile kontrol byte'ý 
+                      00187                                         ;ve yaz bilgisi
+0067   00F2           00188         movwf   I2CSend_Data            ;birleþtiriliyor ve I2CSend 
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00189                                         ;fonksiyonuna ait
+0068   2028           00190         call    I2CSend                 ;parametreye yükleniyor ve 
+                      00191                                         ;gönderiliyor.
+0069   2045           00192         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+006A   0874           00193         movf    I2C_AdrH, W
+006B   00F2           00194         movwf   I2CSend_Data            ;Adresin yüksek byte'ý gönderiliyor
+006C   2028           00195         call    I2CSend
+006D   2045           00196         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+006E   0875           00197         movf    I2C_AdrL, W     
+006F   00F2           00198         movwf   I2CSend_Data            ;Adresin alçak byte'ý gönderiliyor.
+0070   2028           00199         call    I2CSend
+0071   2045           00200         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+0072   0876           00201         movf    I2C_Data, W
+0073   00F2           00202         movwf   I2CSend_Data            ;Yazýlacak veri gönderiliyor.
+0074   2028           00203         call    I2CSend
+0075   2045           00204         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+0076   203A           00205         call    I2CStop                 ;Stop bilgisi gönderiliyor.
+0077   0008           00206         return
+                      00207 ;-------------------------------------------------------------------
+                      00208 ; Seri EEPROM'dan I2C_Data deðiþkenindeki veri okuyan alt program.
+                      00209 ;-------------------------------------------------------------------
+0078                  00210 I2C_ReadEE
+0078   2010           00211         call    I2CStart                ;Start bilgisi gönderiliyor
+0079   0D73           00212         rlf     I2C_Device, W           ;EEPROM donaným adresi (A2,A1,A0) 
+                      00213                                         ;ayarlanýyor.
+007A   39FE           00214         andlw   0xFE
+007B   38A0           00215         iorlw   0xA0                    ;Donaným adresi ile kontrol byte'ý 
+                      00216                                         ;ve yaz bilgisi
+007C   00F2           00217         movwf   I2CSend_Data            ;birleþtiriliyor ve I2CSend 
+                      00218                                         ;fonksiyonuna ait parametreye
+007D   2028           00219         call    I2CSend                 ;yükleniyor ve gönderiliyor.
+007E   2045           00220         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+007F   0874           00221         movf    I2C_AdrH, W
+0080   00F2           00222         movwf   I2CSend_Data            ;Adresin yüksek byte'ý gönderiliyor
+0081   2028           00223         call    I2CSend
+0082   2045           00224         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+0083   0875           00225         movf    I2C_AdrL, W     
+0084   00F2           00226         movwf   I2CSend_Data            ;Adresin alçak byte'ý gönderiliyor      
+0085   2028           00227         call    I2CSend
+0086   2045           00228         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+0087   201D           00229         call    I2CReStart              ;Restart bilgisi gönderiliyor.
+                      00230                                         ;(okuma için gerekli)
+0088   0D73           00231         rlf     I2C_Device,     W       ;EEPROM donaným adresi (A2,A1,A0) 
+                      00232                                         ;ayarlanýyor.
+0089   39FE           00233         andlw   0xFE
+008A   38A1           00234         iorlw   0xA1                    ;Donaným adresi ile kontrol bayte'ý 
+                      00235                                         ;ve oku bilgisi
+008B   00F2           00236         movwf   I2CSend_Data            ;birleþtiriliyor ve I2CSend 
+                      00237                                         ;fonksiyonuna ait parametreye
+008C   2028           00238         call    I2CSend                 ;yükleniyor ve gönderiliyor.
+008D   2045           00239         call    I2CAck                  ;Alýndý bilgisi bekleniyor.
+008E   202E           00240         call    I2CRead                 ;Okuma fonsiyonu ile OKU bilgisi 
+                      00241                                         ;gönderiliyor.
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+008F   00F6           00242         movwf   I2C_Data                ;Okunan veri Work register (W) de.
+0090   2051           00243         call    I2CNak                  ;Ýþlemin tamamlandýðýna dair bilgi 
+                      00244                                         ;alýnýyor.
+0091   203A           00245         call    I2CStop                 ;Stop bilgisi gönderiliyor.
+0092   0008           00246         return
+                      00247 ;-------------------------------------------------------------------
+                      00248 ; 20MHz de 1 ms'lik temel gecikme saðlar.
+                      00249 ; delay_ms_data = 1-255 ms arasýnda ayarlanarak istenilen gecikme 
+                      00250 ; elde edilir. Örneðin: delay_ms_data = 10 yapýldýðýnda 10 ms'lik 
+                      00251 ; gecikme elde edilir.
+                      00252 ;-------------------------------------------------------------------
+0093                  00253 delay_ms
+0093                  00254 delay_j1
+0093   30B9           00255         movlw   D'185'
+0094   00F1           00256         movwf   delay_ms_data+1
+0095   0000           00257         nop
+0096                  00258 delay_j2
+0096   0000           00259         nop
+0097   0000           00260         nop
+0098   0000           00261         nop
+0099   0000           00262         nop
+009A   0000           00263         nop
+009B   0000           00264         nop
+009C   0000           00265         nop
+009D   0000           00266         nop
+009E   0000           00267         nop
+009F   0000           00268         nop
+00A0   0000           00269         nop
+00A1   0000           00270         nop
+00A2   0000           00271         nop
+00A3   0000           00272         nop
+00A4   0000           00273         nop
+00A5   0000           00274         nop
+00A6   0000           00275         nop
+00A7   0000           00276         nop
+00A8   0000           00277         nop
+00A9   0000           00278         nop
+00AA   0000           00279         nop
+00AB   0000           00280         nop
+00AC   0000           00281         nop
+00AD   0000           00282         nop
+00AE   0BF1           00283         decfsz  delay_ms_data+1, F
+00AF   2896           00284         goto    delay_j2
+00B0   0000           00285         nop
+00B1   0BF0           00286         decfsz  delay_ms_data, F
+00B2   2893           00287         goto    delay_j1
+00B3   0000           00288         nop
+00B4   0008           00289         return
+                      00290 ;-------------------------------------------------------------------
+                      00291 ; Ana Program
+                      00292 ;-------------------------------------------------------------------
+00B5                  00293 Ana_Program
+                      00294         
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00B5   3006           00295         movlw   0x06                    ;Analog giriþler kapalý, PORTA 
+                      00296                                         ;dijital giriþe ayarlandý.
+00B6   1683 1303      00297         banksel ADCON1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00B8   009F           00298         movwf   ADCON1                  ;Analog giriþler kapalý, PORTA 
+                      00299                                         ;dijital giriþe ayarlandý.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00B9   0085           00300         movwf   TRISA                   ;RA2 ve RA1 dijital giriþ, 
+                      00301                                         ;diðerleri çýkýþa ayarlandý
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00BA   0186           00302         clrf    TRISB                   ;PORTB çýkýþa ayarlandý.
+00BB   1283 1303      00303         banksel PORTA                   ;BANK0 seçildi.
+00BD   3008           00304         movlw   0x08                    
+00BE   0085           00305         movwf   PORTA                   ;Seri EEPROM yazma korumasý aktif 
+                      00306                                         ;hale getiriliyor.
+00BF   0186           00307         clrf    PORTB                   ;LED’ler ilk durumda sönükler.
+                      00308 
+00C0   2002           00309         call    I2C_init                ;I2C modülü ilk iþlemleri yapýlýyor
+                      00310 
+00C1                  00311 Ana_Prog_Oku
+00C1   1885           00312         btfsc   PORTA, OKU              ;RA1'e basýldý ise (Seri EEPROM 
+                      00313                                         ;okuma kontrol butonu).
+00C2   28CD           00314         goto    Ana_Prog_Yaz            ;RA1 butonuna basýlmadý ise RA2'i 
+                      00315                                         ;kontrol et.
+00C3   01F3           00316         clrf    I2C_Device              ;24C32 Donaným adresi 0
+00C4   01F4           00317         clrf    I2C_AdrH                ;AdresHigh = 0
+00C5   301A           00318         movlw   0x1A                    ;Okumak istediðimiz adresin düþük 
+                      00319                                         ;byte'ý.
+00C6   00F5           00320         movwf   I2C_AdrL                ;AdresLow  = 0x1A; Adres = 0x001A
+00C7   2078           00321         call    I2C_ReadEE              ;Okuma alt programý çaðrýlýyor.
+00C8   0086           00322         movwf   PORTB                   ;Okunan deðeri PORTB'deki LED’lerde 
+                      00323                                         ;göster.
+00C9   300A           00324         movlw   0x0A
+00CA   00F0           00325         movwf   delay_ms_data           ;10ms beklemek için 1ms Delay 
+                      00326                                         ;parametresine 10 deðeri yükleniyor
+00CB   2093           00327         call    delay_ms                ;ve delay_ms çaðrýlýyor.
+00CC   28DB           00328         goto    Ana_Prog_Sonu
+                      00329 
+00CD                  00330 Ana_Prog_Yaz
+00CD   1905           00331         btfsc   PORTA, YAZ              ;RA2'e basýldý ise (Seri EEPROM 
+                      00332                                         ;yazma kontrol butonu).
+00CE   28C1           00333         goto    Ana_Prog_Oku            ;RA2 butonuna basýlmadý ise RA1'i 
+                      00334                                         ;kontrol et.
+00CF   1185           00335         bcf     PORTA, WP               ;EEPROM yazma korumasý kaldýrýlýyor
+00D0   01F3           00336         clrf    I2C_Device              ;24C32 Donaným adresi 0
+00D1   01F4           00337         clrf    I2C_AdrH                ;AdresHigh = 0
+00D2   301A           00338         movlw   0x1A                    ;Yazmak istediðimiz adresin düþük 
+                      00339                                         ;byte'ý.
+00D3   00F5           00340         movwf   I2C_AdrL                ;AdresLow  = 0x1A; Adres = 0x001A
+00D4   30C9           00341         movlw   0xC9                    ;Yazmak istediðimiz veri.
+00D5   00F6           00342         movwf   I2C_Data                ;Örneðimizde bu veri 0xC9
+00D6   2063           00343         call    I2C_WriteEE             ;Yazma alt programý çaðrýlýyor.
+00D7   1585           00344         bsf     PORTA, WP               ;EEPROM yazma korumasý aktif hale 
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00345                                         ;getiriliyor.
+00D8   300A           00346         movlw   0x0A
+00D9   00F0           00347         movwf   delay_ms_data           ;10ms beklemek için 1ms Delay 
+                      00348                                         ;parametresine 10 deðeri yükleniyor
+00DA   2093           00349         call    delay_ms                ;ve delay_ms çaðrýlýyor.
+                      00350 
+00DB                  00351 Ana_Prog_Sonu
+00DB   28DB           00352         goto    Ana_Prog_Sonu           ;Sistem kapatýlana ya da 
+                      00353                                         ;resetlenene kadar boþ döngü.
+                      00354         END
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+Ana_Prog_Oku                      000000C1
+Ana_Prog_Sonu                     000000DB
+Ana_Prog_Yaz                      000000CD
+Ana_Program                       000000B5
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2CAck                            00000045
+I2CAck_j1                         00000049
+I2CAck_j2                         0000004D
+I2CNak                            00000051
+I2CNak_j1                         00000054
+I2CNak_j2                         00000059
+I2CNak_j3                         0000005F
+I2CReStart                        0000001D
+I2CReStart_j1                     00000025
+I2CRead                           0000002E
+I2CRead_j1                        00000031
+I2CRead_j2                        00000035
+I2CSend                           00000028
+I2CSend_Data                      00000072
+I2CStart                          00000010
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+I2CStart_j1                       00000015
+I2CStart_j2                       00000019
+I2CStop                           0000003A
+I2CStop_j1                        0000003D
+I2CStop_j2                        00000041
+I2C_AdrH                          00000074
+I2C_AdrL                          00000075
+I2C_DATA                          00000005
+I2C_Data                          00000076
+I2C_Device                        00000073
+I2C_READ                          00000002
+I2C_ReadEE                        00000078
+I2C_START                         00000003
+I2C_STOP                          00000004
+I2C_WriteEE                       00000063
+I2C_init                          00000002
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OKU                               1
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+WCOL                              00000007
+WP                                3
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+YAZ                               2
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+delay_j1                          00000093
+delay_j2                          00000096
+delay_ms                          00000093
+delay_ms_data                     00000070
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXX---- ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   220
+Program Memory Words Free:  7972
+
+
+MPASM  4.02 Released                             PROG_9_3.ASM   8-10-2006  17:54:50         PAGE 15
+
+
+
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :    23 reported,     0 suppressed
+
+

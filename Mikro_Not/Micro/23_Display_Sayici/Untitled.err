@@ -1,0 +1,15 @@
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 2 : Found directive in column 1. (include)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 12 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 13 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 15 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 16 : Found opcode in column 1. (goto)
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 25 : Using default destination of 1 (file).
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 32 : Using default destination of 1 (file).
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 39 : Using default destination of 1 (file).
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 46 : Using default destination of 1 (file).
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 53 : Using default destination of 1 (file).
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 66 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 67 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 70 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\23_DISPLAY_SAYICI\UNTITLED.ASM 148 : Found directive in column 1. (end)

@@ -1,0 +1,46 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Tue Dec 28 22:50:26 2010
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000004
+                   .org_2       code   0x000004    program   0x000060
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000001      
+                            0x000004    0x000033      
+            50 out of 8453 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              Ana_program   0x00001f    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+                    Kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+                     Led0   0x00000e    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+                     Led1   0x000018    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+          Timer0_islemler   0x00000b    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+          Timer1_islemler   0x000015    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+                   ana_j1   0x000033    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+          Timer0_islemler   0x00000b    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+                     Led0   0x00000e    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+          Timer1_islemler   0x000015    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+                     Led1   0x000018    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+              Ana_program   0x00001f    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+                   ana_j1   0x000033    program     static C:\Users\Google\Desktop\Mikro\5_Timer0_ve_Timer1\Timer0_ve_Timer1.asm
+
+

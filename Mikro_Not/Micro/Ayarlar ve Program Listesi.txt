@@ -1,0 +1,33 @@
+BCF OPTION_REG,7
+Tuþlar Toprak
+SW7 de RB Açýk VE S8 Tamamen Kapalý
+SW6 Açýk , SW9 Kapalý
+SW2 Pull UP, Hepsi Açýk
+
+
+1 - Döngülü Led Sayýcý
+2 -	Döngülü Display Sayýcý
+3 - Timer0 Led sayýcý
+4 -	Timer1 Display 0-9 Arasý sayýcý
+5 - Timer0 ve Timer1 kullanýlarak eþit süre sonra gelen kesmeyle PORTD ye baðlý ledi yandýrýp söndüren uygulama. (Sayac deðerleri deðiþtirilerek oranlar deðiþtirilebilir.)
+6 - RB0 kesmesi geldikçe Portdyi 1 artýran sayýcý
+7 -  
+8 - Timer 2 Led sayýcý
+9 - ADC - RA2 den aldýðý 10 bitlik deðeri (PORTB(tamamý) ve PORTC(0,1))'bitlerinde gösteren döngülü uygulama.
+10 -ADC - RA2 den aldýðý 10 bitlik deðeri (PORTB(tamamý) ve PORTC(0,1))'bitlerinde gösteren kesmeli uygulama.
+11 -Ýlk satýrda Adýmýzý, Ýkinci Satýrda Soyadýmýzý yazacak LCD Uygulamasý.
+12 -EEPROM Yazma-Okuma-Döngülü (0X50 Adresine 0x55 (01010101) deðerini önce yazýyor. Sonrada EEPROM da 0x55 adresindeki deðeri okuyup PORTD de gösteriyor.)
+13 -EEPROM Yazma-Okuma-Kesmeli (FF Adresine 00 yazar. Ardýndan adres deðerini 1 azaltýp Yazacaðý deðeri 1 artýrarak 00 Adresine kadar yazým yapar. Yazma iþlemini PORTD de gösterir.)
+14 -
+15 -EEPROM - ADC de RA2 den aldýðý 10 Bitlik deðeri EEPROMA Yazacak. Sonrada Okuyacak. Yazma iþleminde RC6 Yanarken, Okumada RC7 Yanacak. (Deðerler PORTC'nin (0,1) ve PORTB'nin(tüm) ledlerinde gösterilecek.)
+16 -RBChange Kesmesi ile RB6 ya basýnca 2. Displayde 2, RB7 ye basýnca 1. Displayde 3 Yazan Program (1. Display yanarken 2. Sönük, 2. Display yanarken 1. Sönük olacak)
+17 -RBChange Kesmesi ile RB6 ya basýnca 2. Ledde Artan, RB7 ye basýnca 1. Ledde kaldýðý yerden azalan 0-9 Arasý sayýcý
+18 -RB0 Kesmesi ile Portc de otomatik artan sayýcý. Tekrar RB0 kesmesi gelince Duruyor. Bir daha gelince devam ediyor.
+19 - 
+20 -RB0 Kesmesi geldikçe Displayde 1 Artan 0-9 Arasý sayýcý.
+21 -Timer0 ile Displayde 0-9 Arasý sayýcý.
+22 -RBO Kesmesi ile Displayde 0-9 Arasý sayýcý baþlýyor. Tekrar kesme gelince duruyor. Tekrar kesme gelirse kaldýðý yerden devam ediyor.
+23 -Display 0-9999 Arasý sayýcý
+24 -RBChange Kesmesini kullanarak RB7 ye basýnca Displayde 0-9 Arasý Sayýcý Baþlýyor, Bir Daha Basýnca Duruyor.Tekrar basýnca Kaldýðý yerden devam ediyor
+25 -0,5 Saniye aralýklarda yana kayan led uygulamasý. (Özellikle ilk Ledde 0,5 saniye sonra yanacak.)
+26 -Displayde 23 Yazan uygulama.

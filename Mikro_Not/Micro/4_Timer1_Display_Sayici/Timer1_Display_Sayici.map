@@ -1,0 +1,40 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Sun Dec 26 16:45:16 2010
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000004
+                   .org_2       code   0x000004    program   0x000054
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000001      
+                            0x000004    0x00002d      
+            44 out of 8453 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Dongu   0x00001f    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+                    Kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+                   Lookup   0x000020    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+              ana_program   0x00000f    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+              ana_program   0x00000f    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+                    Dongu   0x00001f    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+                   Lookup   0x000020    program     static C:\Users\Google\Desktop\Mikro\4_Timer1_Display_Sayici\Timer1_Display_Sayici.asm
+
+

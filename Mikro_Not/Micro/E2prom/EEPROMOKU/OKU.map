@@ -1,0 +1,44 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Dec 12 14:30:43 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x0000b0
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x00005b      
+            91 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                  DISPYAZ   0x000032    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                     DON1   0x00004a    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                     DON2   0x000054    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                    GECIK   0x000048    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                      OKU   0x000022    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+              ana_program   0x000005    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ana_program   0x000005    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                      OKU   0x000022    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                  DISPYAZ   0x000032    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                    GECIK   0x000048    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                     DON1   0x00004a    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+                     DON2   0x000054    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROMOKU\oku.asm
+
+

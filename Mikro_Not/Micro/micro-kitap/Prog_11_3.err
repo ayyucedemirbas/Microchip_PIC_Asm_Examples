@@ -1,0 +1,4 @@
+Warning[205] C:\877_PROGRAMLAR\PROG_11_3.ASM 29 : Found directive in column 1. (banksel)
+Message[302] C:\877_PROGRAMLAR\PROG_11_3.ASM 31 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_3.ASM 33 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_3.ASM 34 : Register in operand not in bank 0.  Ensure that bank bits are correct.

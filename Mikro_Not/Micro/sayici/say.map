@@ -1,0 +1,44 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Tue Oct 18 16:55:07 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000036
+     .config_2007_SAYIM.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x00001e      
+                            0x002007    0x002007      
+            31 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ana_program   0x000014    program     static D:\Projeler\sayici\sayim.asm
+                    dongu   0x00001e    program     static D:\Projeler\sayici\sayim.asm
+                    kesme   0x000004    program     static D:\Projeler\sayici\sayim.asm
+              kesme_bitir   0x000013    program     static D:\Projeler\sayici\sayim.asm
+                say_basla   0x00000e    program     static D:\Projeler\sayici\sayim.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    kesme   0x000004    program     static D:\Projeler\sayici\sayim.asm
+                say_basla   0x00000e    program     static D:\Projeler\sayici\sayim.asm
+              kesme_bitir   0x000013    program     static D:\Projeler\sayici\sayim.asm
+              ana_program   0x000014    program     static D:\Projeler\sayici\sayim.asm
+                    dongu   0x00001e    program     static D:\Projeler\sayici\sayim.asm
+
+

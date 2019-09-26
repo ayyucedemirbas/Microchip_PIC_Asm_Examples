@@ -1,0 +1,1094 @@
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*******************************************************************
+                      00002 ;       Dosya Adý               : 12_1.asm
+                      00003 ;       Programýn Amacý         : 4-bit arabirim modunda LCD kullanýmý
+                      00004 ;       PIC DK2.1a              : PORTB Çýkýþ ==> LCD display
+                      00005 ;                               : XT ==> 4Mhz
+                      00006 ;*******************************************************************
+                      00007         list p=16F877A
+                      00008         include "p16F877A.inc" 
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F31           00009         __config H'3F31'                ;PWRT on, diðerleri kapalý, 
+                      00010                                         ;Osilatör XT ve 4Mhz
+                      00011 ;-------------------------------------------------------------------
+                      00012 ; Deðiþken tanýmlarý yapýlýyor: Her bir deðiþken baþlangýç 
+                      00013 ; adresinden itibaren birbirinin peþi sýra 1 byte yer kaplar.
+                      00014 ;-------------------------------------------------------------------
+                      00015         CBLOCK  0x20    ;16F877A'nýn RAM baþlangýç adresi, 
+  00000020            00016         sayacH          ;sayacýn yüksek byte'ý.
+  00000021            00017         sayacL          ;sayacýn düþük byte'ý.
+                      00018 
+  00000022            00019         LCD_data        ;LCD için geçici veri deðiþkeni.
+  00000023            00020         LCD_tmp0        ;LCD için geçici veri deðiþkeni.
+  00000024            00021         LCD_tmp1        ;LCD için geçici veri deðiþkeni.
+  00000025            00022         LCD_line        ;LCD için satýr bilgisini tutan deðiþken.
+  00000026            00023         LCD_pos         ;LCD için sütun bilgisi tutan deðiþken.
+                      00024 
+  00000027            00025         HexMSB          ;Desimale çevrilecek sayýnýn en deðerli byte'ý.
+  00000028            00026         HexLSB          ;Desimale çevrilecek sayýnýn en deðersiz byte'ý.
+  00000029            00027         binler          ;Desimale çevrilen sayýnýn binler basamaðý.     
+  0000002A            00028         yuzler          ;Desimale çevrilen sayýnýn yüzler basamaðý.     
+  0000002B            00029         onlar           ;Desimale çevrilen sayýnýn onlar basamaðý.      
+  0000002C            00030         birler          ;Desimale çevrilen sayýnýn birler basamaðý. 
+                      00031 
+  0000002D            00032         delay_s_data    ;Gecikme alt programlarý için veri deðiþkeni.   
+  0000002E            00033         delay_data      ;Gecikme alt programlarý için veri deðiþkeni.
+                      00034         ENDC
+                      00035 
+0000                  00036         ORG     0 
+0000   118A 120A      00037         pagesel Ana_program      
+0002   294B           00038         goto    Ana_program     ;Ana programa git.
+                      00039 
+0004                  00040         ORG     4               ;Kesme alt programý bu adresten baþlýyor.
+0004   294A           00041         goto    kesme
+                      00042 ;-------------------------------------------------------------------
+                      00043 ; LCD ile ilgili temel tanýmlamalar ve mesajlar.
+                      00044 ;-------------------------------------------------------------------
+                      00045 ; LCD'nin baðlý olduðu port tanýmlarý yapýlýyor.
+                      00046 #define LCD_DataPort PORTB              ;Data pinlerinin baðlý olduðu port 
+                      00047                                         ;(D7-D4  -> RB3-RB0 ).
+                      00048 #define LCD_CtrlPort PORTB              ;Kontrol pinlerinin baðlandýðý port
+                      00049 
+                      00050 ; LCD'nin kontrol pinlerinin baðlý olduðu mikrodenetleyici pinleri 
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00051 ; tanýmlanýyor.
+                      00052 #define LCD_RS  4               ;LCD RS pini RB4'e baðlý.
+                      00053 #define LCD_EN  5               ;LCD E pini RB5'e baðlý.
+                      00054 #define LCD_RW  6               ;LCD RW pini RB6'ya baðlý.
+                      00055 
+0005                  00056 mesajlar                        ;LCD'ye gönderilecek mesajlar buraya yazýlýyor.
+0005   0782           00057         addwf   PCL, F                  ;mesaj adresini yükle.
+0006   344D 3465 3472 00058 msg0    dt      "Merhaba ", 0           ;0 sonlandýrma karakteri.
+       3468 3461 3462 
+       3461 3420 3400 
+000F   3444 3455 344E 00059 msg1    dt      "DUNYA!..", 0
+       3459 3441 3421 
+       342E 342E 3400 
+0018   3448 3445 3458 00060 msg2    dt      "HEX:", 0
+       343A 3400 
+001D   3444 3445 3443 00061 msg3    dt      "DEC:", 0
+       343A 3400 
+                      00062 ;-------------------------------------------------------------------
+                      00063 ; LCD ile ilgili macro tanýmlarý:
+                      00064 ;-------------------------------------------------------------------
+                      00065 LCD_RS_HIGH     macro                   ;LCD'nin RS giriþini HIGH yaparak 
+                      00066         banksel LCD_CtrlPort            ;veri alma modu seçilir.
+                      00067         bsf     LCD_CtrlPort, LCD_RS
+                      00068         endm
+                      00069 
+                      00070 LCD_RS_LOW      macro                   ;LCD'nin RS giriþini LOW yaparak 
+                      00071         banksel LCD_CtrlPort            ;komut alma modu seçilir.
+                      00072         bcf     LCD_CtrlPort, LCD_RS    
+                      00073         endm
+                      00074 
+                      00075 LCD_EStrobe macro                       ;LCD'ye veri ya da komut 
+                      00076         banksel LCD_CtrlPort            ;gönderildiðinde LCD'nin 
+                      00077         bsf     LCD_CtrlPort, LCD_EN    ;bunu iþlemesini saðlar.
+                      00078         movlw   .20                     ;20us kadar bekle. 
+                      00079         call    delay_us
+                      00080         bcf     LCD_CtrlPort, LCD_EN
+                      00081         endm
+                      00082 
+                      00083 LCD_Locate      macro   line, pos
+                      00084         movlw   line                    ;Satýr bilgisini yükle.
+                      00085         movwf   LCD_line        
+                      00086         movlw   pos                     ;Sütun bilgisini yükle.
+                      00087         movwf   LCD_pos                         
+                      00088         call    LCD_SetPos              ;Kursörü konumlandýr.
+                      00089         endm
+                      00090 
+                      00091 ; ----------------LCD ile ilgili fonksiyonlar.---------------------
+                      00092 ;-------------------------------------------------------------------
+                      00093 ; 4 bit iletiþim modunda LCD'ye veri transferi yapar.
+                      00094 ;-------------------------------------------------------------------
+0022                  00095 LCD_NybbleOut                       
+0022   390F           00096         andlw   0x0F                    ;En deðersiz 4 bit W'de,
+0023   00A3           00097         movwf   LCD_tmp0                ;geçici deðiþkene alýnýyor.
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0024   0806           00098         movf    LCD_DataPort,W          ;LCD'nin data pinlerinin baðlý 
+                      00099                                         ;olduðu port bilgisi W'de.
+0025   39F0           00100         andlw   0xF0                    ;Port bilgisinin en deðerli 4 bit’i 
+                      00101                                         ;korunuyor.
+0026   0423           00102         iorwf   LCD_tmp0, W             ;Korunan bilgi ile veri 
+                      00103                                         ;birleþtiriliyor.
+0027   0086           00104         movwf   LCD_DataPort            ;PortA transfer ediliyor.
+                      00105         LCD_EStrobe                     ;LCD'nin veriyi almasý saðlanýyor.
+0028   1283 1303          M         banksel LCD_CtrlPort            ;gönderildiðinde LCD'nin 
+002A   1686               M         bsf     LCD_CtrlPort, LCD_EN    ;bunu iþlemesini saðlar.
+002B   3014               M         movlw   .20                     ;20us kadar bekle. 
+002C   213E               M         call    delay_us
+002D   1286               M         bcf     LCD_CtrlPort, LCD_EN
+002E   30FF           00106         movlw   .255                    ;250us kadar bekle. Bu süre LCD 
+                      00107                                         ;içerisindeki iþlemlerin tamamlanmasý
+002F   213E           00108         call    delay_us                ;için gerekli ( en az 160us kadar ).
+0030   0008           00109         return
+                      00110 ;-------------------------------------------------------------------
+                      00111 ; LCD'ye 1 byte komut transfer eder.
+                      00112 ;-------------------------------------------------------------------
+0031                  00113 LCD_SendCmd                             
+0031   00A2           00114         movwf   LCD_data                ;Komutu geçici deðiþkene al.
+0032   0E22           00115         swapf   LCD_data, W             ;En deðerli 4 bit’i gönder.
+                      00116         LCD_RS_LOW                      ;RS = 0 (komut modu)
+0033   1283 1303          M         banksel LCD_CtrlPort            ;komut alma modu seçilir.
+0035   1206               M         bcf     LCD_CtrlPort, LCD_RS    
+Warning[203]: Found opcode in column 1. (call)
+0036   2022           00117 call    LCD_NybbleOut
+0037   0822           00118         movf    LCD_data, W             ;En deðersiz 4 bit’i gönder.
+                      00119         LCD_RS_LOW                      ;RS = 0 (komut modu)
+0038   1283 1303          M         banksel LCD_CtrlPort            ;komut alma modu seçilir.
+003A   1206               M         bcf     LCD_CtrlPort, LCD_RS    
+003B   2022           00120         call    LCD_NybbleOut                   
+003C   0008           00121         return
+                      00122 ;-------------------------------------------------------------------
+                      00123 ; LCD'ye bir rakam ya da bir karakter göndermek için kullanýlýr.
+                      00124 ;-------------------------------------------------------------------
+003D                  00125 LCD_SendASCII                                           
+003D   3E30           00126         addlw   '0'                     ;LCD'ye rakamý ASCII koda 
+                      00127                                         ;dönüþtürerek göndermek için.
+003E                  00128 LCD_SendCHAR                            ;LCD'ye karakter göndermek için 
+                      00129                                         ;çaðrýlacak.
+003E   00A2           00130         movwf   LCD_data                ;Komutu geçici deðiþkene al.
+003F   0E22           00131         swapf   LCD_data, W             ;En deðerli 4 bit’i gönder.
+                      00132         LCD_RS_HIGH                     ;RS = 1 ( veri gönderme modu )
+0040   1283 1303          M         banksel LCD_CtrlPort            ;veri alma modu seçilir.
+0042   1606               M         bsf     LCD_CtrlPort, LCD_RS
+0043   2022           00133         call    LCD_NybbleOut
+0044   0822           00134         movf    LCD_data, W             ;En deðersiz 4 bit’i gönder.
+                      00135         LCD_RS_HIGH                     ;RS = 1 ( veri gönderme modu )
+0045   1283 1303          M         banksel LCD_CtrlPort            ;veri alma modu seçilir.
+0047   1606               M         bsf     LCD_CtrlPort, LCD_RS
+0048   2022           00136         call    LCD_NybbleOut
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0049   0008           00137         return
+                      00138 ;-------------------------------------------------------------------
+                      00139 ; 1 byte veriyi hexadesimal formda LCD'ye yazar.
+                      00140 ;-------------------------------------------------------------------
+004A                  00141 LCD_SendHEX     
+004A   00A4           00142         movwf   LCD_tmp1
+004B   3C9F           00143         sublw   0x9F                    ;sayý > 0x9F mi? 
+004C   1C03           00144         btfss   STATUS, C               ;hayýr ise bir komut atla.
+004D   2852           00145         goto    LCD_HEX_j0
+004E   0E24           00146         swapf   LCD_tmp1, W
+004F   390F           00147         andlw   0x0F                    ;En deðerli 4 bit W'nin en 
+0050   203D           00148         call    LCD_SendASCII           ;deðersiz 4 bit’inde.
+0051   2856           00149         goto    LCD_HEX_j1
+0052                  00150 LCD_HEX_j0
+0052   0E24           00151         swapf   LCD_tmp1, W
+0053   390F           00152         andlw   0x0F                    ;En deðerli 4 bit W'nin en 
+0054   3E37           00153         addlw   .55                     ;deðersiz 4 bit’inde.
+0055   203E           00154         call    LCD_SendCHAR
+0056                  00155 LCD_HEX_j1
+0056   0824           00156         movf    LCD_tmp1, W
+0057   390F           00157         andlw   0x0F                    ;En deðersiz 4 bit W'nin en 
+0058   00A4           00158         movwf   LCD_tmp1                ;deðersiz 4 bit’inde.
+0059   3C09           00159         sublw   0x09                    ;sayý > 0x09 mi? 
+005A   1C03           00160         btfss   STATUS, C               ;hayýr ise bir komut atla.
+005B   285F           00161         goto    LCD_HEX_j2
+005C   0824           00162         movf    LCD_tmp1, W     
+005D   203D           00163         call    LCD_SendASCII
+005E   0008           00164         return
+005F                  00165 LCD_HEX_j2
+005F   0824           00166         movf    LCD_tmp1, W
+0060   3E37           00167         addlw   .55
+0061   203E           00168         call    LCD_SendCHAR
+0062   0008           00169         return
+                      00170 ;-------------------------------------------------------------------
+                      00171 ; 1 byte veriyi binary formda LCD'ye yazar.
+                      00172 ;-------------------------------------------------------------------
+0063                  00173 LCD_SendBIN
+0063   00A4           00174         movwf   LCD_tmp1                ;Geçici deðiþkene al.
+0064   3000           00175         movlw   .0
+0065   1FA4           00176         btfss   LCD_tmp1, 7             ;7. bit 1 ise bir komut atla.
+0066   203D           00177         call    LCD_SendASCII           ;0 yazdýr.
+0067   3001           00178         movlw   .1
+0068   1BA4           00179         btfsc   LCD_tmp1, 7             ;7. bit 0 ise bir komut atla.
+0069   203D           00180         call    LCD_SendASCII           ;1 yazdýr.
+                      00181 
+006A   3000           00182         movlw   .0
+006B   1F24           00183         btfss   LCD_tmp1, 6             ;6. bit 1 ise bir komut atla.
+006C   203D           00184         call    LCD_SendASCII           ;0 yazdýr.
+006D   3001           00185         movlw   .1
+006E   1B24           00186         btfsc   LCD_tmp1, 6             ;6. bit 0 ise bir komut atla.
+006F   203D           00187         call    LCD_SendASCII           ;1 yazdýr.
+                      00188 
+0070   3000           00189         movlw   .0
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0071   1EA4           00190         btfss   LCD_tmp1, 5             ;5. bit 1 ise bir komut atla.
+0072   203D           00191         call    LCD_SendASCII           ;0 yazdýr.
+0073   3001           00192         movlw   .1
+0074   1AA4           00193         btfsc   LCD_tmp1, 5             ;5. bit 0 ise bir komut atla.
+0075   203D           00194         call    LCD_SendASCII           ;1 yazdýr.
+                      00195 
+0076   3000           00196         movlw   .0
+0077   1E24           00197         btfss   LCD_tmp1, 4             ;4. bit 1 ise bir komut atla.
+0078   203D           00198         call    LCD_SendASCII           ;0 yazdýr.
+0079   3001           00199         movlw   .1
+007A   1A24           00200         btfsc   LCD_tmp1, 4             ;4. bit 0 ise bir komut atla.
+007B   203D           00201         call    LCD_SendASCII           ;1 yazdýr.
+                      00202 
+007C   3000           00203         movlw   .0
+007D   1DA4           00204         btfss   LCD_tmp1, 3             ;3. bit 1 ise bir komut atla.
+007E   203D           00205         call    LCD_SendASCII           ;0 yazdýr.
+007F   3001           00206         movlw   .1
+0080   19A4           00207         btfsc   LCD_tmp1, 3             ;3. bit 0 ise bir komut atla.
+0081   203D           00208         call    LCD_SendASCII           ;1 yazdýr.
+0082   3000           00209         movlw   .0
+0083   1D24           00210         btfss   LCD_tmp1, 2             ;2. bit 1 ise bir komut atla.
+0084   203D           00211         call    LCD_SendASCII           ;0 yazdýr.
+0085   3001           00212         movlw   .1
+0086   1924           00213         btfsc   LCD_tmp1, 2             ;2. bit 0 ise bir komut atla.
+0087   203D           00214         call    LCD_SendASCII           ;1 yazdýr.
+                      00215 
+0088   3000           00216         movlw   .0
+0089   1CA4           00217         btfss   LCD_tmp1, 1             ;1. bit 1 ise bir komut atla.
+008A   203D           00218         call    LCD_SendASCII           ;0 yazdýr.
+008B   3001           00219         movlw   .1
+008C   18A4           00220         btfsc   LCD_tmp1, 1             ;1. bit 0 ise bir komut atla.
+008D   203D           00221         call    LCD_SendASCII           ;1 yazdýr.
+                      00222         
+008E   3000           00223         movlw   .0
+008F   1C24           00224         btfss   LCD_tmp1, 0             ;0. bit 1 ise bir komut atla.
+0090   203D           00225         call    LCD_SendASCII           ;0 yazdýr.
+0091   3001           00226         movlw   .1
+0092   1824           00227         btfsc   LCD_tmp1, 0             ;0. bit 0 ise bir komut atla.
+0093   203D           00228         call    LCD_SendASCII           ;1 yazdýr.
+0094   0008           00229         return
+                      00230 ;-------------------------------------------------------------------
+                      00231 ; LCD ekran belleðini siler.
+                      00232 ;-------------------------------------------------------------------
+0095                  00233 LCD_Clear
+0095   3001           00234         movlw   0x01                    ;LCD görüntü belleðini sil, 
+                      00235                                         ;dolayýsý ile 
+0096   2031           00236         call    LCD_SendCmd             ;LCD'de görünen bilgileri de sil.
+0097   3005           00237         movlw   .5
+0098   212E           00238         call    delay_ms
+0099   0008           00239         return
+                      00240 ;-------------------------------------------------------------------
+                      00241 ; Kursörü göster
+                      00242 ;-------------------------------------------------------------------
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+009A                  00243 LCD_CursorOn
+009A   300F           00244         movlw   0x0F                    ;Display'i aç, kursörü göster. 
+009B   2031           00245         call    LCD_SendCmd             ;Blink ON.
+009C   0008           00246         return
+                      00247 
+                      00248 ;-------------------------------------------------------------------
+                      00249 ; Kursörü gizle
+                      00250 ;-------------------------------------------------------------------
+009D                  00251 LCD_CursorOff
+009D   300C           00252         movlw   0x0C                    ;Display'i aç, kursörü gizle,
+009E   2031           00253         call    LCD_SendCmd             ;Blink OFF.
+009F   0008           00254         return
+                      00255 ;-------------------------------------------------------------------
+                      00256 ; LCD ekraný kullanýma hazýrlar.
+                      00257 ;-------------------------------------------------------------------
+00A0                  00258 LCD_init
+00A0   1683           00259         bsf     STATUS, RP0             ;BANK1 seçildi. Yönlendirme 
+                      00260                                         ;kaydedicileri bu bankta.
+00A1   0806           00261         movf    LCD_DataPort, W
+00A2   39F0           00262         andlw   0xF0                    ;Portun en deðersiz 
+                      00263                                         ;dörtlüsü çýkýþ yapýldý.
+00A3   0086           00264         movwf   LCD_DataPort            ;Port yönlendirildi.
+00A4   1286           00265         bcf     LCD_CtrlPort, LCD_EN    ;LCD_CtrlPort'un LCD_EN 
+                      00266                                         ;pini çýkýþa yönlendirildi.
+00A5   1206           00267         bcf     LCD_CtrlPort, LCD_RS    ;LCD_RS pini çýkýþ yapýldý. 
+00A6   1306           00268         bcf     LCD_CtrlPort, LCD_RW    ;LCD_RW pini çýkýþ yapýldý.
+00A7   1283           00269         bcf     STATUS, RP0             ;BANK0 seçildi.
+00A8   0186           00270         clrf    LCD_DataPort
+                      00271 
+00A9   3032           00272         movlw   .50
+00AA   212E           00273         call    delay_ms                ;40-50 ms kadar bekle.
+                      00274         LCD_RS_LOW
+00AB   1283 1303          M         banksel LCD_CtrlPort            ;komut alma modu seçilir.
+00AD   1206               M         bcf     LCD_CtrlPort, LCD_RS    
+00AE   3003           00275         movlw   0x03                    ;8 bit iletiþim komutu verildi.
+00AF   2022           00276         call    LCD_NybbleOut   
+                      00277         
+00B0   3005           00278         movlw   .5                      ;LCD'nin hazýr olmasý için 
+                      00279                                         ;bekleniyor.
+00B1   212E           00280         call delay_ms
+                      00281 
+                      00282         LCD_EStrobe                     ;8 bit iletiþim için komut 
+00B2   1283 1303          M         banksel LCD_CtrlPort            ;gönderildiðinde LCD'nin 
+00B4   1686               M         bsf     LCD_CtrlPort, LCD_EN    ;bunu iþlemesini saðlar.
+00B5   3014               M         movlw   .20                     ;20us kadar bekle. 
+00B6   213E               M         call    delay_us
+00B7   1286               M         bcf     LCD_CtrlPort, LCD_EN
+                      00283                                         ;yinelendi.
+00B8   30FF           00284         movlw   .255                    ;160-255us kadar bekle. 
+00B9   213E           00285         call    delay_us
+                      00286         
+                      00287         LCD_EStrobe                     ;8 bit iletiþim için komut 
+00BA   1283 1303          M         banksel LCD_CtrlPort            ;gönderildiðinde LCD'nin 
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00BC   1686               M         bsf     LCD_CtrlPort, LCD_EN    ;bunu iþlemesini saðlar.
+00BD   3014               M         movlw   .20                     ;20us kadar bekle. 
+00BE   213E               M         call    delay_us
+00BF   1286               M         bcf     LCD_CtrlPort, LCD_EN
+                      00288                                         ;yinelendi.
+00C0   30FF           00289         movlw   .255                    ;160-255us kadar bekle. 
+00C1   213E           00290         call    delay_us
+                      00291 
+                      00292         LCD_RS_LOW
+00C2   1283 1303          M         banksel LCD_CtrlPort            ;komut alma modu seçilir.
+00C4   1206               M         bcf     LCD_CtrlPort, LCD_RS    
+00C5   3002           00293         movlw   0x02                    ;LCD, 4 Bit iletiþim moduna alýndý.
+00C6   2022           00294         call    LCD_NybbleOut   
+                      00295 
+00C7   30FF           00296         movlw   .255                    ;160-255us kadar bekle. 
+00C8   213E           00297         call    delay_us
+                      00298 
+00C9   3028           00299         movlw   0x28                    ;4 bit iletiþim, 2 satýr LCD, 5x7 
+Warning[203]: Found opcode in column 1. (call)
+00CA   2031           00300 call    LCD_SendCmd                     ;font seçildi.
+00CB   3010           00301         movlw   0x10                    ;LCD'de yazýnýn kaymasý engellendi.
+00CC   2031           00302         call    LCD_SendCmd
+00CD   3001           00303         movlw   0x01                    ;LCD görüntü belleðini sil.
+00CE   2031           00304         call    LCD_SendCmd
+                      00305 
+00CF   3005           00306         movlw   .5                      ;5 ms bekle.
+00D0   212E           00307         call    delay_ms
+                      00308 
+00D1   3006           00309         movlw   0x06                    ;Kursör her karakter yazýmýnda bir 
+00D2   2031           00310         call    LCD_SendCmd             ;ilerlesin.
+00D3   300C           00311         movlw   0x0C                    ;Display'i aç, kursörü gizle.
+00D4   2031           00312         call    LCD_SendCmd
+00D5   0008           00313         return
+                      00314 ;-------------------------------------------------------------------
+                      00315 ; Mesaj etiketi (adresi) W’ye yüklenen mesajý LCD ekranda görüntüler                       
+                      00316 ;-------------------------------------------------------------------
+00D6                  00317 LCD_SendMessage
+00D6   0084           00318         Movwf   FSR             ;Ýlk karaktere iþaret et (onun adresini 
+00D7                  00319 LCD_SMsg:                       ;tut).
+00D7   0804           00320         Movf    FSR, W          ;Ýþaret edilen karakter sýrasýný W'ye al.
+00D8   0A84           00321         incf    FSR, F          ;Bir sonraki karaktere konumlan.
+00D9   2005           00322         Call    mesajlar        ;Mesajlardan ilgili karakteri al.
+00DA   3800           00323         iorlw  0                ;Mesaj sonu mu? 0 bilgisi alýndý ise 
+                      00324                                 ;mesaj sonu demektir.
+00DB   1903           00325         btfsc  STATUS, Z        ;Mesaj sonu deðil ise bir komut atla.
+00DC   0008           00326         return                  ;Mesaj sonu ise alt programdan çýk.
+00DD   203E           00327         call   LCD_SendCHAR     ;Karakteri LCD'ye yazdýr.
+00DE   28D7           00328         goto   LCD_SMsg         ;Bir sonraki karakter için 
+                      00329                                 ;iþlemleri tekrarla.
+                      00330 ;-------------------------------------------------------------------
+                      00331 ; Kursörü LCD'de istenilen satýr ve sütuna konumlandýrýr. Text'in 
+                      00332 ; nereye yazýlacaðýný belirler. 1 - 2 satýr olan LCD'ler için 
+                      00333 ; yazýldýðýna dikkat ediniz. 4 satýr LCD'ler için LCD_line deðerinin
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00334 ; 0, 1, 2 veya 3 olmasý durumuna göre DDRAM baþlangýç adresleri 
+                      00335 ; tespit edilmelidir.
+                      00336 ;-------------------------------------------------------------------
+00DF                  00337 LCD_SetPos
+00DF   3080           00338         movlw   0x80            ;0. satýr için DDRAM adres baþlangýç 
+00E0   08A5           00339         movf    LCD_line, F     ;deðeri.
+00E1   1D03           00340         btfss   STATUS, Z       ;0. satýr ise bir komut atla.
+00E2   30C0           00341         movlw   0xC0            ;1. satýr için 0x80 adresine ilave 
+                      00342                                 ;edilecek deðer.
+00E3   0726           00343         addwf   LCD_pos, W      ;Kursör pozisyonu da ilave edilerek 
+                      00344                                 ;DDRAM'deki adres bulunuyor.
+00E4   2031           00345         call    LCD_SendCmd
+00E5   0008           00346         return
+                      00347 ;-------------------------------------------------------------------
+                      00348 ; 2 byte binary veriyi bcd'ye dönüþtürür. Sonuç binler, yüzler, 
+                      00349 ; onlar ve birler  deðiþkenlerinde saklanýr.
+                      00350 ;-------------------------------------------------------------------
+00E6                  00351 HexTODec
+00E6   01A9           00352         clrf binler                     ;binler = 0
+00E7   01AA           00353         clrf yuzler                     ;yuzler = 0
+00E8   01AB           00354         clrf onlar                      ;onlar = 0
+00E9   01AC           00355         clrf birler                     ;birler = 0
+00EA                  00356 binler_kont
+00EA   3004           00357         movlw   04h                     ;W'ye 1024 (0x0400) sayýsýnýn en 
+                      00358                                         ;deðerli byte'ýný yükle.
+00EB   0227           00359         subwf   HexMSB, W               ;HexMSB'den 1024 çýkart.
+00EC   1C03           00360         btfss   STATUS, C               ;HexMSB > 1024'mü?
+00ED   28F6           00361         goto    yuzler_kont2            ;hayýr ise yüzleri kontrol et.
+00EE   0AA9           00362         incf    binler, F               ;evet ise binleri bir artýr.
+00EF   3004           00363         movlw   04h                     ;W'ye 0x04 yükle.
+00F0   02A7           00364         subwf   HexMSB, F               ;HexMSB'den 1000 çýkart.
+00F1   3018           00365         movlw   18h                     ;W'ye 0x18 yükle.
+00F2   07A8           00366         addwf   HexLSB, F               ;HexLSB'ye (0x18 = 24) ekle 
+00F3   1803           00367         btfsc   STATUS, C               ;elde var mý?
+00F4   0AA7           00368         incf    HexMSB, F               ;evet ise bir artýr.
+00F5   28EA           00369         goto    binler_kont             ;binleri yeniden kontrol et
+00F6                  00370 yuzler_kont2
+00F6   3001           00371         movlw   0x01                    ;256 (0x0100)
+00F7   0227           00372         subwf   HexMSB, W               ;HexMSB'den 200 çýkart ve sonucu 
+                      00373                                         ;W'ye sakla.
+00F8   1C03           00374         btfss   STATUS, C               ;sonuç >=256'mý?
+00F9   2909           00375         goto    yuzler_kont1            ;Hayýr ise 100'ün katlarýný
+                      00376                                         ;kontrol et.
+00FA   3002           00377         movlw   0x02                    ;deðilse,
+00FB   07AA           00378         addwf   yuzler, F               ;yuzler'e 2 ekle
+00FC   3001           00379         movlw   0x01                    ;W = 1
+00FD   02A7           00380         subwf   HexMSB, F               ;HexMSB'den 200 çýkart.
+00FE   3038           00381         movlw   0x38                    ;W =0x38 (256'nýn 56 lýk kýsmý)
+00FF   07A8           00382         addwf   HexLSB, F               ;HexLSB'ye 56'yý ekle.
+0100   1803           00383         btfsc   STATUS, C               ;elde var mý?
+0101   0AA7           00384         incf    HexMSB, F               ;evet ise HexMSB'yi bir artýr.
+0102   300A           00385         movlw   0x0A                    ;W = 10
+0103   022A           00386         subwf   yuzler, W               ;yuzler = 1000 olup olmadýðýný 
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00387                                         ;kontrol et.
+0104   1D03           00388         btfss   STATUS, Z               ;sonuç sýfýr mý?
+0105   28F6           00389         goto    yuzler_kont2            ;hayýr ise yuzleri yeniden kontrol 
+0106   01AA           00390         clrf    yuzler                  ;et. yuzler = 0
+0107   0AA9           00391         incf    binler, F               ;binler'i artýr.
+0108   28F6           00392         goto    yuzler_kont2            ;yuzler'i 200 ya da daha büyük 
+                      00393                                         ;sayý için yeniden kontrol et.
+0109                  00394 yuzler_kont1 
+0109   3064           00395         movlw   0x64                    ;W = 0x64
+010A   0228           00396         subwf   HexLSB, W               ;HexLSB'den 100 çýkart.
+010B   1C03           00397         btfss   STATUS, C               ;sonuç >= 100 mü?
+010C   2917           00398         goto    onlar_kont              ;hayýr ise onlarý kontrol et.
+010D   0AAA           00399         incf    yuzler, F               ;evet ise yuzler'i bir artýr.
+010E   3064           00400         movlw   0x64                    ;W = 0x64 (100)
+010F   02A8           00401         subwf   HexLSB, F               ;HexLSB'yi 100 azalt.
+0110   300A           00402         movlw   0x0A                    ;W = 0x0A (10)
+0111   022A           00403         subwf   yuzler, W               ;yuzler = 1000 kontrolü yap.
+0112   1D03           00404         btfss   STATUS, Z               ;sonuç = 0 mý?
+0113   2909           00405         goto    yuzler_kont1            ;hayýr ise 100 için yuzler'i 
+                      00406                                         ;yeniden kontrol et.
+0114   01AA           00407         clrf    yuzler                  ;yuzler = 0
+0115   0AA9           00408         incf    binler, F               ;binleri bir artýr.
+0116   2909           00409         goto    yuzler_kont1            ;100 ya da daha büyük olma durumu 
+                      00410                                         ;için yüzleri yeniden kontrol et.
+0117                  00411 onlar_kont
+0117   300A           00412         movlw   0x0A                    ;W = 0x0A (10)
+0118   0228           00413         subwf   HexLSB, W               ;HexLSB'den 10 çýkart.
+0119   1C03           00414         btfss   STATUS, C               ;sonuç >= 10 mu?
+011A   291F           00415         goto    birler_kont             ;hayýr ise birleri kontrol et.
+011B   0AAB           00416         incf    onlar, F                ;evet ise onlarý bir artýr.
+011C   300A           00417         movlw   0x0A                    ;W = 0x0A (10)
+011D   02A8           00418         subwf   HexLSB, F               ;HexLSB'den 10 çýkart.
+011E   2917           00419         goto    onlar_kont              ;onlar'ý yeniden kontrol et.
+011F                  00420 birler_kont
+011F   0828           00421         movf    HexLSB, W               ;W = HexLSB
+0120   00AC           00422         movwf   birler                  ;birler = W, dönüþüm iþlemi tamam
+0121   0008           00423         return                          ;alt programdan çýk.
+                      00424 ;-------------------------------------------------------------------
+                      00425 ; 1-255 sn arasýnda gecikme saðlayan alt program.
+                      00426 ;-------------------------------------------------------------------
+0122                  00427 delay_s
+0122   00AD           00428         movwf   delay_s_data
+0123                  00429 delay_s_j0:
+0123   30FA           00430         movlw   .250                    ;4 * 250 = 1000 ms bekle,
+0124   212E           00431         call    delay_ms                ;her çevrim 1 sn.
+0125   30FA           00432         movlw   .250
+0126   212E           00433         call    delay_ms
+0127   30FA           00434         movlw   .250                                    
+0128   212E           00435         call    delay_ms
+0129   30FA           00436         movlw   .250
+012A   212E           00437         call    delay_ms
+Message[305]: Using default destination of 1 (file).
+012B   0BAD           00438         decfsz  delay_s_data
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+012C   2923           00439         goto    delay_s_j0
+012D   0008           00440         return
+                      00441 
+                      00442 ;-------------------------------------------------------------------
+                      00443 ; 1-255 ms arasýnda gecikme saðlayan alt program.
+                      00444 ;-------------------------------------------------------------------
+012E                  00445 delay_ms
+012E   00AE           00446         movwf   delay_data
+012F                  00447 delay_ms_j0
+012F   308E           00448         movlw   .142
+0130   00AF           00449         movwf   delay_data+1
+0131   0000           00450         nop
+0132   0000           00451         nop
+0133                  00452 delay_ms_j1
+0133   0000           00453         nop
+0134   0000           00454         nop
+0135   0000           00455         nop
+0136   0000           00456         nop
+0137   0BAF           00457         decfsz  delay_data+1, F
+0138   2933           00458         goto    delay_ms_j1
+0139   0000           00459         nop
+013A   0BAE           00460         decfsz  delay_data, F
+013B   292F           00461         goto    delay_ms_j0
+013C   0000           00462         nop
+013D   0008           00463         return
+                      00464 ;-------------------------------------------------------------------
+                      00465 ; 16-255 µs gecikme saðlayan alt program.
+                      00466 ;-------------------------------------------------------------------
+013E                  00467 delay_us
+013E   00AE           00468         movwf   delay_data
+013F   0CAE           00469         rrf     delay_data, F
+0140   0CAE           00470         rrf     delay_data, F
+0141   303F           00471         movlw   .63
+0142   05AE           00472         andwf   delay_data, F
+0143   3003           00473         movlw   .3
+0144   02AE           00474         subwf   delay_data, F
+0145   0000           00475         nop
+0146   0BAE           00476         decfsz  delay_data, F
+0147   2945           00477         goto    $ - 2
+0148   0000           00478         nop
+0149   0008           00479         return
+                      00480 ;-------------------------------------------------------------------
+                      00481 ; Kesme programý (kullanýlacak ise LCD ya da zamanlamanýn önemli
+                      00482 ; olduðu cihazlarla çalýþýrken iletiþimin kesilmemesine dikkat 
+                      00483 ; ediniz).
+                      00484 ;-------------------------------------------------------------------
+014A                  00485 kesme
+014A   0009           00486         retfie
+                      00487 ;-------------------------------------------------------------------
+                      00488 ; Ana program
+                      00489 ;-------------------------------------------------------------------
+014B                  00490 Ana_program
+014B   20A0           00491         call    LCD_init                ;LCD’yi kullanýma hazýrlar.
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+014C                  00492 Ana_j0:
+014C   2095           00493         call    LCD_Clear               ;LCD'deki bilgileri sil.
+014D   209D           00494         call    LCD_CursorOff           ;Kursörü gizle.
+014E   01A0           00495         clrf    sayacH                  ;sayac = 0
+014F   01A1           00496         clrf    sayacL
+                      00497 
+                      00498         LCD_Locate      0, 0            ;0. satýr, 0. sütuna konumlan.
+0150   3000               M         movlw   0                       ;Satýr bilgisini yükle.
+0151   00A5               M         movwf   LCD_line        
+0152   3000               M         movlw   0                       ;Sütun bilgisini yükle.
+0153   00A6               M         movwf   LCD_pos                         
+0154   20DF               M         call    LCD_SetPos              ;Kursörü konumlandýr.
+0155   3000           00499         movlw   msg0-6                  ;mesaj0 yaz (adresi 6 eksiði).
+Warning[203]: Found opcode in column 1. (call)
+0156   20D6           00500 call    LCD_SendMessage
+                      00501         LCD_Locate      1, 0            ;1. satýr, 0. sütuna konumlan
+0157   3001               M         movlw   1                       ;Satýr bilgisini yükle.
+0158   00A5               M         movwf   LCD_line        
+0159   3000               M         movlw   0                       ;Sütun bilgisini yükle.
+015A   00A6               M         movwf   LCD_pos                         
+015B   20DF               M         call    LCD_SetPos              ;Kursörü konumlandýr.
+015C   3009           00502         movlw   msg1-6                  ;mesaj1 yaz.
+015D   20D6           00503         call    LCD_SendMessage
+                      00504 
+015E   300A           00505         movlw   .10
+015F   2122           00506         call    delay_s                 ;10 saniye bekle.
+                      00507 
+0160                  00508 Ana_j1:
+0160   2095           00509         call    LCD_Clear               ;LCD'deki bilgileri sil.
+                      00510 
+                      00511                                         ;sayac deðerini hexadesimal formda 0. satýra yaz.               
+                      00512         LCD_Locate      0, 0            ;0. satýr, 0. sütuna konumlan.  
+0161   3000               M         movlw   0                       ;Satýr bilgisini yükle.
+0162   00A5               M         movwf   LCD_line        
+0163   3000               M         movlw   0                       ;Sütun bilgisini yükle.
+0164   00A6               M         movwf   LCD_pos                         
+0165   20DF               M         call    LCD_SetPos              ;Kursörü konumlandýr.
+0166   3012           00513         movlw   msg2-6                  ;mesaj2 yaz.
+0167   20D6           00514         call    LCD_SendMessage
+0168   0820           00515         movf    sayacH, W
+0169   204A           00516         call    LCD_SendHEX
+016A   0821           00517         movf    sayacL, W
+016B   204A           00518         call    LCD_SendHEX
+                      00519 
+                      00520 ;sayaç deðerini desimal formda 1. satýra yaz.           
+                      00521         LCD_Locate      1, 0            ;0. satýr, 0. sütuna konumlan.  
+016C   3001               M         movlw   1                       ;Satýr bilgisini yükle.
+016D   00A5               M         movwf   LCD_line        
+016E   3000               M         movlw   0                       ;Sütun bilgisini yükle.
+016F   00A6               M         movwf   LCD_pos                         
+0170   20DF               M         call    LCD_SetPos              ;Kursörü konumlandýr.
+0171   3017           00522         movlw   msg3-6                  ;mesaj2 yaz.
+0172   20D6           00523         call    LCD_SendMessage
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0173   0820           00524         movf    sayacH, W               ;HexMSB = sayacH
+0174   00A7           00525         movwf   HexMSB
+0175   0821           00526         movf    sayacL, W               ;HexLSB = sayacL
+0176   00A8           00527         movwf   HexLSB
+0177   20E6           00528         call    HexTODec                ;Desimale dönüþtür.
+0178   0829           00529         movf    binler, W               ;binler basamaðýný yaz.
+0179   203D           00530         call    LCD_SendASCII
+017A   082A           00531         movf    yuzler, W               ;yüzler basamaðýný yaz.
+017B   203D           00532         call    LCD_SendASCII
+017C   082B           00533         movf    onlar, W                ;onlar basamaðýný yaz.
+017D   203D           00534         call    LCD_SendASCII
+017E   082C           00535         movf    birler, W               ;birler basamaðýný yaz.
+017F   203D           00536         call    LCD_SendASCII
+                      00537 
+0180   3001           00538         movlw   .1                      ;1 sn bekle.    
+0181   2122           00539         call    delay_s
+                      00540 
+                      00541 ; sayacL deðerini binary formda 1. satýra yaz (0. satýrda ayný 
+                      00542 ; sayýnýn HEX deðeri var).              
+                      00543         LCD_Locate      1, 0            ;0. satýr, 0. sütuna konumlan.  
+0182   3001               M         movlw   1                       ;Satýr bilgisini yükle.
+0183   00A5               M         movwf   LCD_line        
+0184   3000               M         movlw   0                       ;Sütun bilgisini yükle.
+0185   00A6               M         movwf   LCD_pos                         
+0186   20DF               M         call    LCD_SetPos              ;Kursörü konumlandýr.
+0187   0821           00544         movf    sayacL, W
+0188   2063           00545         call    LCD_SendBIN             ;sayacL deðerini binary formda 
+                      00546                                         ;göster.
+                      00547 ; sayaç deðerini 10000 olana kadar bir artýr, 10000 ise en baþa dön
+0189   0AA1           00548         incf    sayacL, F               ;sayacL'yi bir artýr.
+018A   1903           00549         btfsc   STATUS, Z               ;sayacL sýfýrdan farklý ise bir 
+                      00550                                         ;komut atla.
+018B   0AA0           00551         incf    sayacH, F               ;sayacH'i bir artýr.
+018C   3027           00552         movlw   0x27
+018D   0220           00553         subwf   sayacH, W
+018E   1D03           00554         btfss   STATUS, Z               ;sayacH = 0x27 ise bir komut atla.
+018F   2995           00555         goto    Ana_j2                  ;sayac henüz 10000'e ulaþmadý, o 
+                      00556                                         ;halde devam et.
+0190   3010           00557         movlw   0x10
+0191   0221           00558         subwf   sayacL, W
+0192   1D03           00559         btfss   STATUS, Z               ;sayacL = 0x10 ise bir komut atla.
+0193   2995           00560         goto    Ana_j2                  ;sayac henüz 10000'e ulaþmadý, o 
+                      00561                                         ;halde devam et.
+0194   294C           00562         goto    Ana_j0                  ;En baþa dönerek iþlemleri tekrar 
+0195                  00563 Ana_j2:                         ;et.
+0195   3001           00564         movlw   .1                      ;1 sn bekle.
+0196   2122           00565         call    delay_s
+0197   2960           00566         goto    Ana_j1                  ;sayma iþlemine devam.
+                      00567         
+                      00568         end
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+Ana_j0                            0000014C
+Ana_j1                            00000160
+Ana_j2                            00000195
+Ana_program                       0000014B
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+HexLSB                            00000028
+HexMSB                            00000027
+HexTODec                          000000E6
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+LCD_Clear                         00000095
+LCD_CtrlPort                      PORTB
+LCD_CursorOff                     0000009D
+LCD_CursorOn                      0000009A
+LCD_DataPort                      PORTB
+LCD_EN                            5
+LCD_EStrobe                       
+LCD_HEX_j0                        00000052
+LCD_HEX_j1                        00000056
+LCD_HEX_j2                        0000005F
+LCD_Locate                        
+LCD_NybbleOut                     00000022
+LCD_RS                            4
+LCD_RS_HIGH                       
+LCD_RS_LOW                        
+LCD_RW                            6
+LCD_SMsg                          000000D7
+LCD_SendASCII                     0000003D
+LCD_SendBIN                       00000063
+LCD_SendCHAR                      0000003E
+LCD_SendCmd                       00000031
+LCD_SendHEX                       0000004A
+LCD_SendMessage                   000000D6
+LCD_SetPos                        000000DF
+LCD_data                          00000022
+LCD_init                          000000A0
+LCD_line                          00000025
+LCD_pos                           00000026
+LCD_tmp0                          00000023
+LCD_tmp1                          00000024
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 18
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+binler                            00000029
+binler_kont                       000000EA
+birler                            0000002C
+birler_kont                       0000011F
+delay_data                        0000002E
+delay_ms                          0000012E
+delay_ms_j0                       0000012F
+delay_ms_j1                       00000133
+delay_s                           00000122
+delay_s_data                      0000002D
+delay_s_j0                        00000123
+delay_us                          0000013E
+kesme                             0000014A
+mesajlar                          00000005
+msg0                              00000006
+msg1                              0000000F
+msg2                              00000018
+msg3                              0000001D
+onlar                             0000002B
+onlar_kont                        00000117
+MPASM  4.02 Released                            PROG_12_1.ASM   8-11-2006  11:49:18         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+sayacH                            00000020
+sayacL                            00000021
+yuzler                            0000002A
+yuzler_kont1                      00000109
+yuzler_kont2                      000000F6
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXX-XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0100 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0140 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0180 : XXXXXXXXXXXXXXXX XXXXXXXX-------- ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   407
+Program Memory Words Free:  7785
+
+
+Errors   :     0
+Warnings :     3 reported,     0 suppressed
+Messages :     1 reported,     0 suppressed
+
+

@@ -1,0 +1,6 @@
+Warning[205] D:\HAZIRLIK\KAYAN NOKTA\KAYANNOKTA.ASM 1 : Found directive in column 1. (list)
+Warning[205] D:\HAZIRLIK\KAYAN NOKTA\KAYANNOKTA.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[205] D:\HAZIRLIK\KAYAN NOKTA\KAYANNOKTA.ASM 7 : Found directive in column 1. (ORG)
+Warning[203] D:\HAZIRLIK\KAYAN NOKTA\KAYANNOKTA.ASM 8 : Found opcode in column 1. (GOTO)
+Message[302] D:\HAZIRLIK\KAYAN NOKTA\KAYANNOKTA.ASM 12 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\HAZIRLIK\KAYAN NOKTA\KAYANNOKTA.ASM 40 : Found directive in column 1. (END)

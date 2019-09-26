@@ -1,0 +1,5 @@
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\4_TIMER1_DISPLAY_SAYICI\TIMER1_DISPLAY_SAYICI.ASM 5 : Found label after column 1. (Sayac_Display)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\4_TIMER1_DISPLAY_SAYICI\TIMER1_DISPLAY_SAYICI.ASM 6 : Found label after column 1. (Sayac)
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO\4_TIMER1_DISPLAY_SAYICI\TIMER1_DISPLAY_SAYICI.ASM 22 : Using default destination of 1 (file).
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\4_TIMER1_DISPLAY_SAYICI\TIMER1_DISPLAY_SAYICI.ASM 27 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\4_TIMER1_DISPLAY_SAYICI\TIMER1_DISPLAY_SAYICI.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.

@@ -1,0 +1,38 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Dec 26 23:11:52 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x00001c
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000011      
+            17 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    DONGU   0x000011    program     static C:\Users\Google\Desktop\Mikro Calisma\6_RB0 Kesmesi\program.asm
+              ana_program   0x000007    program     static C:\Users\Google\Desktop\Mikro Calisma\6_RB0 Kesmesi\program.asm
+                    kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro Calisma\6_RB0 Kesmesi\program.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro Calisma\6_RB0 Kesmesi\program.asm
+              ana_program   0x000007    program     static C:\Users\Google\Desktop\Mikro Calisma\6_RB0 Kesmesi\program.asm
+                    DONGU   0x000011    program     static C:\Users\Google\Desktop\Mikro Calisma\6_RB0 Kesmesi\program.asm
+
+

@@ -1,0 +1,8 @@
+Warning[205] C:\877_PROGRAMLAR\PROG_6_10.ASM 27 : Found directive in column 1. (banksel)
+Message[302] C:\877_PROGRAMLAR\PROG_6_10.ASM 28 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_10.ASM 30 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_10.ASM 34 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_10.ASM 36 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_10.ASM 42 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_10.ASM 58 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_10.ASM 74 : Register in operand not in bank 0.  Ensure that bank bits are correct.

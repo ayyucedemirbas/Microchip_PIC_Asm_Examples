@@ -1,0 +1,42 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Tue Dec 27 18:13:48 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000004
+                   .org_2       code   0x000004    program   0x000036
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000001      
+                            0x000004    0x00001e      
+            29 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Devam   0x000010    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+                    Dongu   0x00001e    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+                    Kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+              ana_program   0x000012    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+                      ilk   0x00000c    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Kesme   0x000004    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+                      ilk   0x00000c    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+                    Devam   0x000010    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+              ana_program   0x000012    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+                    Dongu   0x00001e    program     static C:\Users\Google\Desktop\Mikro Calisma\25_Ciftlerin_Sorusu\Untitled.asm
+
+

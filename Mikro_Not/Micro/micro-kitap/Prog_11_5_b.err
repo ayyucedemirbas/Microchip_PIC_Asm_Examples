@@ -1,0 +1,5 @@
+Message[302] C:\877_PROGRAMLAR\PROG_11_5_B.ASM 42 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_5_B.ASM 45 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_5_B.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_5_B.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_11_5_B.ASM 62 : Register in operand not in bank 0.  Ensure that bank bits are correct.

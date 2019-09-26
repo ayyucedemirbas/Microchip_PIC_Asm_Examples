@@ -1,0 +1,52 @@
+MPLINK 4.43, Linker
+Linker Map File - Created Wed Sep 26 11:07:07 2012
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000010    program   0x000066
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000010    0x000042      
+            54 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                      DON   0x000019    program     static H:\deneme1\deneme1.asm   
+                    START   0x000010    program     static H:\deneme1\deneme1.asm   
+                  TUS1SON   0x00002c    program     static H:\deneme1\deneme1.asm   
+                  TUS1YAK   0x000029    program     static H:\deneme1\deneme1.asm   
+                     TUS2   0x00002f    program     static H:\deneme1\deneme1.asm   
+                     TUS3   0x000032    program     static H:\deneme1\deneme1.asm   
+                     TUS4   0x000035    program     static H:\deneme1\deneme1.asm   
+                  etiket1   0x00003a    program     static H:\deneme1\deneme1.asm   
+                  etiket2   0x00003c    program     static H:\deneme1\deneme1.asm   
+                  gecikme   0x000038    program     static H:\deneme1\deneme1.asm   
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    START   0x000010    program     static H:\deneme1\deneme1.asm   
+                      DON   0x000019    program     static H:\deneme1\deneme1.asm   
+                  TUS1YAK   0x000029    program     static H:\deneme1\deneme1.asm   
+                  TUS1SON   0x00002c    program     static H:\deneme1\deneme1.asm   
+                     TUS2   0x00002f    program     static H:\deneme1\deneme1.asm   
+                     TUS3   0x000032    program     static H:\deneme1\deneme1.asm   
+                     TUS4   0x000035    program     static H:\deneme1\deneme1.asm   
+                  gecikme   0x000038    program     static H:\deneme1\deneme1.asm   
+                  etiket1   0x00003a    program     static H:\deneme1\deneme1.asm   
+                  etiket2   0x00003c    program     static H:\deneme1\deneme1.asm   
+
+

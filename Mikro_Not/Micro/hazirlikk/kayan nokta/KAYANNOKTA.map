@@ -1,0 +1,38 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Tue Jan 01 19:25:26 2013
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000030
+                   .cinit    romdata   0x000018    program   0x000004
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000019      
+            26 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+               ANAPROGRAM   0x000001    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+                    DONGU   0x00000c    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+                 GECIKME1   0x000012    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+                 GECIKME2   0x000015    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+               ANAPROGRAM   0x000001    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+                    DONGU   0x00000c    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+                 GECIKME1   0x000012    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+                 GECIKME2   0x000015    program     static D:\hazirlik\kayan nokta\kayannokta.asm
+
+

@@ -1,0 +1,60 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Dec 12 14:54:32 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x0000f8
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x00007f      
+            127 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ANA_PROGRAM   0x000016    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                     ATLA   0x00000a    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    BEKLE   0x000072    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                      DON   0x00007b    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    DONGU   0x000017    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    GECIK   0x000079    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    KESME   0x000004    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                KESME_SON   0x000076    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                      YAZ   0x000068    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                   YAZBIR   0x000047    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                  YAZDORT   0x00001a    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                   YAZIKI   0x000038    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    YAZUC   0x000029    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+             ÝLK_ÝSLEMLER   0x000056    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    KESME   0x000004    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                     ATLA   0x00000a    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+              ANA_PROGRAM   0x000016    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    DONGU   0x000017    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                  YAZDORT   0x00001a    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    YAZUC   0x000029    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                   YAZIKI   0x000038    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                   YAZBIR   0x000047    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+             ÝLK_ÝSLEMLER   0x000056    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                      YAZ   0x000068    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    BEKLE   0x000072    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                KESME_SON   0x000076    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                    GECIK   0x000079    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+                      DON   0x00007b    program     static C:\Users\uluzman\Desktop\mikroproje\EEPROM-YAZ-OKU\YAZ_OKU.asm
+
+

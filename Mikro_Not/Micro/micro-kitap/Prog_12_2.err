@@ -1,0 +1,11 @@
+Message[302] C:\877_PROGRAMLAR\PROG_12_2.ASM 71 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_12_2.ASM 73 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\877_PROGRAMLAR\PROG_12_2.ASM 101 : Found opcode in column 1. (call)
+Message[302] C:\877_PROGRAMLAR\PROG_12_2.ASM 169 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_12_2.ASM 174 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[202] C:\877_PROGRAMLAR\PROG_12_2.ASM 176 : Argument out of range.  Least significant bits used.
+Warning[203] C:\877_PROGRAMLAR\PROG_12_2.ASM 178 : Found opcode in column 1. (call)
+Warning[202] C:\877_PROGRAMLAR\PROG_12_2.ASM 179 : Argument out of range.  Least significant bits used.
+Warning[202] C:\877_PROGRAMLAR\PROG_12_2.ASM 181 : Argument out of range.  Least significant bits used.
+Warning[202] C:\877_PROGRAMLAR\PROG_12_2.ASM 183 : Argument out of range.  Least significant bits used.
+Warning[203] C:\877_PROGRAMLAR\PROG_12_2.ASM 188 : Found opcode in column 1. (call)

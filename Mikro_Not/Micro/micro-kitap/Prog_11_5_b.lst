@@ -1,0 +1,313 @@
+MPASM  4.02 Released                          PROG_11_5_B.ASM   8-11-2006  11:05:12         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*******************************************************************
+                      00002 ;       Dosya Adý               : 11_5_b.asm
+                      00003 ;       Programýn Amacý         : Baþka bir PIC’den USART ile senkron veri 
+                      00004 ;       alýmý
+                      00005 ;       PIC DK2.1a              : PORTB<4:7> Çýkýþ ==> LED
+                      00006 ;                               : XT ==> 4Mhz
+                      00007 ;*******************************************************************
+                      00008         list    p=16f628A
+                      00009         #include <p16F628A.inc>
+                      00001         LIST
+                      00002 ; P16F628A.INC  Standard Header File, Version 1.10    Microchip Technology, Inc.
+                      00265         LIST
+                      00266 
+                      00010 
+2007   3F50           00011         __CONFIG        _CP_OFF & _DATA_CP_OFF & _LVP_OFF & _MCLRE_OFF & _WDT_OFF & _PWRTE_ON & _INTRC_O
+                            SC_NOCLKOUT
+                      00012 ;-------------------------------------------------------------------
+                      00013 ; Deðiþken tanýmlama
+                      00014 ;-------------------------------------------------------------------
+                      00015         cblock  0x20
+  00000020            00016         temp
+                      00017         endc
+                      00018 
+0000                  00019         ORG     0x000
+0000   2801           00020         goto    main
+                      00021 ;-------------------------------------------------------------------
+                      00022 ; Ana program
+                      00023 ;-------------------------------------------------------------------
+0001                  00024 main
+0001   200A           00025         call    initilize
+0002                  00026 loop
+0002   201B           00027         call    snkSlaveRead            ;Veri oku.
+0003   00A0           00028         movwf   temp                    ;Geçici deðiþkene al.
+0004   3CFF           00029         sublw   0xFF                    ;Okunan veriyi 0xFF ile 
+                      00030                                         ;karþýlaþtýr, Hatalý veri mi?
+0005   1903           00031         btfsc   STATUS, Z               ;Veri hatasýz ise komut atla.
+0006   2802           00032         goto    loop                    ;Okunan veri hatalý, baþa dön.
+0007   0E20           00033         swapf   temp, W                 ;Okunan verinin (tuþun) kodunu 
+                      00034                                         ;W'nin en deðerli 4 bit’ine taþý.
+0008   0086           00035         movwf   PORTB                   ;Sonucu PORTB'de görüntüle.
+0009   2802           00036         goto    loop                    ;Baþa dön.
+                      00037 
+000A                  00038 initilize
+000A   0186           00039         clrf    PORTB                   ;PORTB'nýn ilk çýkýþlarý sýfýrlandý
+000B   1683 1303      00040         banksel TRISB                   ;TRISB ve TXSTA BANK1'de.
+000D   3006           00041         movlw   b'00000110'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000E   0086           00042         movwf   TRISB                   ;RB1/RX/DT ve RB2/TX/CK pinlerini 
+                      00043                                         ;giriþe ayarla.
+                      00044                                         ;Usart modülü Senkron Slave Moduna alýnýyor.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000F   1618           00045         bsf     TXSTA, SYNC             ;Usart modülü senkron iletiþime 
+                      00046                                         ;ayarlandý.
+MPASM  4.02 Released                          PROG_11_5_B.ASM   8-11-2006  11:05:12         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0010   1283 1303      00047         banksel RCSTA
+0012   1798           00048         bsf     RCSTA, SPEN             ;Seri portun açýldý.
+0013   1683 1303      00049         banksel TXSTA                   ;TXSTA ve PIE1 BANK1'de.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0015   1398           00050         bcf     TXSTA, CSRC             ;Senkron Slave Mod seçildi.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0016   168C           00051         bsf     PIE1, RCIE              ;Veri alma kesmesi aktifleþtirildi.
+0017   1283 1303      00052         banksel RCSTA
+0019   1318           00053         bcf     RCSTA, RX9              ;8 bit veri alýmý.
+001A   0008           00054         return
+                      00055 
+001B                  00056 snkSlaveRead
+                      00057                                         ;Aþaðýdaki durum atamalarý sýralý olmalý.
+001B   1283 1303      00058         banksel RCSTA
+001D   1798           00059         bsf     RCSTA, SPEN             ;Seri portun her seferinde 
+                      00060                                         ;öncelikle yeniden açýlmasý ;gerekiyor.
+001E   1683 1303      00061         banksel TXSTA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0020   1398           00062         bcf     TXSTA, CSRC             ;Veri alma iþleminden sonra set 
+                      00063                                         ;oluyor ve Master moda geçiyor, 
+                      00064                                         ;dolayýsýyle Slave mod için 
+                      00065                                         ;silinmeli.
+0021   1283 1303      00066         banksel RCSTA                   ;RCSTA, PIR1 ve RCREG BANK0'da.
+0023   1618           00067         bsf     RCSTA, CREN             ;Sürekli alma modu açýldý, almada 
+                      00068                                         ;hata oluþursa bu bit resetleniyor, 
+                      00069                                         ;hata olma durumuna karþý set 
+                      00070                                         ;edilmeli.
+0024   1E8C           00071         btfss   PIR1, RCIF              ;Alma iþlemi tamamlanana kadar 
+0025   2824           00072         goto    $-1                     ;bekle.
+0026   081A           00073         movf    RCREG, W                ;Alýnan veriyi W'ye yaz.
+0027   128C           00074         bcf     PIR1, RCIF              ;Alma bayraðýný yeni veri alýmý 
+                      00075                                         ;için resetle.
+0028   1A18           00076         btfsc   RCSTA, CREN             ;Hata varsa komut atla.
+0029   0008           00077         return                          ;Hata yoksa normal çýkýþ (W'de 
+                      00078                                         ;alýnan veri var).
+002A   34FF           00079         retlw   0xFF                    ;Veri almada hata oluþtu 0xFF hata 
+                      00080                                         ;kodu döndür (W'de 0xFF var).
+                      00081 
+                      00082         END
+MPASM  4.02 Released                          PROG_11_5_B.ASM   8-11-2006  11:05:12         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ADEN                              00000003
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CIS                               00000003
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000001F
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+DC                                00000001
+EEADR                             0000009B
+EECON1                            0000009C
+EECON2                            0000009D
+EEDATA                            0000009A
+EEIE                              00000007
+EEIF                              00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GIE                               00000007
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_BO                            00000000
+NOT_BOD                           00000000
+NOT_BOR                           00000000
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+OERR                              00000001
+MPASM  4.02 Released                          PROG_11_5_B.ASM   8-11-2006  11:05:12         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+OPTION_REG                        00000081
+OSCF                              00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PIE1                              0000008C
+PIR1                              0000000C
+PORTA                             00000005
+PORTB                             00000006
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+RBIE                              00000003
+RBIF                              00000000
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RP0                               00000005
+RP1                               00000006
+RX9                               00000006
+RX9D                              00000000
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1OSCEN                           00000003
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+MPASM  4.02 Released                          PROG_11_5_B.ASM   8-11-2006  11:05:12         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRMT                              00000001
+TX9                               00000006
+TX9D                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+VR0                               00000000
+VR1                               00000001
+VR2                               00000002
+VR3                               00000003
+VRCON                             0000009F
+VREN                              00000007
+VROE                              00000006
+VRR                               00000005
+W                                 00000000
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DATA_CP_OFF                      00003FFF
+_DATA_CP_ON                       00003EFF
+_ER_OSC_CLKOUT                    00003FFF
+_ER_OSC_NOCLKOUT                  00003FFE
+_EXTCLK_OSC                       00003FEF
+_HS_OSC                           00003FEE
+_INTOSC_OSC_CLKOUT                00003FFD
+_INTOSC_OSC_NOCLKOUT              00003FFC
+_INTRC_OSC_CLKOUT                 00003FFD
+_INTRC_OSC_NOCLKOUT               00003FFC
+_LP_OSC                           00003FEC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_MCLRE_OFF                        00003FDF
+_MCLRE_ON                         00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC_CLKOUT                    00003FFF
+_RC_OSC_NOCLKOUT                  00003FFE
+_WDT_OFF                          00003FFB
+MPASM  4.02 Released                          PROG_11_5_B.ASM   8-11-2006  11:05:12         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDT_ON                           00003FFF
+_XT_OSC                           00003FED
+__16F628A                         00000001
+initilize                         0000000A
+loop                              00000002
+main                              00000001
+snkSlaveRead                      0000001B
+temp                              00000020
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXX----- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    43
+Program Memory Words Free:  2005
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     5 reported,     0 suppressed
+
+

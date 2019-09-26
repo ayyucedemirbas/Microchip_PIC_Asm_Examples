@@ -1,0 +1,4 @@
+Warning[207] C:\USERS\NESRIN ULGAY\DESKTOP\MICRO\MICRO\3_TIMER0_LED_SAYICI\TIMER0_LED_SAYICI.ASM 4 : Found label after column 1. (Sayac)
+Message[305] C:\USERS\NESRIN ULGAY\DESKTOP\MICRO\MICRO\3_TIMER0_LED_SAYICI\TIMER0_LED_SAYICI.ASM 18 : Using default destination of 1 (file).
+Message[302] C:\USERS\NESRIN ULGAY\DESKTOP\MICRO\MICRO\3_TIMER0_LED_SAYICI\TIMER0_LED_SAYICI.ASM 28 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\NESRIN ULGAY\DESKTOP\MICRO\MICRO\3_TIMER0_LED_SAYICI\TIMER0_LED_SAYICI.ASM 31 : Register in operand not in bank 0.  Ensure that bank bits are correct.

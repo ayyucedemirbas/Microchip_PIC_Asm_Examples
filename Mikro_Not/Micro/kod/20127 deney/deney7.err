@@ -1,0 +1,8 @@
+Warning[207] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 4 : Found label after column 1. (LCDVERI)
+Warning[207] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 5 : Found label after column 1. (SAYAC1)
+Warning[207] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 6 : Found label after column 1. (SAYAC2)
+Message[302] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 72 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 74 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 76 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 81 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\SERAP\DESKTOP\MKROOOOO\ODEV7\DENEY7.ASM 89 : Register in operand not in bank 0.  Ensure that bank bits are correct.

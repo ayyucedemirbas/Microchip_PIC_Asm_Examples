@@ -1,0 +1,8 @@
+Message[302] C:\877_PROGRAMLAR\PROG_6_4.ASM 33 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_4.ASM 35 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_4.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_6_4.ASM 56 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\877_PROGRAMLAR\PROG_6_4.ASM 69 : Found opcode in column 1. (movf)
+Warning[203] C:\877_PROGRAMLAR\PROG_6_4.ASM 71 : Found opcode in column 1. (movwf)
+Warning[203] C:\877_PROGRAMLAR\PROG_6_4.ASM 73 : Found opcode in column 1. (call)
+Warning[203] C:\877_PROGRAMLAR\PROG_6_4.ASM 81 : Found opcode in column 1. (return)

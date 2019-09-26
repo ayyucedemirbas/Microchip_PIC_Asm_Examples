@@ -1,0 +1,5 @@
+Warning[203] C:\877_PROGRAMLAR\PROG_3_4.ASM 32 : Found opcode in column 1. (goto)
+Warning[207] C:\877_PROGRAMLAR\PROG_3_4.ASM 68 : Found label after column 1. (ana_program)
+Message[302] C:\877_PROGRAMLAR\PROG_3_4.ASM 76 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_3_4.ASM 77 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_3_4.ASM 79 : Register in operand not in bank 0.  Ensure that bank bits are correct.

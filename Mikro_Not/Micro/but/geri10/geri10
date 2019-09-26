@@ -1,0 +1,7 @@
+list p=16f877a
+include "p16f877a.inc"
+org 0
+GOTO ANA
+ORG 4
+KESME 
+RETFIE

@@ -1,0 +1,2 @@
+Warning[203] C:\877_PROGRAMLAR\PROG_6_2.ASM 45 : Found opcode in column 1. (bcf)
+Message[302] C:\877_PROGRAMLAR\PROG_6_2.ASM 117 : Register in operand not in bank 0.  Ensure that bank bits are correct.

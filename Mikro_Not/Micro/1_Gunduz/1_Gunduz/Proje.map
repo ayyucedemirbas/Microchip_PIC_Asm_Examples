@@ -1,0 +1,40 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Sun Oct 16 22:36:30 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000004
+                   .org_2       code   0x000004    program   0x000030
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000001      
+                            0x000004    0x00001b      
+            26 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              Ana_program   0x00000c    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+        Bir_Defa_Sola_Kay   0x000009    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+                    Dongu   0x00001b    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+                    Kesme   0x000004    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Kesme   0x000004    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+        Bir_Defa_Sola_Kay   0x000009    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+              Ana_program   0x00000c    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+                    Dongu   0x00001b    program     static C:\Users\GOOGLE\Desktop\1_Gunduz\Proje.asm
+
+

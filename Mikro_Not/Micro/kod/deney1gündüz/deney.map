@@ -1,0 +1,48 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Oct 15 14:00:49 2012
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x000064
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x000035      
+            51 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                      ANA   0x000006    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                      DON   0x00002f    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                     DON2   0x000031    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                    DONGU   0x00001e    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                    GECIK   0x00002d    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                    KESME   0x000005    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                      SAG   0x000028    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                      SOL   0x000023    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    KESME   0x000005    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                      ANA   0x000006    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                    DONGU   0x00001e    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                      SOL   0x000023    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                      SAG   0x000028    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                    GECIK   0x00002d    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                      DON   0x00002f    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+                     DON2   0x000031    program     static C:\Users\TUBA\Desktop\yenimm\deney1gündüz\deney.asm
+
+

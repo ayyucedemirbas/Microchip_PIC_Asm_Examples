@@ -1,0 +1,14 @@
+Warning[215] C:\877_PROGRAMLAR\PROG_8_2.ASM 10 : Processor superseded by command line.  Verify processor symbol.
+Message[301] D:\PROGRAM FILES\MICROCHIP\MPASM SUITE\P16F877A.INC 36 : MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 33 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 39 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 48 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 61 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 70 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 93 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 94 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 101 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 107 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 114 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_2.ASM 118 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\877_PROGRAMLAR\PROG_8_2.ASM 119 : Found opcode in column 1. (goto)

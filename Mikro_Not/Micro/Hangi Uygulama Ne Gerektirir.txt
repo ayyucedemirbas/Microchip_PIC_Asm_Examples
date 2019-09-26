@@ -1,0 +1,61 @@
+0 - TIMER0 (FF-00 Kesmesi)
+	OPTION_REG
+	INTCON
+	
+	
+1 - TIMER1 (FFFF-0000 Kesmesi)
+	T1CON
+	TMR1H
+	TMR1L
+	PIR1
+	PIE1
+	INTCON
+	
+	
+2 - TIMER2 (TMR2=PR2 Kesmesi)
+	T2CON
+	PR2
+	PIR1
+	PIE1
+	INTCON
+	
+	
+3 - RB0
+	OPTION_REG
+	ADCON1
+	INTCON
+	
+4 - RBCHANGE
+	OPTION_REG
+	ADCON1
+	INTCON
+	
+5 - ADC (Döngülü)	
+	ADCON1
+	ADCON0
+	ADRESH
+	ADRESL
+	
+6 - ADC (Kesmeli)	
+	ADCON1
+	ADCON0
+	ADRESH
+	ADRESL
+	PIR1
+	PIE1
+	INTCON
+	
+7 - EEPROM (Döngülü)
+	EEADR   ; Adres buraya yazýlýr.
+	EEDATA  ; Deðer buraya yazýlýr.
+	EECON1  ; Gerekli ayarlamalar yapýlýr.
+	EECON2  ; Yazmada önce 0x55 sonrada 0xAA deðeri buna yazýldýktan sonra Yaz komutu EECON1 ye verilir.
+	
+8 - EEPROM (Kesmeli)
+	EEADR   ; Adres buraya yazýlýr.
+	EEDATA  ; Deðer buraya yazýlýr.
+	EECON1  ; Gerekli ayarlamalar yapýlýr.
+	EECON2  ; Yazmada önce 0x55 sonrada 0xAA deðeri buna yazýldýktan sonra Yaz komutu EECON1 ye verilir.	
+	PIR2
+	PIE2
+	INTCON

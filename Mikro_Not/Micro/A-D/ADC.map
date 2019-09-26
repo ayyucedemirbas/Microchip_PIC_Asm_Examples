@@ -1,0 +1,76 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Dec 05 21:04:43 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000176
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x0000be      
+            190 out of 8454 program addresses used, program memory utilization is 2%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ANA_PROGRAM   0x000005    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    BUYUK   0x00009e    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   BUYUK1   0x0000a1    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   BUYUK2   0x0000a4    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    DEVAM   0x00007e    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    DONGU   0x000030    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    GECIK   0x00002e    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   GECIK1   0x0000b8    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                 GECIKDSP   0x0000b2    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    HEDEF   0x00003c    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                      HES   0x000060    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                     HES1   0x000068    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                     HES2   0x000070    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    HESAP   0x00005b    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   HESAP2   0x000078    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    KESME   0x000020    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+              KESME_BITIR   0x00003b    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    KODLA   0x0000a7    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    SONUC   0x000091    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                      YAZ   0x000042    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   YAZ256   0x000081    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   YAZ512   0x000089    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ANA_PROGRAM   0x000005    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    KESME   0x000020    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    GECIK   0x00002e    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    DONGU   0x000030    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+              KESME_BITIR   0x00003b    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    HEDEF   0x00003c    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                      YAZ   0x000042    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    HESAP   0x00005b    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                      HES   0x000060    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                     HES1   0x000068    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                     HES2   0x000070    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   HESAP2   0x000078    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    DEVAM   0x00007e    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   YAZ256   0x000081    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   YAZ512   0x000089    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    SONUC   0x000091    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    BUYUK   0x00009e    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   BUYUK1   0x0000a1    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   BUYUK2   0x0000a4    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                    KODLA   0x0000a7    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                 GECIKDSP   0x0000b2    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+                   GECIK1   0x0000b8    program     static C:\Users\uluzman\Desktop\mikroproje\A-D\adc.asm
+
+

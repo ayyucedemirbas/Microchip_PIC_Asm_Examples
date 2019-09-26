@@ -1,0 +1,482 @@
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (list)
+                      00001 list P=16F877A
+                      00002 #include <p16f877a.inc>
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00400         LIST
+                      00003 
+  00000020            00004 SAYAC EQU 0X20
+  00000021            00005 TEMP EQU 0X21
+  00000023            00006 TEMP1 EQU 0X23
+  00000024            00007 TEMP2 EQU 0X24
+  00000025            00008 TEMP3 EQU 0X25
+  00000022            00009 SAYAC2 EQU 0X22
+Warning[205]: Found directive in column 1. (org)
+0000                  00010 org 0x00
+Warning[203]: Found opcode in column 1. (GOTO)
+0000   2805           00011 GOTO ana_program
+Warning[205]: Found directive in column 1. (ORG)
+0004                  00012 ORG 0x04
+Warning[203]: Found opcode in column 1. (RETFIE)
+0004   0009           00013 RETFIE
+0005                  00014 ana_program
+0005   1683           00015         BSF STATUS,RP0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0006   0188           00016         CLRF TRISD
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0007   0185           00017         CLRF TRISA
+0008   1283           00018         BCF STATUS,RP0
+0009   0185           00019         CLRF PORTA
+000A   0188           00020         CLRF PORTD
+000B   01A0           00021         CLRF SAYAC
+000C   01A1           00022         CLRF TEMP
+000D   01A3           00023         CLRF TEMP1
+000E   01A4           00024         CLRF TEMP2
+000F   01A5           00025         CLRF TEMP3
+0010   01A2           00026         CLRF SAYAC2
+                      00027 
+0011   2022           00028         CALL OKU
+0012   1283 1303      00029         BANKSEL TEMP
+0014   00A1           00030         MOVWF TEMP
+0015   2022           00031         CALL OKU
+0016   1283 1303      00032         BANKSEL TEMP1
+0018   00A3           00033         MOVWF TEMP1
+0019   2022           00034         CALL OKU
+001A   1283 1303      00035         BANKSEL TEMP2
+001C   00A4           00036         MOVWF TEMP2
+001D   2022           00037         CALL OKU
+001E   1283 1303      00038         BANKSEL TEMP3
+0020   00A5           00039         MOVWF TEMP3
+0021   2832           00040         GOTO DISPYAZ
+0022                  00041 OKU
+0022   0AA0           00042         INCF SAYAC,F
+0023   0820           00043         MOVF SAYAC,W
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0024   1283 1703      00044         BANKSEL EEADR
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0026   008D           00045         MOVWF EEADR
+0027   1683 1703      00046         BANKSEL EECON1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0029   140C           00047         BSF EECON1,RD
+002A   1283 1303      00048         BANKSEL SAYAC
+002C   1920           00049         BTFSC SAYAC,2
+002D   01A0           00050         CLRF SAYAC
+002E   1283 1703      00051         BANKSEL EEDATA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0030   080C           00052         MOVF EEDATA,W
+0031   0008           00053         RETURN
+                      00054 
+0032                  00055 DISPYAZ 
+0032   1283           00056         BCF STATUS,RP0
+0033   3001           00057         MOVLW B'00000001'
+0034   0085           00058         MOVWF PORTA
+0035   0821           00059         MOVF TEMP,W
+0036   2060           00060         CALL tablo
+0037   0088           00061         MOVWF PORTD
+0038   204C           00062         CALL GECIK
+                      00063         
+0039   3002           00064         MOVLW B'00000010'
+003A   0085           00065         MOVWF PORTA
+003B   0823           00066         MOVF TEMP1,W
+003C   2060           00067     CALL tablo
+003D   0088           00068         MOVWF PORTD
+003E   204C           00069         CALL GECIK
+                      00070 
+003F   3004           00071         MOVLW B'00000100'
+0040   0085           00072         MOVWF PORTA
+0041   0824           00073         MOVF TEMP2,W
+0042   2060           00074     CALL tablo
+0043   0088           00075         MOVWF PORTD
+0044   204C           00076         CALL GECIK
+                      00077 
+0045   3008           00078         MOVLW B'00001000'
+0046   0085           00079         MOVWF PORTA
+0047   0825           00080         MOVF TEMP3,W
+0048   2060           00081         CALL tablo
+0049   0088           00082         MOVWF PORTD
+004A   204C           00083         CALL GECIK
+                      00084 
+004B   2832           00085         GOTO DISPYAZ
+004C                  00086 GECIK
+004C   30FA           00087         MOVLW D'250'
+004D   00A2           00088         MOVWF SAYAC2
+004E                  00089 DON1    
+004E   0000           00090         NOP
+004F   0000           00091         NOP
+0050   0000           00092         NOP
+0051   0000           00093         NOP
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0052   0000           00094         NOP
+0053   0000           00095         NOP
+0054   0BA2           00096         DECFSZ SAYAC2,F
+0055   284E           00097         GOTO DON1
+0056   30FA           00098         MOVLW D'250'
+0057   00A2           00099         MOVWF SAYAC2
+0058                  00100 DON2
+0058   0000           00101         NOP
+0059   0000           00102         NOP
+005A   0000           00103         NOP
+005B   0000           00104         NOP
+005C   0000           00105         NOP
+005D   0BA2           00106         DECFSZ SAYAC2,F
+005E   2858           00107         GOTO DON2
+005F   0008           00108         RETURN
+0060                  00109 tablo
+0060   0782           00110         addwf   PCL, F
+0061   343F           00111         retlw   0x3F            ; 0 rakamý için segment deðeri.
+0062   3406           00112         retlw   0x06            ; 1 rakamý için segment deðeri.
+0063   345B           00113         retlw   0x5B            ; 2 rakamý için segment deðeri.
+0064   344F           00114         retlw   0x4F            ; 3 rakamý için segment deðeri.
+0065   3466           00115         retlw   0x66            ; 4 rakamý için segment deðeri.
+0066   346D           00116         retlw   0x6D            ; 5 rakamý için segment deðeri.
+0067   347D           00117         retlw   0x7D            ; 6 rakamý için segment deðeri.
+0068   3407           00118         retlw   0x07            ; 7 rakamý için segment deðeri.
+0069   347F           00119         retlw   0x7F            ; 8 rakamý için segment deðeri.
+006A   346F           00120         retlw   0x6F            ; 9 rakamý için segment deðeri.
+                      00121         END
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DISPYAZ                           00000032
+DON1                              0000004E
+DON2                              00000058
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GECIK                             0000004C
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OKU                               00000022
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SAYAC                             00000020
+SAYAC2                            00000022
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TEMP                              00000021
+TEMP1                             00000023
+TEMP2                             00000024
+TEMP3                             00000025
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+MPASM  5.20                           OKU.ASM   12-12-2011  22:50:51         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+ana_program                       00000005
+tablo                             00000060
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXX----- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   104
+Program Memory Words Free:  8088
+
+
+Errors   :     0
+Warnings :     5 reported,     0 suppressed
+Messages :     5 reported,     0 suppressed
+
+

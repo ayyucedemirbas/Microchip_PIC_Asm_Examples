@@ -1,0 +1,3 @@
+Warning[207] D:\HAZIRLIK\TIMER1\TIMER1.ASM 3 : Found label after column 1. (SAYAC)
+Message[302] D:\HAZIRLIK\TIMER1\TIMER1.ASM 25 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\HAZIRLIK\TIMER1\TIMER1.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.

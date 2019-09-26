@@ -1,0 +1,8 @@
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 2 : Found directive in column 1. (include)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 4 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 5 : Found opcode in column 1. (goto)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 6 : Found directive in column 1. (ORG)
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 14 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 15 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\26_TEKLERIN_SORUSU\UNTITLED.ASM 32 : Found directive in column 1. (end)

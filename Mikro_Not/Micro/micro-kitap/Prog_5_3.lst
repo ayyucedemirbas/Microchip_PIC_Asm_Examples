@@ -1,0 +1,563 @@
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*****************************************************************
+                      00002 ;       Dosya Adý               : 5_3.asm
+                      00003 ;       Programýn Amacý         : PWM modülünün kullanýlmasý.
+                      00004 ;       PIC DK2.1a              : PORTA<1:4> Dijital giriþ ==> BUTON
+                      00005 ;                               : PORTC<2> çýkýþ ==> LED/OSÝLASKOP
+                      00006 ;                               : XT ==> 20 Mhz
+                      00007 ;*******************************************************************
+                      00008         list p=16F877A
+                      00009         include "p16F877A.inc"  
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F3A           00010         __config H'3F3A'        ;Tüm program sigortalarý kapalý, 
+                      00011                                 ;Osilatör HS ve 20Mhz
+                      00012 ;-------------------------------------------------------------------
+                      00013 ; Genel deðiþken tanýmlamalarý 
+                      00014 ;-------------------------------------------------------------------
+  00000020            00015 tmp     equ     0x20            ;Geçici deðerler için 1 byte'lýk 
+                      00016                                 ;deðiþken.
+  00000021            00017 delay_ms_tmp    equ     0x21    ;Delay için 2 byte'lýk deðiþken
+  00000023            00018 PWM_Set_Degeri  equ     0x23    ;PWM Duty Cycle için 1 byte'lýk 
+                      00019                                 ;deðiþken.
+                      00020 
+0000                  00021         ORG     0               ;Derleyici bu adresinden itibaren 
+                      00022                                 ;kodlarý oluþturur.
+0000   018A           00023         clrf    PCLATH          ;0. Program sayfasý seçildi.
+0001   2854           00024         goto    ana_program     ;Ana programa git.
+                      00025 ;-------------------------------------------------------------------
+                      00026 ; PWM ilk iþlemler alt programý. 
+                      00027 ;-------------------------------------------------------------------
+0002                  00028 PWM_Baslat
+0002   303F           00029         movlw   D'63'
+0003   1683 1303      00030         banksel PR2             ;PR2 kaydedicisinin bulunduðu BANK 
+                      00031                                 ;seçildi.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0005   0092           00032         movwf   PR2             ;PR2'ye 63 deðeri atandý.
+0006   300C           00033         movlw   0x0C
+0007   1283 1303      00034         banksel CCP1CON 
+0009   0097           00035         movwf   CCP1CON         ;PWM modunu baþlat.
+000A   0195           00036         clrf    CCPR1L          ;ilk durumda Duty Cycle deðeri sýfýr.
+000B   1683 1303      00037         banksel TRISC
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000D   1107           00038         bcf     TRISC, 2        ;PWM pini (RC2) çýkýþa ayarlanýyor.
+000E   3004           00039         movlw   D'4'
+000F   1283 1303      00040         banksel T2CON
+0011   0092           00041         movwf   T2CON           ;TMR2 prescaler ve postscaler deðeri 1:1 
+                      00042                                 ;yapýldý ve TMR2 çalýþtýrýldý.
+0012   0008           00043         return
+                      00044 ;-------------------------------------------------------------------,
+                      00045 ; PWM Duty Cycle (Görev Çevrimi) belirleme alt programý. 
+                      00046 ;-------------------------------------------------------------------
+0013                  00047 PWM_Set
+0013   1283 1303      00048         Banksel PWM_Set_Degeri
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0015   0823           00049         movf    PWM_Set_Degeri, W
+0016   3903           00050         andlw   D'3'                    ;PWM_Set_Degeri'nin en deðersiz 2 
+                      00051                                         ;bit’i tmp'ye kaydet. 
+0017   00A0           00052         movwf   tmp
+0018   0E20           00053         swapf   tmp, W                  ;4 bit sola kaydýrma ile ayný iþlem  
+0019   39F0           00054         andlw   0xF0            
+001A   1283 1303      00055         banksel CCP1CON                 ;CCP1CON kaydedicisinin bulunduðu 
+                      00056                                         ;BANK seçildi
+001C   0097           00057         movwf   CCP1CON                 ;ve CCP1CON kaydedicisine aktar.
+001D   380C           00058         iorlw   0x0C                    ;CCP1CON'da PWM modu ayarý 
+                      00059                                         ;korunuyor.
+001E   0097           00060         movwf   CCP1CON
+001F   0823           00061         movf    PWM_Set_Degeri, W       
+0020   00A0           00062         movwf   tmp
+0021   0CA0           00063         rrf     tmp, F
+0022   0C20           00064         rrf     tmp, W                  ;PWM_Set_Degeri'nin deðersiz 2 
+                      00065                                         ;bit’ini atarak
+0023   393F           00066         andlw   0x3F                    ;deðerli 6 bit’ini elde et ve 
+                      00067                                         ;CCPR1L'e yükle.
+0024   0095           00068         movwf   CCPR1L                  
+0025   0008           00069         return
+                      00070 ;-------------------------------------------------------------------
+                      00071 ; PWM sonlandýrma alt programý.
+                      00072 ;-------------------------------------------------------------------
+0026                  00073 PWM_Sonlandir
+0026   1283 1303      00074         Banksel T2CON                   ;0. bank seçildi, CCP1CON ve T2CON 
+                      00075                                         ;bu bankta.
+0028   0192           00076         clrf    T2CON                   ;TMR2 prescaler ve postscaler 
+                      00077                                         ;deðeri 1:1, TMR2 durduruldu.
+0029   0197           00078         clrf    CCP1CON                 ;Capture/Compare/PWM modülü 
+                      00079                                         ;kapatýldý.
+002A   0008           00080         return
+                      00081 ;-------------------------------------------------------------------
+                      00082 ; Ýlk iþlemlerin yapýldýðý alt program. 
+                      00083 ;-------------------------------------------------------------------
+002B                  00084 ilk_islemler
+002B   1683 1303      00085         banksel TRISA                   ;1. bank seçildi (ADCON1, TRISA, 
+                      00086                                         ;INTCON bu bankta).
+002D   3006           00087         movlw   D'6'                    ;Tüm analog giriþleri kapat ve 
+                      00088                                         ;dijital giriþe ayarla.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002E   009F           00089         movwf   ADCON1
+002F   30FF           00090         movlw   0xFF
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0030   0085           00091         movwf   TRISA                   ;PORTA pinleri giriþe ayarlandý.
+                      00092 
+0031   0008           00093         return
+                      00094 ;-------------------------------------------------------------------
+                      00095 ; Fosc = 20MHz'de 1 ms'lik gecikme saðlayan alt program.
+                      00096 ;-------------------------------------------------------------------
+0032                  00097 Delay_ms
+0032                  00098 delay_j1
+0032   30B9           00099         movlw   .185
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0033   00A2           00100         movwf   delay_ms_tmp+1
+0034   0000           00101         nop
+0035                  00102 delay_j2
+0035   0000           00103         nop
+0036   0000           00104         nop
+0037   0000           00105         nop
+0038   0000           00106         nop
+0039   0000           00107         nop
+003A   0000           00108         nop
+003B   0000           00109         nop
+003C   0000           00110         nop
+003D   0000           00111         nop
+003E   0000           00112         nop
+003F   0000           00113         nop
+0040   0000           00114         nop
+0041   0000           00115         nop
+0042   0000           00116         nop
+0043   0000           00117         nop
+0044   0000           00118         nop
+0045   0000           00119         nop
+0046   0000           00120         nop
+0047   0000           00121         nop
+0048   0000           00122         nop
+0049   0000           00123         nop
+004A   0000           00124         nop
+004B   0000           00125         nop
+004C   0000           00126         nop
+004D   0BA2           00127         decfsz  delay_ms_tmp+1, F
+004E   2835           00128         goto    delay_j2
+004F   0000           00129         nop
+0050   0BA1           00130         decfsz delay_ms_tmp, F
+0051   2832           00131         goto    delay_j1
+0052   0000           00132         nop
+0053   0008           00133         return
+0054                  00134 Delay_ms_Sonu
+                      00135 ;-------------------------------------------------------------------
+                      00136 ; ANA PROGRAM 
+                      00137 ;-------------------------------------------------------------------
+0054                  00138 ana_program
+0054   202B           00139         call    ilk_islemler            ;ilk iþlemler yapýlýyor.
+0055   307F           00140         movlw   D'127'
+0056   1283 1303      00141         banksel PWM_Set_Degeri    
+0058   00A3           00142         movwf   PWM_Set_Degeri          ;Duty Cycle %50 deðere set edildi.
+0059                  00143 ana_j1
+0059   1283 1303      00144         banksel PORTA
+005B   1A05           00145         btfsc   PORTA,4                 ;RA4'e baðlý baþlama butonuna 
+                      00146                                         ;basýldý ise bir komut atla.
+005C   2859           00147         goto    ana_j1                  ;Baþlama butonuna basýlana kadar bekle.
+005D   2002           00148         call    PWM_Baslat              ;PWM ilk iþlemleri gerçekleþtirildi.
+005E   2013           00149         call    PWM_Set
+005F                  00150 ana_j2
+005F   1283 1303      00151         banksel PORTA   
+0061   1985           00152         btfsc   PORTA,3                 ;RA3'e baðlý Dur butonuna basýldý 
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00153                                         ;ise bir komut atla.
+0062   2865           00154         goto    ana_j3                  ;Dur butonuna basýlmadý ise diðer 
+                      00155                                         ;butonlarý kontrol et.
+0063   2026           00156         call    PWM_Sonlandir           
+0064   2859           00157         goto    ana_j1
+0065                  00158 ana_j3
+0065   1283 1303      00159         banksel PORTA
+0067   1885           00160         btfsc   PORTA, 1                ;RA1 pinine baðlý ARTIRMA butonuna 
+                      00161                                         ;basýldý ise bir komut atla.
+0068   2871           00162         goto    ana_j4                  ;Hayýr ise EKSÝLTME butonunu 
+                      00163                                         ;kontrol et.
+0069   30FF           00164         movlw   0xFF
+006A   0223           00165         subwf   PWM_Set_Degeri, W               
+006B   1C03           00166         btfss   STATUS, C               ;PWM_Set_Degeri >= 0xFF ise bir 
+                      00167                                         ;komut atla.
+006C   0AA3           00168         incf    PWM_Set_Degeri, F       ;PWM_Set_Degeri < 0xFF ise deðiþken 
+                      00169                                         ;içeriðini bir artýr.
+006D   300A           00170         movlw   D'10'                   ;Delay süresi Buton arkýný önlemek 
+                      00171                                         ;için deðiþtirilebilir.
+006E   00A1           00172         movwf   delay_ms_tmp            ;10ms deðerini Delay alt programý 
+                      00173                                         ;parametresine yükle.
+006F   2032           00174         call    Delay_ms                ;Buton arkýný önlemek için 10ms 
+                      00175                                         ;bekle.
+0070   2013           00176         call    PWM_Set                 ;PWM çýkýþý PWM_Set_Degeri'ne göre 
+                      00177                                         ;ayarlanýyor.
+0071                  00178 ana_j4
+0071   1283 1303      00179         banksel PORTA
+0073   1905           00180         btfsc   PORTA, 2                ;RA2 pinine baðlý AZALTMA butonuna 
+                      00181                                         ;basýldý ise bir komut atla.
+0074   285F           00182         goto    ana_j2                  ;Hayýr ise ARTIRMA butonunu 
+                      00183                                         ;kontrol et.
+0075   0823           00184         movf    PWM_Set_Degeri, W
+0076   3C00           00185         sublw   D'0'
+0077   1C03           00186         btfss   STATUS, C               ;PWM_Set_Deðeri = 0x00 ise bir 
+                      00187                                         ;komut atla.
+0078   03A3           00188         decf    PWM_Set_Degeri, F       ;PWM_Set_Deðeri > 0x00 ise deðiþken 
+                      00189                                         ;içeriðini bir azalt.
+0079   300A           00190         movlw   D'10'                   ;Delay süresi Buton arkýný önlemek 
+                      00191                                         ;için deðiþtirilebilir.
+007A   00A1           00192         movwf   delay_ms_tmp            ;10ms deðerini Delay alt programý 
+                      00193                                         ;parametresine yükle.
+007B   2032           00194         call    Delay_ms                ;Buton arkýný önlemek için 10ms 
+                      00195                                         ;bekle.
+007C   2013           00196         call    PWM_Set                 ;PWM çýkýþý PWM_Set_Deðeri'ne göre 
+                      00197                                         ;ayarlanýyor.
+007D   285F           00198         goto    ana_j2
+                      00199 
+                      00200         END                             ;Program sonu.
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+Delay_ms                          00000032
+Delay_ms_Sonu                     00000054
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+PWM_Baslat                        00000002
+PWM_Set                           00000013
+PWM_Set_Degeri                    00000023
+PWM_Sonlandir                     00000026
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+MPASM  4.02 Released                             PROG_5_3.ASM   8-10-2006  13:29:32         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+ana_j1                            00000059
+ana_j2                            0000005F
+ana_j3                            00000065
+ana_j4                            00000071
+ana_program                       00000054
+delay_j1                          00000032
+delay_j2                          00000035
+delay_ms_tmp                      00000021
+ilk_islemler                      0000002B
+tmp                               00000020
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXX--
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   126
+Program Memory Words Free:  8066
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
+
+

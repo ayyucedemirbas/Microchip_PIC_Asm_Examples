@@ -1,0 +1,11 @@
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 2 : Found directive in column 1. (include)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 5 : Found directive in column 1. (ORG)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 7 : Found directive in column 1. (ORG)
+Message[305] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 28 : Using default destination of 1 (file).
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 54 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 56 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 67 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO CALISMA\22_TIMER1_DISPLAY_SAYICI(ORHAN)\UNTITLED.ASM 93 : Found directive in column 1. (end)

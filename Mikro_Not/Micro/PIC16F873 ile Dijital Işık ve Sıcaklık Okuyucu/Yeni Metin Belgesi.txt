@@ -1,0 +1,2 @@
+Bu projede sensörlerin bulunduðu yerin sýcaklýðý ve ortamýn ýþýðý ( parlaklýðý ) ölçülmektedir. ADC’ deki data hesaplanarak LCD ekranda görülmektedir. 
+Devre dijital sýcaklýk ve ýþýk ölçer gibi çalýþmaktadýr. Her iki sensörde PIC’ in analog kanallarýna baðlýdýr. Hesaplama iþlemlerini basitleþtirmek için 2.56 V’ luk bir referans voltajý kullanýlmýþtýr.

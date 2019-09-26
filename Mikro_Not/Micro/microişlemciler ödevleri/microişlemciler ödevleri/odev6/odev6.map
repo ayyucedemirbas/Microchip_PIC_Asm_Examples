@@ -1,0 +1,78 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Tue Dec 06 08:29:50 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x00015c
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x0000b1      
+            175 out of 8453 program addresses used, program memory utilization is 2%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                      ALT   0x000080    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+              ANA_PROGRAM   0x000084    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    CARP1   0x00003b    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    CARP2   0x00002e    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    CARP3   0x000024    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   CHECK1   0x000081    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    DONGU   0x00009e    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   DONGU1   0x000079    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   DONGU2   0x00007b    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                  GECIKME   0x000077    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    HESAP   0x00000f    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   HESAP2   0x000018    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    KESME   0x000004    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+              KESME_BITIR   0x00000d    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    TABLE   0x00006c    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                  birinci   0x000049    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                 dordebol   0x000067    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                 dorduncu   0x00005f    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   ikinci   0x00004f    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   kisim1   0x000043    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   kisim2   0x000046    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                  tempeat   0x000040    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   ucuncu   0x000057    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    KESME   0x000004    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+              KESME_BITIR   0x00000d    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    HESAP   0x00000f    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   HESAP2   0x000018    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    CARP3   0x000024    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    CARP2   0x00002e    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    CARP1   0x00003b    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                  tempeat   0x000040    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   kisim1   0x000043    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   kisim2   0x000046    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                  birinci   0x000049    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   ikinci   0x00004f    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   ucuncu   0x000057    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                 dorduncu   0x00005f    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                 dordebol   0x000067    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    TABLE   0x00006c    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                  GECIKME   0x000077    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   DONGU1   0x000079    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   DONGU2   0x00007b    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                      ALT   0x000080    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                   CHECK1   0x000081    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+              ANA_PROGRAM   0x000084    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+                    DONGU   0x00009e    program     static C:\Users\GENCO\Desktop\odev6\odev6.asm
+
+

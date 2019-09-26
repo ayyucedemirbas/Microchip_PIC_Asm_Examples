@@ -1,0 +1,7 @@
+Warning[215] C:\USERS\BüNYAMIN ÖGET\DESKTOP\DENE\DENE.ASM 1 : Processor superseded by command line.  Verify processor symbol.
+Message[301] C:\PROGRAM FILES (X86)\MICROCHIP\MPASM SUITE\P16F877A.INC 33 : MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+Warning[207] C:\USERS\BüNYAMIN ÖGET\DESKTOP\DENE\DENE.ASM 4 : Found label after column 1. (Tmr0Sayaci)
+Warning[207] C:\USERS\BüNYAMIN ÖGET\DESKTOP\DENE\DENE.ASM 5 : Found label after column 1. (Tmr1Sayaci)
+Message[302] C:\USERS\BüNYAMIN ÖGET\DESKTOP\DENE\DENE.ASM 59 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BüNYAMIN ÖGET\DESKTOP\DENE\DENE.ASM 61 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\BüNYAMIN ÖGET\DESKTOP\DENE\DENE.ASM 71 : Register in operand not in bank 0.  Ensure that bank bits are correct.

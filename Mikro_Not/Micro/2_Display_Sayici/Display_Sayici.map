@@ -1,0 +1,44 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Wed Dec 29 00:46:45 2010
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000054
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000029      
+            42 out of 8453 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    BASLA   0x00000e    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                    BEKLE   0x000001    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                       D1   0x000003    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                       D2   0x000005    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                       D3   0x000007    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                   LOOKUP   0x00001c    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                      SAY   0x000015    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    BEKLE   0x000001    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                       D1   0x000003    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                       D2   0x000005    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                       D3   0x000007    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                    BASLA   0x00000e    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                      SAY   0x000015    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+                   LOOKUP   0x00001c    program     static C:\Users\Google\Desktop\Mikro\2_Display_Sayici\Display_Sayici.asm
+
+

@@ -1,0 +1,917 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0054)http://www.geocities.com/dariuskrail20/PICtemplite.asm -->
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=windows-1254">
+<META content="MSHTML 6.00.2600.0" name=GENERATOR></HEAD>
+<BODY><PRE>;------------------------------------------------------------------------------------------------------------------------
+; Source code for the PIC16F873 based Digital Light and Temp. Reader.
+;------------------------------------------------------------------------------------------------------------------------
+;	
+;	**Analog Pinouts
+;	Analog Voltage Input	-	RA0 (Temp), RA1 (Light).
+;	Low Voltage Reference	- 	Vss
+;	High Voltage Reference	-	RA3, 2.56V
+;	Resolution = 2.56V / 1024 = 2.5mV / bit.
+;
+;	**USART Pinouts
+;	Transmit Data			- RC6 (TX)
+;
+;	**Modes
+;	Debug Mode				- RC4 (Low = Debug, High = User)
+;	Infra Mode				- RC5 (Low = Enabled, High = Disabled)
+;
+;	**LCD Pinouts
+;	1	Vss -	Ground, 3rd pin of the potentiometer
+;  	2	Vcc	-	5V DC, 1st pin of the potentiometer
+;  	3 	Vee	-	Middle pin of the potentiometer
+;  	4 	RS	-	RC0		(Data - 1, Instruction - 0)
+;  	5 	R/W	-	RC1		(R - 1, W - 0)
+;	6 	E	-	RC2		(Enable Pulse)
+;	7 	DB0	-	RB0		(LSB)
+;	8 	DB1	-	RB1
+;	9 	DB2	-	RB2
+; 	10	DB3	-	RB3		(Lower 4 bits)
+; 	11	DB4 -	RB4		(Upper 4 bits)
+; 	12	DB5	-	RB5
+; 	13	DB6	-	RB6
+; 	14	DB7	-	RB7		(MSB)
+;
+;	Instruction Cycle Time = 1 / (4MHz / 4) = 1us per instruction
+;------------------------------------------------------------------------------------------------------------------------
+
+		LIST P=16F873
+		INCLUDE "p16f873.inc"   
+;		ERRORLEVEL -302        
+		__CONFIG _PWRTE_OFF &amp; _HS_OSC &amp; _WDT_OFF &amp; _WRT_ENABLE_ON &amp; _LVP_OFF &amp; _BODEN_OFF;  configuration switches
+
+			CBlock 0x20
+			N 					; Delay registers.
+			FIXDELAY		
+			visdelay
+			dataL
+
+			rmng_num			; Digit breaker registers.
+			quotient
+			temp_num
+
+			tempL				; Temp. variable registers.
+			tempH
+			tempCfract
+
+			digittempdata0		; Temp Data digit registers.
+			digittempdata1
+			digittempdata2
+			digittempdataL0
+			digittempdataL1
+			digittempdataL2
+
+			tempnonfract0		; Actual temperature digit registers.
+			tempnonfract1
+			tempnonfract2
+			tempfract0
+			tempfract1
+
+			briteL				; Brightness variable registers.
+			briteH
+			britefract
+
+			digitbritedata0		; Brightness data digit registers.
+			digitbritedata1
+			digitbritedata2
+			digitbritedataL0
+			digitbritedataL1
+			digitbritedataL2
+
+			britenonfract0		; Actual temperature digit registers.
+			britenonfract1
+			britenonfract2
+			britefract0
+			britefract1
+
+			tempHtrans			; Data to be passed to PC.
+			tempLtrans
+			briteHtrans
+			briteLtrans
+			ENDC
+
+			org 0x00
+			nop					; Reserved for ICD II.
+			goto start
+
+start 		call initports		; Initialize Ports as output/inputs.
+			call setupUART		; Setup USART.
+			call delay			; Delay for USART settling time.
+			call INITLCD		; Initialize LCD.
+
+main		call tempconv		; Convert temperature readings.
+			call briteconv		; Convert brightness readings.
+			call passdata2pc	; Pass data to PC.
+			call displaydata	; Display the calculated data, either in Debug or User mode.
+			call visualdelay	; Visual delay for the to view data.
+						
+			goto main
+
+;------------------------------------------------------------------------------------------------------------------------
+; Subroutine to initialize the PORTs as Inputs or Outputs.
+;------------------------------------------------------------------------------------------------------------------------		
+
+initports
+			clrf PORTB
+			clrf PORTC
+
+			banksel TRISB		; All PORTB pins as output.
+			movlw b'00000000'
+			movwf TRISB
+
+			banksel TRISC		; Pins RC0-RC3 and RC6 as output. 
+			movlw b'10110000'	; Pins RC4-RC5 and RC7 as input.
+			movwf TRISC
+
+			return		
+
+;------------------------------------------------------------------------------------------------------------------------
+; Initialize the LCD.
+;------------------------------------------------------------------------------------------------------------------------
+
+INITLCD		
+			BANKSEL PORTB		; Select Bank for PORTB.
+
+			MOVLW	0xE6		; Call for 46ms delay
+			CALL 	NDELAY		; Wait for VCC of the LCD to reach 5V
+			
+			BCF		PORTC, 0	; Clear RS to select Instruction Reg.
+			BCF		PORTC, 1	; Clear R/W to write
+		
+			MOVLW	B'00111011'	; Function Set to 8 bits, 2 lines and 5x7 dot matrix
+			MOVWF 	PORTB
+			CALL	ENABLEPULSE
+			CALL	DELAY50
+			CALL	ENABLEPULSE
+			CALL	DELAY50
+			CALL	ENABLEPULSE
+			CALL	DELAY50		; Call 50us delay and wait for instruction completion
+
+			MOVLW	B'00001000'	; Display OFF
+			MOVWF	PORTB
+			CALL	ENABLEPULSE
+			CALL	DELAY50		; Call 50us delay and wait for instruction completion
+
+			MOVLW	B'00000001'	; Clear Display
+			MOVWF	PORTB
+			CALL	ENABLEPULSE
+			MOVLW	0x09		; Call 1.8ms delay and wait for instruction completion				
+			CALL	NDELAY		
+
+			MOVLW	B'00000010'	; Cursor Home
+			MOVWF	PORTB
+			CALL	ENABLEPULSE
+			MOVLW	0x09		; Call 1.8ms delay and wait for instruction completion				
+			CALL	NDELAY
+		
+			MOVLW	B'00001100'	; Display ON, Cursor OFF, Blinking OFF
+			MOVWF	PORTB
+			CALL	ENABLEPULSE
+			CALL	DELAY50		; Call 50us delay and wait for instruction completion
+
+			MOVLW 	B'00000110'	; Entry Mode Set, Increment &amp; No display shift
+			MOVWF	PORTB
+			CALL	ENABLEPULSE
+			CALL	DELAY50		; Call 50us delay and wait for instruction completion
+
+			BSF		PORTC, 0	; Set RS to select Data Reg.
+			BCF		PORTC, 1	; Clear R/W to write
+
+			RETURN
+
+;------------------------------------------------------------------------------------------------------------------------
+; Enable Pulse for writing or reading instructions or data
+;------------------------------------------------------------------------------------------------------------------------
+
+ENABLEPULSE	BCF	PORTC, 2		; 2us LOW followed by 3us HIGH Enable Pulse and 2us LOW.
+			NOP
+			NOP
+			BSF	PORTC, 2
+			NOP
+			NOP
+			NOP
+			BCF PORTC, 2
+			NOP
+			NOP
+			RETURN
+
+;------------------------------------------------------------------------------------------------------------------------
+; N DELAY SUBROUTINE, delay in multiples of 200us up to 200us*255 = 51ms (or more)
+;------------------------------------------------------------------------------------------------------------------------
+
+NDELAY
+			MOVWF N				; N is delay multiplier
+NOTOVER		CALL DELAY200		; Call for 200us
+			DECFSZ N, 1			; Decrease N by 1
+			GOTO NOTOVER		; The delay isn't done
+			RETURN
+	
+;------------------------------------------------------------------------------------------------------------------------
+; FIXED 200us DELAY (Possibly more due to execution time of the DECFSZ instruction.)
+;------------------------------------------------------------------------------------------------------------------------
+
+DELAY200	
+			MOVLW 0x42			; 66 LOOPS
+			MOVWF FIXDELAY		; 200us fixed delay
+NOTDONE200	DECFSZ FIXDELAY, 1 	; Decrement of FIXDELAY
+			GOTO NOTDONE200		; If 200us isn't up go back to NOTDONE200
+			RETURN				; If 200us is up then return to instruction.
+
+;------------------------------------------------------------------------------------------------------------------------
+; FIXED 50us DELAY (Possibly more due to execution time of the DECFSZ instruction.)
+;------------------------------------------------------------------------------------------------------------------------
+
+DELAY50	
+			MOVLW 0x10			; 16 LOOPS
+			MOVWF FIXDELAY		; 50us fixed delay
+NOTDONE50	DECFSZ FIXDELAY, 1 	; Decrement of FIXDELAY
+			GOTO NOTDONE50		; If 50us isn't up go back to NOTDONE50
+			RETURN				; If 50us is up then return to instruction.
+
+;------------------------------------------------------------------------------------------------------------------------
+; Visual delay subroutine.
+;------------------------------------------------------------------------------------------------------------------------
+
+visualdelay movlw 0x12
+			movwf visdelay
+
+seetemp		movlw 0xFF
+			call NDELAY
+			decfsz visdelay, 1
+			goto seetemp
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Fast Directive to write characters to LCD.
+;------------------------------------------------------------------------------------------------------------------------
+
+PUTCHAR
+			MOVWF PORTB			; A quicker way of writing characters to LCD.
+			CALL ENABLEPULSE
+			CALL CHKBUSY
+			RETURN
+
+;------------------------------------------------------------------------------------------------------------------------
+; Subroutine to check for the BUSY flag. Mostly used for instructions that follows up a character write.
+;------------------------------------------------------------------------------------------------------------------------
+
+CHKBUSY
+			bcf	PORTC, 0		; Clear RS to select Instruction Reg.
+			bsf	PORTC, 1		; Set R/W to read.
+
+			banksel TRISB		; Select Bank for TRISC.
+			movlw 0xFF			; Define all PORTC Pins as Inputs.
+			movwf TRISB
+
+			banksel PORTC		; Select Bank for PORTC.
+			bsf PORTC, 2		; I tried to write my own code for this part initially but I wasn't successful.
+			movf PORTB, w		; Therefore, I implemented a portion of Peter Ouwehand's LCD Code.
+			bcf PORTC, 2		; Will look more into the BUSY flag of the LCD.
+			andlw 0x80			; Credits to Peter Ouwehand for his code here. :)
+			btfss STATUS, Z
+			goto CHKBUSY
+
+			banksel TRISB		; Select Bank for TRISB.
+			movlw 0x00			; Define all PORTC Pins as Outputs.
+			movwf TRISB
+		
+			banksel PORTC		; Select Bank for PORTA, B, and C.
+			bsf PORTC, 0		; Set RS to select Data Register.
+			bcf PORTC, 1		; Clear R/W to write.
+			
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Position Cursor to the next line.
+;------------------------------------------------------------------------------------------------------------------------
+
+nextline
+			banksel PORTC
+			bcf PORTC, 0	; Select Instructions Register.
+			bcf PORTC, 1	; Select Write.
+
+			movlw b'11000000'	; Shift cursor to second line at 0x40 RAM address on LCD.
+			call PUTCHAR
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Clear screen and Cursor home.
+;------------------------------------------------------------------------------------------------------------------------
+
+clrscreen
+			banksel PORTC
+			bcf PORTC, 0		; Clear RS to select Instructions Register.
+			bcf PORTC, 1		; Clear R/W to select Write.
+
+			banksel PORTB
+			MOVLW B'00000001'	; Clear Display
+			call PUTCHAR
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Position Cursor to home position.
+;------------------------------------------------------------------------------------------------------------------------
+
+cursorhome
+			banksel PORTC
+			bcf PORTC, 0	; Select Instructions Register.
+			bcf PORTC, 1	; Select Write.
+
+			movlw b'00000010'	; Position cursor to home position.
+			call PUTCHAR
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Initialize ADC Subroutine
+;------------------------------------------------------------------------------------------------------------------------
+		
+initadc		
+			banksel TRISA		; Select Bank for TRISA.
+			movlw b'00111111'	; Initialize RA0 - RA5 as Inputs.
+			movwf TRISA
+
+			banksel ADCON1		; Select Bank for ADCON1.
+			movlw b'00000101'	; ADFM for Left Justified, Vref-=Vss Vref+=AN3 Analog In=AN0, AN1 (R/C = 1/2).
+			movwf ADCON1
+
+			banksel ADCON0		; Select Bank for ADCON0.
+			movlw b'01000001'	; Fosc/8, Channel 0, Enable the ADC (Default Chan. 0)
+			movwf ADCON0		
+			
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Wait 20us for Acquisition time in order for holding capacitor to charge up.
+;------------------------------------------------------------------------------------------------------------------------
+
+delay20		
+			banksel FIXDELAY	; A loop to generate 20us delay.
+			movlw 0x0A
+			movwf FIXDELAY
+			
+notdone20	decfsz FIXDELAY, 1 
+			goto notdone20
+			
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; This routine starts the AD Conversion and waits for it to complete.
+;------------------------------------------------------------------------------------------------------------------------
+
+startadc	
+			banksel ADCON0		; Select Bank for ADCON0.
+			bsf ADCON0, GO		; Set the GO bit to begin AD Conversion.
+			
+			banksel ADCON0		; Select Bank for ADCON0.
+checkdone	btfsc ADCON0, GO	; Check if the conversion is done?
+			goto checkdone		; If not, check again.
+
+			return				; Else, return to the main programme.
+
+;------------------------------------------------------------------------------------------------------------------------
+; Subroutine to setup the USART.
+;------------------------------------------------------------------------------------------------------------------------
+
+setupUART
+			banksel SPBRG			; Load into SPBRG the value of 103 for Baud Rate of 2400 with error of 0.17%.
+			movlw d'103'
+			movwf SPBRG
+
+			movlw b'00100100'		; Set 8 bit Transmission, Enable Transmit, Asynchronous Mode, High Speed.
+			movwf TXSTA
+
+			banksel RCSTA
+			movlw b'10010000'		; Enable Serial Port, 8 bit Reception, Enable Continuous Receive.
+			movwf RCSTA
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Delay to provide some settling time for start up.
+;------------------------------------------------------------------------------------------------------------------------
+
+delay		
+			banksel dataL
+			clrf dataL
+
+settle		decfsz dataL, f			; The delay loop.
+			goto settle				
+
+			movf RCREG, w			; Flush the receive buffer.
+			movf RCREG, w
+			movf RCREG, w
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Receive character from RS232 and store in WREG.
+;------------------------------------------------------------------------------------------------------------------------
+
+receive
+			banksel PIR1
+waitrcv		btfss PIR1, RCIF		; Wait for RCIF to be set, when set then receive buffur is full.
+			goto waitrcv			; If not set, then keep waiting.
+			movf RCREG, w			; If set, move buffer content to WREG.
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Transmit the character that is on WREG to RS232 and wait until the sending is complete.
+;------------------------------------------------------------------------------------------------------------------------
+
+transmit
+			banksel TXREG
+			movwf TXREG				; Move character to TXREG to be transmitted.
+
+			banksel TXSTA
+waittrn		btfss TXSTA, TRMT		; Check if buffer is empty.
+			goto waittrn			; If no, then keep waiting.
+			banksel PORTB			; If yes, select Bank 0 and return.
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Select Channel AN0 of A/D Converter.
+;------------------------------------------------------------------------------------------------------------------------
+
+chan0		
+			banksel ADCON0
+			bcf ADCON0, 5
+			bcf ADCON0, 4
+			bcf ADCON0, 3
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Select Channel AN1 of A/D Converter.
+;------------------------------------------------------------------------------------------------------------------------
+
+chan1		
+			banksel ADCON0
+			bcf ADCON0, 5
+			bcf ADCON0, 4
+			bsf ADCON0, 3
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Breaks down a number to its individual digits.
+;------------------------------------------------------------------------------------------------------------------------
+
+get_dig
+			movlw d'10'			; To split the digits, divide them by 10.
+			incf quotient, f	; Increment of quotient with each subtraction by 10.
+			subwf rmng_num, f	; Subtract the number by 10.
+			skpnc				; If already negative, stop division.
+			goto get_dig		; Else, continue dividing.
+			addwf rmng_num, f	; Restore number.
+			decf quotient, f	; Restore quotient.
+
+			movf rmng_num, w	; Move rmng_num to temp_num.
+			movwf temp_num
+			movf quotient, w	; Move quotient to rmng_num.
+			movwf rmng_num
+			movf temp_num, w
+
+			return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Temperature Conversion Subroutine.
+;------------------------------------------------------------------------------------------------------------------------
+
+tempconv
+			call initadc		; Initialize and begin ADC on AN0.
+			call chan0
+			call delay20		; Delay to charge up holding capacitor.
+			call startadc		; Start ADC and await the completion.
+
+			banksel ADRESH		; Pass high byte to tempH.
+			movf ADRESH, w
+			movwf tempH
+			movwf tempHtrans
+
+			banksel ADRESL		; Pass low byte to tempL.
+			movf ADRESL, w
+			banksel tempL
+			movwf tempL
+			movwf tempLtrans
+
+arrgtemp	bcf STATUS, C		; Rearrange tempL from xx00 0000 to 0000 00xx.
+			rlf tempL, f
+			btfss STATUS, C
+			goto $+2
+			bsf tempL, 0
+
+			bcf STATUS, C
+			rlf tempL, f
+			btfss STATUS, C
+			goto $+2
+			bsf tempL, 0
+
+brkdigtemp	
+			banksel tempH
+			movf tempH, w
+			movwf rmng_num
+
+			clrf quotient			; Break ADC high byte result to individual digits to be displayed.
+			call get_dig
+			movwf digittempdata0
+
+			clrf quotient
+			call get_dig
+			movwf digittempdata1
+
+			clrf quotient
+			call get_dig
+			movwf digittempdata2
+
+			banksel tempL
+			movf tempL, w
+			movwf rmng_num
+
+			clrf quotient			; Break ADC low byte result to individual digits to be displayed.
+			call get_dig
+			movwf digittempdataL0
+
+			clrf quotient
+			call get_dig
+			movwf digittempdataL1
+
+			clrf quotient
+			call get_dig
+			movwf digittempdataL2
+
+calctempC					
+				banksel tempL
+				movlw d'25'				; Assign multiplier and clear fractional temperature reading.
+				clrf tempCfract
+
+mult25			addwf tempCfract, f		; Multiply ADRESL by 25 to obtain fractional temperature reading.
+				decfsz tempL, f
+				goto mult25
+
+breaktempC		movf tempH, w			; Break up temperature readings to ind. digits to be displayed.
+				movwf rmng_num			
+
+				clrf quotient
+				call get_dig
+				movwf tempnonfract0
+
+				clrf quotient
+				call get_dig
+				movwf tempnonfract1
+
+				clrf quotient
+				call get_dig
+				movwf tempnonfract2
+
+				movf tempCfract, w
+				movwf rmng_num
+
+				clrf quotient
+				call get_dig
+				movwf tempfract0
+
+				clrf quotient
+				call get_dig
+				movwf tempfract1
+
+				return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Brightness Conversion Subroutine.
+;------------------------------------------------------------------------------------------------------------------------
+
+briteconv
+			call initadc		; Initialize and begin ADC on AN1.
+			call chan1
+			call delay20		; Delay to charge up holding capacitor.
+			call delay20
+			call startadc		; Start ADC and await the completion.
+
+			banksel ADRESH		; Pass high byte to briteH.
+			movf ADRESH, w
+			movwf briteH
+			movwf briteHtrans
+
+			banksel ADRESL		; Pass low byte to briteL.
+			movf ADRESL, w
+			banksel briteL
+			movwf briteL
+			movwf briteLtrans
+
+arrgbrite	bcf STATUS, C		; Rearrange briteL from xx00 0000 to 0000 00xx.
+			rlf briteL, f
+			btfss STATUS, C
+			goto $+2
+			bsf briteL, 0
+
+			bcf STATUS, C
+			rlf briteL, f
+			btfss STATUS, C
+			goto $+2
+			bsf briteL, 0
+
+			bcf STATUS, C		; Pass LSbit of briteH to 2nd bit of briteL.
+			rrf briteH, f
+			btfss STATUS, C
+			goto $+2
+			bsf briteL, 2
+
+chkbrite	movlw d'30'			; Check if brightness is below 30%.
+			subwf briteH, w		
+			skpc
+			goto onbklit		; If yes, activate backlit.
+			goto offbklit		; Else, off backlit.
+
+onbklit		bsf PORTC, 3
+			goto brkdigbrite
+offbklit	bcf PORTC, 3
+			goto brkdigbrite
+			
+brkdigbrite	
+			banksel briteH
+			movf briteH, w
+			movwf rmng_num
+
+			clrf quotient			; Break ADC high byte result to individual digits to be displayed.
+			call get_dig
+			movwf digitbritedata0
+
+			clrf quotient
+			call get_dig
+			movwf digitbritedata1
+
+			clrf quotient
+			call get_dig
+			movwf digitbritedata2
+
+			banksel briteL
+			movf briteL, w
+			movwf rmng_num
+
+			clrf quotient			; Break ADC low byte result to individual digits to be displayed.
+			call get_dig
+			movwf digitbritedataL0
+
+			clrf quotient
+			call get_dig
+			movwf digitbritedataL1
+
+			clrf quotient
+			call get_dig
+			movwf digitbritedataL2
+
+calcbrite					
+				banksel briteL
+				movlw d'13'				; Assign multiplier and clear fractional brightness reading.
+				clrf britefract
+
+mult13			addwf britefract, f		; Multiply ADRESL by 13 to obtain fractional brightness reading.
+				decfsz briteL, f
+				goto mult13
+
+breakbrite		movf briteH, w			; Break up brightness readings to ind. digits to be displayed.
+				movwf rmng_num			
+
+				clrf quotient
+				call get_dig
+				movwf britenonfract0
+
+				clrf quotient
+				call get_dig
+				movwf britenonfract1
+
+				clrf quotient
+				call get_dig
+				movwf britenonfract2
+
+				movf britefract , w
+				movwf rmng_num
+
+				clrf quotient
+				call get_dig
+				movwf britefract0
+
+				clrf quotient
+				call get_dig
+				movwf britefract1
+
+				return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Check status on RC5 to determine whether to pass data to PC.
+;------------------------------------------------------------------------------------------------------------------------
+
+passdata2pc
+				btfss PORTC, 5
+				goto transdata
+				goto transdone
+
+transdata		movf tempHtrans, w			; Pass temp results to PC.
+				call transmit
+				movf tempLtrans, w
+				call transmit
+				movf briteHtrans, w
+				call transmit
+				movf briteLtrans, w
+				call transmit
+
+				goto transdone
+
+transdone		return
+
+;------------------------------------------------------------------------------------------------------------------------
+; Check status on RC4 and display the data.
+;------------------------------------------------------------------------------------------------------------------------
+
+displaydata		movlw d'48'					; Convert individual digits to ASCII.
+				addwf digittempdata2, f
+				addwf digittempdata1, f
+				addwf digittempdata0, f
+				addwf digittempdataL2, f
+				addwf digittempdataL1, f
+				addwf digittempdataL0, f
+
+				addwf tempnonfract2, f
+				addwf tempnonfract1, f
+				addwf tempnonfract0, f
+				addwf tempfract1, f
+				addwf tempfract0, f
+
+				addwf digitbritedata2, f
+				addwf digitbritedata1, f
+				addwf digitbritedata0, f
+				addwf digitbritedataL2, f
+				addwf digitbritedataL1, f
+				addwf digitbritedataL0, f
+
+				addwf britenonfract2, f
+				addwf britenonfract1, f
+				addwf britenonfract0, f
+				addwf britefract1, f
+				addwf britefract0, f
+
+				btfss PORTC, 4			; Check Pin 4 of PORTC. If HIGH then display calc. data.
+				goto debugdata			; Else, display raw ADC data.
+				goto userdata		
+
+debugdata		call cursorhome			; Reposition cursor to home.
+
+				movlw A'A'				; Displays "ADRES0 xxx yyy"
+				call PUTCHAR			;		   "ADRES1 xxx yyy"
+				movlw A'D'
+				call PUTCHAR
+				movlw A'R'
+				call PUTCHAR
+				movlw A'E'
+				call PUTCHAR
+				movlw A'S'
+				call PUTCHAR
+				movlw A'0'
+				call PUTCHAR
+
+				movlw A' '
+				call PUTCHAR
+				movf digittempdata2, w
+				call PUTCHAR
+				movf digittempdata1, w
+				call PUTCHAR
+				movf digittempdata0, w
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movf digittempdataL2, w
+				call PUTCHAR
+				movf digittempdataL1, w
+				call PUTCHAR
+				movf digittempdataL0, w
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+
+				call nextline
+
+				movlw A'A'
+				call PUTCHAR
+				movlw A'D'
+				call PUTCHAR
+				movlw A'R'
+				call PUTCHAR
+				movlw A'E'
+				call PUTCHAR
+				movlw A'S'
+				call PUTCHAR
+				movlw A'1'
+				call PUTCHAR
+
+				movlw A' '
+				call PUTCHAR
+				movf digitbritedata2, w
+				call PUTCHAR
+				movf digitbritedata1, w
+				call PUTCHAR
+				movf digitbritedata0, w
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movf digitbritedataL2, w
+				call PUTCHAR
+				movf digitbritedataL1, w
+				call PUTCHAR
+				movf digitbritedataL0, w
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+
+				goto displaydone
+
+userdata		call cursorhome			; Reposition cursor to home.
+
+				movlw A'T'				; Display message "Temp    xxx.yy C"
+				call PUTCHAR			;                 "Light   xxx.yy %"
+				movlw A'e'
+				call PUTCHAR
+				movlw A'm'
+				call PUTCHAR
+				movlw A'p'
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+
+				movf tempnonfract2, w
+				call PUTCHAR
+				movf tempnonfract1, w
+				call PUTCHAR
+				movf tempnonfract0, w
+				call PUTCHAR
+				movlw A'.'
+				call PUTCHAR
+				movf tempfract1, w
+				call PUTCHAR
+				movf tempfract0, w
+				call PUTCHAR
+				movlw b'11011111'
+				call PUTCHAR
+				movlw A'C'
+				call PUTCHAR
+
+				call nextline
+
+				movlw A'L'
+				call PUTCHAR
+				movlw A'i'
+				call PUTCHAR
+				movlw A'g'
+				call PUTCHAR
+				movlw A'h'
+				call PUTCHAR
+				movlw A't'
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+				movlw A' '
+				call PUTCHAR
+
+				movf britenonfract2, w
+				call PUTCHAR
+				movf britenonfract1, w
+				call PUTCHAR
+				movf britenonfract0, w
+				call PUTCHAR
+				movlw A'.'
+				call PUTCHAR
+				movf britefract1, w
+				call PUTCHAR
+				movf tempfract0, w
+				call PUTCHAR
+
+				movlw A' '
+				call PUTCHAR
+				movlw A'%'
+				call PUTCHAR
+
+displaydone		return
+
+;------------------------------------------------------------------------------------------------------------------------
+; End of Programme.
+;------------------------------------------------------------------------------------------------------------------------
+				end
+</PRE></BODY></HTML>

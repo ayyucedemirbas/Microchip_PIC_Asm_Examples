@@ -1,0 +1,114 @@
+MPASM  5.42                       ODEVBIR.ASM   10-19-2011  20:09:32         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (list)
+Warning[215]: Processor superseded by command line.  Verify processor symbol.
+                      00001 list p=16f877A
+Error[105]  : Cannot open file (Include File "16F877A.INC" not found)
+                      00002 #include <16F877A.INC>
+Warning[205]: Found directive in column 1. (ORG)
+0000                  00003 ORG 0X000
+  00000025            00004 SAY EQU h'25'
+Warning[203]: Found opcode in column 1. (goto)
+Error[113]  : Symbol not previously defined (ana)
+Error[113]  : Symbol not previously defined (program)
+Error[112]  : Missing operator
+0000   2800           00005 goto ana program
+Warning[205]: Found directive in column 1. (org)
+0004                  00006 org 0X004
+Warning[203]: Found opcode in column 1. (goto)
+0004   2814           00007 goto kesme
+0005                  00008 anaprogram
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (RP0)
+0005   1000           00009         bcf STATUS,RP0
+Error[113]  : Symbol not previously defined (PORTD)
+0006   0180           00010         clrf PORTD
+0007   3090           00011         movlw b'10010000'
+Error[113]  : Symbol not previously defined (INTCON)
+0008   0080           00012         movwf INTCON
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (RP0)
+0009   1400           00013         bsf STATUS,RP0
+Error[113]  : Symbol not previously defined (TRISD)
+000A   0180           00014         clrf TRISD
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (C)
+000B   1400           00015         bsf STATUS,C
+Error[113]  : Symbol not previously defined (OPTION_REG)
+Error[113]  : Symbol not previously defined (INTEDG)
+000C   1000           00016         bcf OPTION_REG,INTEDG
+000D   3001           00017         movlw h'01'
+Error[113]  : Symbol not previously defined (TRISB)
+000E   0080           00018         movwf TRISB
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (RP0)
+000F   1000           00019         bcf STATUS,RP0
+0010   3000           00020         MOVLW h'00'
+0011   00A5           00021         movwf SAY
+Error[113]  : Symbol not previously defined (PORTD)
+0012   0080           00022         movwf PORTD
+0013                  00023 dongu
+0013   2813           00024         goto dongu
+0014                  00025 kesme
+Error[113]  : Symbol not previously defined (INTCON)
+Error[113]  : Symbol not previously defined (INTF)
+0014   1000           00026         bcf INTCON,INTF
+MPASM  5.42                       ODEVBIR.ASM   10-19-2011  20:09:32         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0015   0DA5           00027         rlf SAY,1
+Error[113]  : Symbol not previously defined (STATUS)
+0016   1800           00028         btfsc STATUS,0
+0017   281B           00029         goto dvm
+0018   0825           00030         movf SAY,0
+Error[113]  : Symbol not previously defined (PORTD)
+0019   0080           00031         movwf PORTD
+001A   0009           00032     retfie
+001B                  00033 dvm
+Error[113]  : Symbol not previously defined (STATUS)
+Error[113]  : Symbol not previously defined (C)
+001B   1000           00034         bcf STATUS,C
+001C   3001           00035         movlw h'01'
+001D   00A5           00036         movwf SAY
+Error[113]  : Symbol not previously defined (PORTD)
+001E   0080           00037         movwf PORTD
+Warning[203]: Found opcode in column 1. (retfie)
+001F   0009           00038 retfie
+                      00039     end
+MPASM  5.42                       ODEVBIR.ASM   10-19-2011  20:09:32         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SAY                               00000025
+__16F877                          00000001
+__DEBUG                           1
+anaprogram                        00000005
+dongu                             00000013
+dvm                               0000001B
+kesme                             00000014
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    29
+Program Memory Words Free:  8163
+
+
+Errors   :    26
+Warnings :     7 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

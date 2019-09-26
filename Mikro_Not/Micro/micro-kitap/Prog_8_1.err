@@ -1,0 +1,5 @@
+Message[302] C:\877_PROGRAMLAR\PROG_8_1.ASM 31 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_1.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_1.ASM 61 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_1.ASM 62 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\877_PROGRAMLAR\PROG_8_1.ASM 69 : Register in operand not in bank 0.  Ensure that bank bits are correct.

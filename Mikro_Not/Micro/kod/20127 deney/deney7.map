@@ -1,0 +1,54 @@
+MPLINK 4.35, Linker
+Linker Map File - Created Mon Dec 10 21:27:34 2012
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x0000c0
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x000063      
+            97 out of 8453 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+               ANAPROGRAM   0x000032    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                      DON   0x00005d    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                     DON2   0x00005f    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                    DONGU   0x000050    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                  GECIKME   0x00005b    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+           KARAKTERGONDER   0x00001a    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+              KARAKTERYAZ   0x000014    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                    KESME   0x000051    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+              KOMUTGONDER   0x00000b    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                 KOMUTYAZ   0x000005    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+               LCDHAZIRLA   0x000023    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 KOMUTYAZ   0x000005    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+              KOMUTGONDER   0x00000b    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+              KARAKTERYAZ   0x000014    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+           KARAKTERGONDER   0x00001a    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+               LCDHAZIRLA   0x000023    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+               ANAPROGRAM   0x000032    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                    DONGU   0x000050    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                    KESME   0x000051    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                  GECIKME   0x00005b    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                      DON   0x00005d    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+                     DON2   0x00005f    program     static C:\Users\SERAP\Desktop\mkrooooo\odev7\deney7.asm
+
+

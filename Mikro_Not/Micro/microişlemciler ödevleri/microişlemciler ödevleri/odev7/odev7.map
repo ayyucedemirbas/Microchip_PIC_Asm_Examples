@@ -1,0 +1,68 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Dec 12 13:48:37 2011
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x000130
+     .config_2007_ODEV7.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x00009b      
+                            0x002007    0x002007      
+            156 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+               ANAPROGRAM   0x000086    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                BASLANGIC   0x000073    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   BUTON1   0x000011    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   BUTON2   0x000015    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   BUTON3   0x000019    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   BUTON4   0x00001d    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                    DEVAM   0x000021    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   DEVAM2   0x000053    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                     DON1   0x000068    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                     DON2   0x00006a    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                    DONGU   0x000087    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                 EPROMOKU   0x000026    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                 EPROMYAZ   0x000050    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                  GECIKME   0x000068    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                KESMESONU   0x000024    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                    YAZMA   0x000066    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+               YAZMABEKLE   0x000063    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   BUTON1   0x000011    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   BUTON2   0x000015    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   BUTON3   0x000019    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   BUTON4   0x00001d    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                    DEVAM   0x000021    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                KESMESONU   0x000024    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                 EPROMOKU   0x000026    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                 EPROMYAZ   0x000050    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                   DEVAM2   0x000053    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+               YAZMABEKLE   0x000063    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                    YAZMA   0x000066    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                  GECIKME   0x000068    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                     DON1   0x000068    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                     DON2   0x00006a    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                BASLANGIC   0x000073    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+               ANAPROGRAM   0x000086    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+                    DONGU   0x000087    program     static D:\picprojeler\16f877A\odev7\odev7.asm
+
+

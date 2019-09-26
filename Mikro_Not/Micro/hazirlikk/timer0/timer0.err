@@ -1,0 +1,6 @@
+Warning[205] D:\HAZIRLIK\TIMER0\TIMER0.ASM 1 : Found directive in column 1. (list)
+Warning[205] D:\HAZIRLIK\TIMER0\TIMER0.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[207] D:\HAZIRLIK\TIMER0\TIMER0.ASM 3 : Found label after column 1. (SAYAC)
+Message[302] D:\HAZIRLIK\TIMER0\TIMER0.ASM 24 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\HAZIRLIK\TIMER0\TIMER0.ASM 30 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\HAZIRLIK\TIMER0\TIMER0.ASM 36 : Found directive in column 1. (END)

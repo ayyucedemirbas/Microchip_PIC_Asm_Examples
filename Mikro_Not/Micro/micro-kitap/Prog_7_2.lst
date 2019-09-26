@@ -1,0 +1,568 @@
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*******************************************************************
+                      00002 ;       Dosya Adý               : 7_2.asm
+                      00003 ;       Programýn Amacý         : A/D modülü ile ýsý ölçümü (LM35 ile)
+                      00004 ;       PIC DK2.1a              : PORTB Çýkýþ ==> 7 segment display’ler
+                      00005 ;                               : XT ==> 4Mhz
+                      00006 ;*******************************************************************
+Warning[215]: Processor superseded by command line.  Verify processor symbol.
+                      00007         list p=16F877A  
+                      00008         include "p16F877A.inc"  
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+Message[301]: MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+                      00398         LIST
+2007   3F31           00009         __config H'3F31'        ;PWRT on, diðerleri kapalý,
+                      00010                                 ;Osc:XT ve 4Mhz
+                      00011 ;-------------------------------------------------------------------
+                      00012 ; Deðiþken tanýmlarý yapýlýyor.
+                      00013 ;-------------------------------------------------------------------    
+Warning[205]: Found directive in column 1. (CBLOCK)
+                      00014 CBLOCK  0x20            ;16F877A'nýn RAM baþlangýç adresi, 
+                      00015                         ;deðiþkenler burada.
+  00000020            00016         sira            ;display sýrasýný belirler.
+  00000021            00017         HexLSB          ;Çevrilecek sayýnýn en deðersiz byte'ý.
+  00000022            00018         onlar           ;Çevrilen sayýnýn onlar basamaðý burada.
+  00000023            00019         birler          ;Çevrilen sayýnýn birler basamaðý burada.
+  00000024            00020         Timer5ms        ;5 ms sayacý.
+  00000025            00021         Timer1s         ;1sn sayacý.
+  00000026            00022         TimeCtrl        ;Zaman kontrol laydedicisi
+                      00023         ENDC
+                      00024 
+0000                  00025         ORG     0
+Message[312]: Page or Bank selection not needed for this device.  No code generated.
+                      00026         pagesel Ana_program             ;ana programýn bulunduðu program 
+                      00027                                         ;sayfasý seçildi.
+0000   285B           00028         goto    Ana_program             ;ana programa git.
+0004                  00029         ORG     4                       ;Kesme alt programý bu adresten 
+                      00030                                         ;baþlýyor.
+0004   2845           00031         goto    kesme
+                      00032 ;-------------------------------------------------------------------
+                      00033 ; 1 byte binary veriyi bcd'ye dönüþtürür. Sonuç onlar ve birler 
+                      00034 ; deðiþkenlerinde saklanýr.0'dan 99'a kadar olan desimal sayý 
+                      00035 ; dönüþümü yapar, 99'u aþan deðerler için uygun deðildir.
+                      00036 ;------------------------------------------------------------------- 
+0005                  00037 HexToDec
+0005   01A2           00038         clrf onlar                      ;onlar = 0
+0006   01A3           00039         clrf birler                     ;birler = 0
+0007                  00040 onlar_kont
+0007   300A           00041         movlw   0x0A                    ;W = 0x0A (10)
+0008   0221           00042         subwf   HexLSB, W               ;HexLSB'den 10 çýkart.
+0009   1C03           00043         btfss   STATUS, C               ;sonuç >= 10 mu?
+000A   280F           00044         goto    birler_kont             ;hayýr ise birleri kontrol et.
+000B   0AA2           00045         incf    onlar, F                ;evet ise onlarý bir artýr.
+000C   300A           00046         movlw   0x0A                    ;W = 0x0A (10)
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000D   02A1           00047         subwf   HexLSB, F               ;HexLSB'den 10 çýkart.
+000E   2807           00048         goto    onlar_kont              ;onlar'ý yeniden kontrol et.
+000F                  00049 birler_kont
+000F   0821           00050         movf    HexLSB, W               ;W = HexLSB
+0010   00A3           00051         movwf   birler                  ;birler = W, dönüþüm iþlemi tamam.
+0011   0008           00052         return                          ;alt programdan çýk.
+                      00053 ;-------------------------------------------------------------------
+                      00054 ; Isý dönüþümünü gerçekleþtirir ve desimale dönüþtürür.
+                      00055 ;------------------------------------------------------------------- 
+0012                  00056 IsiOlc
+0012   1283 1303      00057         Banksel ADCON0                  ;BANK0'a geç, ADCON0 bu bankta.
+0014   151F           00058         bsf     ADCON0, GO              ;Isý dönüþümünü baþlat.
+0015   191F           00059         btfsc   ADCON0, GO              ;Dönüþüm tamamlanana kadar bekle.
+0016   2815           00060         goto    $ - 1
+0017   1003           00061         bcf     STATUS, C
+0018   0C9E           00062         rrf     ADRESH, F
+0019   1683 1303      00063         banksel ADRESL                  ;ADRESL BANK1'de.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001B   0C1E           00064         rrf     ADRESL, W
+001C   1283 1303      00065         banksel HexLSB                  ;BANK0'a geç.
+001E   00A1           00066         movwf   HexLSB
+001F   2005           00067         call    HexToDec
+0020   0008           00068         return
+                      00069 ;-------------------------------------------------------------------
+                      00070 ; Her 5 ms'de bir display'leri tarayarak görüntü oluþturur.
+                      00071 ;------------------------------------------------------------------- 
+0021                  00072 DisplaydeGoster
+0021                  00073 display1
+0021   0AA0           00074         incf    sira, F         ;Taranacak display sýrasýný seçiliyor.
+0022   3001           00075         movlw   .1
+0023   0220           00076         subwf   sira, W
+0024   1D03           00077         btfss   STATUS, Z       ;1. display mi taranacak?
+0025   282A           00078         goto    display2        ;Hayýr ise 2. display için kontrol yap.
+0026   300A           00079         movlw   0x0A            ;C iþareti için.
+0027   3810           00080         iorlw   0x10            ;1. display sürme bilgisi ve deðeri W'de.
+0028   0086           00081         movwf   PORTB           ;1. display’de görüntü oluþturuldu.
+0029   2844           00082         goto    disp_son
+002A                  00083 display2
+002A   3002           00084         movlw   .2
+002B   0220           00085         subwf   sira, W
+002C   1D03           00086         btfss   STATUS, Z       ;2. display mi taranacak?
+002D   2832           00087         goto    display3        ;Hayýr ise 3. display için kontrol yap.
+002E   0823           00088         movf    birler, W
+002F   3820           00089         iorlw   0x20            ;2. display sürme bilgisi ve deðeri W'de.
+0030   0086           00090         movwf   PORTB           ;2. display’de görüntü oluþturuldu.
+0031   2844           00091         goto    disp_son
+0032                  00092 display3
+0032   3003           00093         movlw   .3
+0033   0220           00094         subwf   sira, W
+0034   1D03           00095         btfss   STATUS, Z       ;3. display mi taranacak?
+0035   283A           00096         goto    display4        ;Hayýr ise 4. display için kontrol yap.
+0036   0822           00097         movf    onlar, W
+0037   3840           00098         iorlw   0x40            ;3. display sürme bilgisi ve deðeri W'de
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0038   0086           00099         movwf   PORTB           ;3. display’de görüntü oluþturuldu.
+0039   2844           00100         goto    disp_son
+003A                  00101 display4
+003A   3004           00102         movlw   .4
+003B   0220           00103         subwf   sira, W
+003C   1D03           00104         btfss   STATUS, Z       ;4. display mi taranacak?
+003D   2842           00105         goto    display5        ;Hayýr ise sirayi 1. display için ayarla 
+                      00106                                 ;ve uygula.
+003E   300F           00107         movlw   0x0F            ;Display'de biþey görünmez.
+003F   3880           00108         iorlw   0x80            ;4. display sürme bilgisi ve deðeri W'de.
+0040   0086           00109         movwf   PORTB           ;4. display’de görüntü oluþturuldu.
+0041   2844           00110         goto    disp_son
+0042                  00111 display5
+0042   01A0           00112         clrf    sira            ;sira deðerini sýfýrla ve
+0043   2821           00113         goto    display1        ;tekrar bir artýrarak kontrol için baþa.
+0044                  00114 disp_son
+0044   0008           00115         return
+                      00116 ;-------------------------------------------------------------------
+                      00117 ; Kesme programý (kullanýlacak ise LCD ya da zamanlamanýn önemli
+                      00118 ; olduðu cihazlarla çalýþýrken iletiþimin kesilmemesine dikkat 
+                      00119 ; ediniz).
+                      00120 ;------------------------------------------------------------------- 
+0045                  00121 kesme
+0045   1E8B           00122         btfss   INTCON, T0IE            ;TMR0 kesmesi etkinse bir 
+                      00123                                         ;komut atla.
+0046   2859           00124         goto    int_son                 ;hayýrsa kesmeden çýk.
+0047   1D0B           00125         btfss   INTCON, T0IF            ;TMR0 kesmesi oluþtu mu? T0IF =? 1      
+0048   2859           00126         goto    int_son                 ;hayýrsa kesmeden çýk.
+0049   3006           00127         movlw   0x06
+004A   0081           00128         movwf   TMR0
+004B   0AA4           00129         incf    Timer5ms, F
+004C   3005           00130         movlw   .5
+004D   0224           00131         subwf   Timer5ms, W
+004E   1D03           00132         btfss   STATUS, Z
+004F   2859           00133         goto    int_son
+0050   01A4           00134         clrf    Timer5ms                ;5 ms doldu.
+0051   1426           00135         bsf     TimeCtrl, 0             ;5 ms bayraðý set oldu.
+0052   0AA5           00136         incf    Timer1s, F              ;1 sn sayacýný artýr, deðeri 200 
+                      00137                                         ;olduðunda 1 sn geçmiþtir.
+                      00138                                         ;bu durumda sayaç artýrýlacak.
+0053   30C8           00139         movlw   .200
+0054   0225           00140         subwf   Timer1s, W
+0055   1C03           00141         btfss   STATUS, C
+0056   2859           00142         goto    int_son
+0057   01A5           00143         clrf    Timer1s                 ;1 sn doldu.
+0058   14A6           00144         bsf     TimeCtrl, 1             ;1 sn bayraðý set oldu.
+0059                  00145 int_son
+0059   110B           00146         bcf     INTCON, T0IF            ;Kesme bayraðýný sil.
+005A   0009           00147         retfie
+                      00148 ;-------------------------------------------------------------------
+                      00149 ; Ana program
+                      00150 ;------------------------------------------------------------------- 
+005B                  00151 Ana_program     
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+005B   30D1           00152         movlw   0xD1                    ;RB pull-up pasif, TMR0 için clock 
+                      00153                                         ;kaynaðý intrenal clock
+Warning[224]: Use of this instruction is not recommended.
+005C   0062           00154         option                          ;1:4 prescaler deðer seçildi.
+005D   1683 1303      00155         banksel TRISB                   ;BANK1 seçildi.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005F   0186           00156         clrf    TRISB                   ;PORTB çýkýþ yapýldý.
+0060   308E           00157         movlw   0x8E                                    
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0061   009F           00158         movwf   ADCON1                  ;Isý sonuç saða dayalý ve RA0 
+                      00159                                         ;analog giriþ, diðerleri dijital.
+0062   1283 1303      00160         banksel PORTB                   ;BANK0 seçildi.
+0064   0186           00161         clrf    PORTB                   ;PORTB çýkýþlarý sýfýrlandý.
+0065   3081           00162         movlw   0x81
+0066   009F           00163         movwf   ADCON0                  ;Fosc/32, 0. Kanal seçildi ve AD 
+                      00164                                         ;modülü açýldý.
+0067   01A1           00165         clrf    HexLSB                  ;Ýlk durumda ýsý deðeri sýfýr 
+                      00166                                         ;kabul edildi.
+0068   2005           00167         call    HexToDec
+0069   01A0           00168         clrf    sira                    ;sira = 0, þu an herhangi bir 
+                      00169                                         ;display’i iþaret etmiyor.
+006A   01A4           00170         clrf    Timer5ms                ;5ms sayacý sýfýrlandý.
+006B   01A5           00171         clrf    Timer1s                 ;1sn sayacý sýfýrlandý.
+006C   01A6           00172         clrf    TimeCtrl                ;Zaman kontrol kaydedicisi 
+                      00173                                         ;sýfýrlandý.
+006D   3006           00174         movlw   0x06
+006E   0081           00175         movwf   TMR0                    ;TMR0’a ilk deðeri verildi.
+                      00176 
+006F   168B           00177         bsf     INTCON, T0IE            ;TMR0 kesmesi etkin hale getirildi.
+0070   178B           00178         bsf     INTCON, GIE             ;Etkinleþtirilen tüm kesmelere 
+                      00179                                         ;izin verildi.
+0071                  00180 Ana_j1:
+0071   1C26           00181         btfss   TimeCtrl, 0             ;5 ms süre geçti mi?
+0072   2875           00182         goto    Ana_j2                  ;1 sn bayraðýný kontrol et.
+0073   1026           00183         bcf     TimeCtrl, 0             ;5 ms bayraðýný sil.
+0074   2021           00184         call    DisplaydeGoster         ;Display tara.
+0075                  00185 Ana_j2
+0075   1CA6           00186         btfss   TimeCtrl, 1             ;1 sn süre geçti mi?
+0076   2871           00187         goto    Ana_j1                  ;5 ms bayraðýný kontrol et.
+0077   2012           00188         call    IsiOlc                  ;Isý ölç ve dönüþtür.
+0078   10A6           00189         bcf     TimeCtrl, 1             ;1 sn bayraðýný sil.
+0079   2871           00190         goto    Ana_j1                  ;Sistem kapatýlana ya da 
+                      00191                                         ;resetlenene kadar boþ döngü
+                      00192                                         ;Bu döngü sýrasýnda 5ms'de bir 
+                      00193                                         ;kesme çalýþýyor.
+                      00194         END
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+Ana_j1                            00000071
+Ana_j2                            00000075
+Ana_program                       0000005B
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+DisplaydeGoster                   00000021
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+HexLSB                            00000021
+HexToDec                          00000005
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+IsiOlc                            00000012
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+TimeCtrl                          00000026
+Timer1s                           00000025
+Timer5ms                          00000024
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+MPASM  4.02 Released                             PROG_7_2.ASM   8-10-2006  16:07:47         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F628A                         00000001
+birler                            00000023
+birler_kont                       0000000F
+disp_son                          00000044
+display1                          00000021
+display2                          0000002A
+display3                          00000032
+display4                          0000003A
+display5                          00000042
+int_son                           00000059
+kesme                             00000045
+onlar                             00000022
+onlar_kont                        00000007
+sira                              00000020
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXX------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   119
+Program Memory Words Free:  1929
+
+
+Errors   :     0
+Warnings :     3 reported,     0 suppressed
+Messages :     5 reported,     0 suppressed
+
+

@@ -1,0 +1,3 @@
+Warning[205] C:\877_PROGRAMLAR\PROG_11_2.ASM 14 : Found directive in column 1. (CBLOCK)
+Warning[224] C:\877_PROGRAMLAR\PROG_11_2.ASM 222 : Use of this instruction is not recommended.
+Message[302] C:\877_PROGRAMLAR\PROG_11_2.ASM 225 : Register in operand not in bank 0.  Ensure that bank bits are correct.

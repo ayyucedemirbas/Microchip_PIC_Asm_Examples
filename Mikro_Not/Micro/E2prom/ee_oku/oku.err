@@ -1,0 +1,10 @@
+Warning[205] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 1 : Found directive in column 1. (list)
+Warning[205] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 10 : Found directive in column 1. (org)
+Warning[203] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 11 : Found opcode in column 1. (GOTO)
+Warning[205] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 12 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 13 : Found opcode in column 1. (RETFIE)
+Message[302] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 16 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 17 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 45 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\YENI KLASöR\OKU.ASM 52 : Register in operand not in bank 0.  Ensure that bank bits are correct.

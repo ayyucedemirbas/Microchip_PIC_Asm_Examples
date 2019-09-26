@@ -1,0 +1,5 @@
+Warning[205] D:\HAZIRLIK\ÇARPIM\CARPIM.ASM 1 : Found directive in column 1. (list)
+Warning[205] D:\HAZIRLIK\ÇARPIM\CARPIM.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[205] D:\HAZIRLIK\ÇARPIM\CARPIM.ASM 6 : Found directive in column 1. (ORG)
+Warning[203] D:\HAZIRLIK\ÇARPIM\CARPIM.ASM 7 : Found opcode in column 1. (GOTO)
+Message[302] D:\HAZIRLIK\ÇARPIM\CARPIM.ASM 11 : Register in operand not in bank 0.  Ensure that bank bits are correct.

@@ -1,0 +1,38 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Mon Jan 16 17:13:36 2012
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x000048
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x000027      
+            37 out of 8454 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                      ANA   0x00000f    program     static C:\Users\hp\Desktop\but\RB0SAYICIportdled\sayici.asm
+                    DONGU   0x000027    program     static C:\Users\hp\Desktop\but\RB0SAYICIportdled\sayici.asm
+                    KESME   0x000004    program     static C:\Users\hp\Desktop\but\RB0SAYICIportdled\sayici.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    KESME   0x000004    program     static C:\Users\hp\Desktop\but\RB0SAYICIportdled\sayici.asm
+                      ANA   0x00000f    program     static C:\Users\hp\Desktop\but\RB0SAYICIportdled\sayici.asm
+                    DONGU   0x000027    program     static C:\Users\hp\Desktop\but\RB0SAYICIportdled\sayici.asm
+
+

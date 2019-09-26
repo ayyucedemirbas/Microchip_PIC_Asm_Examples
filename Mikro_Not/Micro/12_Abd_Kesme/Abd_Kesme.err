@@ -1,0 +1,10 @@
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 1 : Found directive in column 1. (LIST)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 2 : Found directive in column 1. (INCLUDE)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 7 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 8 : Found opcode in column 1. (GOTO)
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 9 : Found directive in column 1. (ORG)
+Warning[203] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 10 : Found opcode in column 1. (GOTO)
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 14 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 16 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[202] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 39 : Argument out of range.  Least significant bits used.
+Warning[205] C:\USERS\GOOGLE\DESKTOP\MIKRO\12_ABD_KESME\ABD_KESME.ASM 51 : Found directive in column 1. (END)

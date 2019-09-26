@@ -1,0 +1,537 @@
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002         list p=16F877A
+                      00003         include "p16F877A.inc"  
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00400         LIST
+2007   3F31           00004         __config H'3F31'                ;PWRT on, diðerler sigortalarý 
+                      00005                                         ;kapalý, Osilatör XT ve 4Mhz
+                      00006 ;-------------------------------------------------------------------
+                      00007 ; Deðiþkenler tanýmlamalarý.    
+                      00008 ;-------------------------------------------------------------------
+  00000020            00009 say EQU 0X20
+  00000021            00010 topla EQU 0X21
+  00000022            00011 ds1 EQU 0X22
+  00000023            00012 ds2 EQU 0X23
+  00000024            00013 ds3 EQU 0X24
+  00000025            00014 say1  EQU 0X25
+0000                  00015         ORG     0                       
+0000   018A           00016         clrf    PCLATH                  
+0001   2805           00017         goto    ana_program             
+0004                  00018         ORG     4                       
+0004                  00019 Kesme                           
+0004   0009           00020         Retfie
+                      00021 
+0005                  00022 ana_program
+0005   1683 1303      00023         Banksel TRISA
+0007   3001           00024         movlw H'01'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0008   0085           00025         movwf   TRISA           
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0009   0188           00026         clrf    TRISD                   
+000A   1283           00027         bcf     STATUS, RP0     
+000B   01A0           00028         clrf say
+000C   01A1           00029         clrf topla
+000D   01A2           00030         clrf ds1
+000E   01A3           00031         clrf ds2
+000F   01A4           00032         clrf ds3        
+0010   0188           00033         clrf    PORTD
+0011   30F0           00034         movlw B'11110000'
+0012   0085           00035         movwf PORTA             
+0013   30C1           00036         movlw   b'11000001'
+0014   009F           00037         movwf   ADCON0          
+0015   308E           00038         movlw   b'10001110'
+0016   1683           00039         bsf     STATUS, RP0             
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0017   009F           00040         movwf   ADCON1                  
+0018   1283           00041         bcf     STATUS, RP0     
+0019   151F           00042         bsf    ADCON0,2           ;BAÞLA
+001A                  00043 bekle
+001A   191F           00044         btfsc   ADCON0, 2               ;Dönüþtürme tamamlanana kadar bekle
+001B   281A           00045         goto    bekle
+001C   1683           00046         bsf     STATUS, RP0     
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001D   081E           00047         movf ADRESL,W
+001E   1283           00048         bcf     STATUS, RP0     
+001F   00A0           00049         movwf say
+0020   1820           00050         btfsc say,0                                             
+0021   2031           00051         call bir
+0022   18A0           00052         btfsc say,1
+0023   2033           00053         call iki
+0024   1920           00054         btfsc say,2
+0025   2036           00055         call dort
+0026   19A0           00056         btfsc say,3
+0027   2039           00057         call sekiz
+0028   1A20           00058         btfsc say,4
+0029   203C           00059         call onaltý
+002A   1AA0           00060         btfsc say,5
+002B   203F           00061         call otuz2
+002C   1B20           00062         btfsc say,6
+002D   2042           00063         call atmýs4
+002E   1BA0           00064         btfsc say,7
+002F   2045           00065         call yuz28
+                      00066 ;;;;DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+0030   2848           00067         goto cozumle
+0031                  00068 bir
+0031   0AA1           00069         incf topla,F
+0032   0008           00070         return
+0033                  00071 iki
+0033   3002           00072         movlw D'2'
+Message[305]: Using default destination of 1 (file).
+0034   07A1           00073         addwf topla
+0035   0008           00074         return
+0036                  00075 dort
+0036   3004           00076         movlw D'4'
+Message[305]: Using default destination of 1 (file).
+0037   07A1           00077         addwf topla
+0038   0008           00078         return
+0039                  00079 sekiz
+0039   3008           00080         movlw D'8'
+Message[305]: Using default destination of 1 (file).
+003A   07A1           00081         addwf topla
+003B   0008           00082         return
+003C                  00083 onaltý
+003C   3010           00084         movlw D'16'
+Message[305]: Using default destination of 1 (file).
+003D   07A1           00085         addwf topla
+003E   0008           00086         return
+003F                  00087 otuz2
+003F   3020           00088         movlw D'32'
+Message[305]: Using default destination of 1 (file).
+0040   07A1           00089         addwf topla
+0041   0008           00090         return
+0042                  00091 atmýs4
+0042   3040           00092         movlw D'64'
+Message[305]: Using default destination of 1 (file).
+0043   07A1           00093         addwf topla
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0044   0008           00094         return
+0045                  00095 yuz28
+0045   3080           00096         movlw D'128'
+Message[305]: Using default destination of 1 (file).
+0046   07A1           00097         addwf topla
+0047   0008           00098         return
+0048                  00099 cozumle
+0048   3064           00100         movlw D'100'
+0049   0221           00101         subwf topla,W
+004A   1C03           00102         btfss STATUS,C  
+004B   284F           00103         goto birler
+004C   00A3           00104         movwf ds2
+004D   0AA4           00105         incf ds3,F
+004E   2848           00106         goto cozumle
+004F                  00107 birler
+004F   300A           00108         movlw D'10'
+0050   0221           00109     subwf topla,W
+0051   1C83           00110         btfss STATUS,DC
+0052   2867           00111     goto yaz
+0053   00A3           00112         movwf ds2
+0054   284F           00113         goto birler
+                      00114 
+0055                  00115 gecik
+0055   0000           00116     nop
+0056   0000           00117         nop
+0057   0BA5           00118         decfsz say1,1
+0058   2855           00119         goto gecik
+0059   30FA           00120         movlw D'250'
+005A   00A5           00121         movwf say1
+005B   0008           00122         return
+005C                  00123 tablo
+005C   0782           00124         addwf   PCL, F
+005D   343F           00125         retlw   0x3F            ; 0 rakamý için segment deðeri.
+005E   3406           00126         retlw   0x06            ; 1 rakamý için segment deðeri.
+005F   345B           00127         retlw   0x5B            ; 2 rakamý için segment deðeri.
+0060   344F           00128         retlw   0x4F            ; 3 rakamý için segment deðeri.
+0061   3466           00129         retlw   0x66            ; 4 rakamý için segment deðeri.
+0062   346D           00130         retlw   0x6D            ; 5 rakamý için segment deðeri.
+0063   347D           00131         retlw   0x7D            ; 6 rakamý için segment deðeri.
+0064   3407           00132         retlw   0x07            ; 7 rakamý için segment deðeri.
+0065   347F           00133         retlw   0x7F            ; 8 rakamý için segment deðeri.
+0066   346F           00134         retlw   0x6F            ; 9 rakamý için segment deðeri.
+0067                  00135 yaz
+0067   1485           00136     bsf PORTA,1
+Message[305]: Using default destination of 1 (file).
+0068   08A2           00137         movf ds1
+0069   205C           00138         call tablo
+006A   0088           00139         movwf PORTD
+006B   1485           00140         bsf PORTA,1
+006C   2055           00141         call gecik
+006D   1505           00142         bsf PORTA,2
+Message[305]: Using default destination of 1 (file).
+006E   08A3           00143         movf ds2
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+006F   205C           00144         call tablo
+0070   0088           00145         movwf PORTD
+0071   1505           00146         bsf PORTA,2
+0072   2055           00147         call gecik
+0073   1585           00148     bsf PORTA,3
+Message[305]: Using default destination of 1 (file).
+0074   08A4           00149         movf ds3
+0075   205C           00150         call tablo
+0076   0088           00151         movwf PORTD
+0077   1585           00152         bsf PORTA,3
+0078   2055           00153         call gecik
+0079   2867           00154         goto yaz
+                      00155 
+                      00156         END
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+Kesme                             00000004
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+ana_program                       00000005
+MPASM  5.20                      PROG_7_1.ASM   12-6-2011  2:10:06         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+atmýs4                            00000042
+bekle                             0000001A
+bir                               00000031
+birler                            0000004F
+cozumle                           00000048
+dort                              00000036
+ds1                               00000022
+ds2                               00000023
+ds3                               00000024
+gecik                             00000055
+iki                               00000033
+onaltý                            0000003C
+otuz2                             0000003F
+say                               00000020
+say1                              00000025
+sekiz                             00000039
+tablo                             0000005C
+topla                             00000021
+yaz                               00000067
+yuz28                             00000045
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XX--XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXX------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   120
+Program Memory Words Free:  8072
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :    14 reported,     0 suppressed
+
+
