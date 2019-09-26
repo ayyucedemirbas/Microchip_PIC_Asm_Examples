@@ -1,5 +1,13 @@
 # Microchip_PIC_Asm_Examples
-I'm sharing PIC microprocessor programs in assembly
+
+
+![PIC16F877A](https://user-images.githubusercontent.com/8023150/65719485-9168b300-e0ae-11e9-83df-73e642c649fe.png)
+
+
+
+I'm sharing PIC microprocessor programs in assembly and lecture notes.
+
+Most of these contents don't belong to me. Thank you so much all of the contributors. You all are secret heroes. We love you.
 
 First of all, download MPLAB IDE (not MPLABX IDE) using this link https://pic-microcontroller.com/mplab-ide-v8-92-free-download/
 
