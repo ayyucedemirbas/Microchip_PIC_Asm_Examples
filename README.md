@@ -5,9 +5,13 @@
 
 
 
-I'm sharing PIC microprocessor programs in assembly and lecture notes.
+I'm sharing PIC microprocessor programs in assembly and the lecture notes.
 
 Most of these contents don't belong to me. Thank you so much all of the contributors. You all are secret heroes. We love you.
+
+Students (and makers of course), you can ask me your questions about PIC assembly. To do that please create an issue or ping me on @demirbasayyuce twitter account. 
+
+Contributions are welcome! Please open pull requests. Thank you so much :)
 
 First of all, download MPLAB IDE (not MPLABX IDE) using this link https://pic-microcontroller.com/mplab-ide-v8-92-free-download/
 
