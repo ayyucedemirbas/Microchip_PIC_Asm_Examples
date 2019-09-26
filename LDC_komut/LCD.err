@@ -1,0 +1,9 @@
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 4 : Found label after column 1. (SAYAC_GECIK)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 5 : Found label after column 1. (SAYAC_GECIK2)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 6 : Found label after column 1. (LCD_DATA)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 9 : Found label after column 1. (ANA_PROGRAM)
+Message[302] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 11 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 32 : Found label after column 1. (VERI_YAZ)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 40 : Found label after column 1. (LCD_VERI_GONDER)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 50 : Found label after column 1. (KOMUT_YAZ)
+Warning[207] C:\USERS\GOOGLE\DESKTOP\MIKRO\11_LCD\LCD.ASM 58 : Found label after column 1. (LCD_KOMUT_GONDER)

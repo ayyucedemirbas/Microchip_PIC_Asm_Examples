@@ -1,0 +1,825 @@
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[215]: Processor superseded by command line.  Verify processor symbol.
+                      00001         LIST P=16F877A
+                      00002 ;Erdogan Canbay Tarafýndan Dizayn Edildi Fýrat Universitesi Bilgisayar Muhendisligi Öðrencisi
+                      00003         #INCLUDE <P16F877A.INC>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+Message[301]: MESSAGE: (Processor-header file mismatch.  Verify selected processor.)
+                      00566         LIST
+Warning[207]: Found label after column 1. (DEGER)
+  00000020            00004         DEGER EQU 0X20
+Warning[207]: Found label after column 1. (DEGER2)
+  00000021            00005         DEGER2 EQU 0X21
+Warning[207]: Found label after column 1. (TEMP)
+  00000022            00006         TEMP EQU 0X22
+Warning[207]: Found label after column 1. (BIRLER)
+  00000023            00007         BIRLER EQU 0X23
+Warning[207]: Found label after column 1. (ONLAR)
+  00000024            00008         ONLAR EQU 0X24
+Warning[207]: Found label after column 1. (YUZLER)
+  00000025            00009         YUZLER EQU 0X25
+Warning[207]: Found label after column 1. (OKUNAN_DEGER)
+  00000026            00010         OKUNAN_DEGER EQU 0X26
+Warning[207]: Found label after column 1. (HEDEFBIRLER)
+  00000027            00011         HEDEFBIRLER EQU 0X27
+Warning[207]: Found label after column 1. (HEDEFONLAR)
+  00000028            00012         HEDEFONLAR EQU 0X28
+0000                  00013         ORG 0X00
+0000   2801           00014         GOTO MAIN
+0001                  00015 MAIN
+0001   1683 1303      00016         BANKSEL TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0003   0186           00017         CLRF TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0004   0187           00018         CLRF TRISC      
+                      00019 
+0005   300F           00020         MOVLW 0X0F
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0006   0088           00021         MOVWF TRISD
+                      00022 
+0007   1283 1303      00023         BANKSEL ADCON0          ;A portu normalde analogdur hangi portlardan analog hangi portlardan dýj
+                            ýtal çýkýþ alacaðýmýzý adcon registeri ile belirleriz
+0009   30C1           00024         MOVLW B'11000001'               ;Register ayarlamasý ve port ayarlamarýný yapýyoruz
+000A   009F           00025         MOVWF ADCON0            
+                      00026 
+000B   1683 1303      00027         BANKSEL ADCON1
+000D   3088           00028         MOVLW B'10001000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000E   009F           00029         MOVWF ADCON1
+                      00030 
+000F   1683 1303      00031         BANKSEL TRISA
+0011   30FF           00032         MOVLW 0XFF
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   0085           00033         MOVWF TRISA
+                      00034 
+0013   1283 1303      00035         BANKSEL PORTB
+0015   0186           00036         CLRF PORTB
+0016   0185           00037         CLRF PORTA
+0017   0188           00038         CLRF PORTD
+0018   1608           00039         BSF PORTD,4
+0019   3030           00040         MOVLW 0X30                      ;hedef deðerinin birler basamaðý
+001A   00A7           00041         MOVWF HEDEFBIRLER 
+001B   3030           00042         MOVLW 0X30                      ;hedef basamaðýnýn onlar deðeri
+001C   00A8           00043         MOVWF HEDEFONLAR        ;0x30 ascii kod duzeninde 0 sayýsýna denk gelmektedir
+                      00044 
+001D                  00045 TEMIZLE 
+001D   3002           00046         MOVLW 0X02                      ;lcd paneli ile igili kodlar 
+001E   20AF           00047         CALL KOMUT_YAZ          ;örneðin 0x02 satýr baþýna imleci getirir
+001F   3028           00048         MOVLW 0X28                      ;Lcd ile ilgili iþlem yapmadan önce bu tarz ayarlamalarý
+0020   20AF           00049         CALL KOMUT_YAZ          ;yapýp lcd yi kullanýma hazýrlmamýz gerekmektedir
+0021   300C           00050         MOVLW 0X0C                      
+0022   20AF           00051         CALL KOMUT_YAZ
+0023   3080           00052         MOVLW 0X80      
+0024   20AF           00053         CALL KOMUT_YAZ
+                      00054 
+0025                  00055 DONUSTUR
+0025   1283 1303      00056         BANKSEL ADCON0
+0027   151F           00057         BSF ADCON0,GO    ;A/D DONUSUME Basla
+0028   20D1           00058         CALL GECIKME
+0029                  00059 KONTROL
+0029   191F           00060         BTFSC ADCON0,GO ;A/D DONUSUM BITTI MI
+002A   2829           00061         GOTO KONTROL    ;dönüþtürme iþlemi bittiyse adresL ye bir deðer yüklenmiþ olacaktýr
+002B   1683 1303      00062         BANKSEL ADRESL          ;adresL yada AdresH a atanacak deðer ADFM biti ile belirlenecektir
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002D   081E           00063         MOVF ADRESL,W   ;ADFM 1 olursa saða dayalý (AdresH a yazar)
+002E   1283           00064         BCF STATUS,RP0          ;ADFM 0 olursa Sola Dayalý (AdresL ye yazar)
+002F   00A6           00065         MOVWF OKUNAN_DEGER
+                      00066         
+0030   1808           00067         BTFSC PORTD,0
+0031   2835           00068         GOTO ARTTIR
+0032   1888           00069         BTFSC PORTD,1
+0033   283F           00070         GOTO AZALT      
+0034   2848           00071         GOTO LOOP
+                      00072 
+0035                  00073 ARTTIR
+0035   3039           00074         MOVLW 0X39                      ;Hedef birler basamaðý 9 olduysa (Asci de 0x39 a denk gelir)
+0036   0227           00075         SUBWF HEDEFBIRLER,W     ;9 dan sonra 0 yaz 
+0037   1C03           00076         BTFSS STATUS,C                   
+Message[305]: Using default destination of 1 (file).
+0038   0AA7           00077         INCF HEDEFBIRLER
+0039   1C03           00078         BTFSS STATUS,C      
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+003A   2848           00079         GOTO LOOP                       ;birler basamaðý 9 olduktan sonra onlar basamaðýnýn 1 artýp birl
+                            er basamaðýnýn tekrar 0 olmasý gerekmektedir
+Message[305]: Using default destination of 1 (file).
+003B   0AA8           00080         INCF HEDEFONLAR         ;ve hedef onlar onlar basamaðýný arttýr
+003C   3030           00081         MOVLW 0X30                      ;9 sayýsýdan sonra tekrar 0 deðerini birler basamðýna atamamýz g
+                            erekiyor
+003D   00A7           00082         MOVWF HEDEFBIRLER
+003E   2848           00083         GOTO LOOP
+                      00084         
+003F                  00085 AZALT
+003F   3031           00086         MOVLW 0X31                      ;azaltma deðeri için birler basamðýnýn 0 olduðu durumda tekrar 9
+                             deðerini atayarak yapýyoruz 
+0040   0227           00087         SUBWF HEDEFBIRLER,W ; HEDEFBIRLER-0X30
+0041   1803           00088         BTFSC STATUS,C       ; C=1 DEGER3 > 0X30
+Message[305]: Using default destination of 1 (file).
+0042   03A7           00089         DECF HEDEFBIRLER
+0043   1803           00090         BTFSC STATUS,C                  ;örneðin deðerimiz 45 44 43 42 41 40 diye azalýyor
+0044   2848           00091         GOTO LOOP                       ;40 sayýsýnda onlar basamðý 4 birler basamaðý 0 dýr (2 parça hal
+                            inde düþünmek zorundayýz zira asci kodlamada 40 diye bir sayý yoktur biz rakamlarý yan yana yaza
+Message[305]: Using default destination of 1 (file).
+0045   03A8           00092         DECF HEDEFONLAR         ;þimdi burada onlar basamaðý 1 azalacaktýr ve birler basamaðý 9 olacaktý
+                            r
+0046   3039           00093         MOVLW 0X39                      ;40 dan sonraki deðerimiz 39 olacaktýr (2 parça halinde düþünürs
+                            ek onlar basamaðý 1 azaldý birler basamaðýda 0 dan sonra 9 deðerini aldý)
+0047   00A7           00094         MOVWF HEDEFBIRLER       ;pic kodlamak düþük seviye kodlama olduðu için hangi adýmda hangi deðiþi
+                            min olacaðýný detaylý þekilde düþünüp kodlamamýz gerekmektedir
+                      00095 
+                      00096 
+0048                  00097 LOOP
+0048   2087           00098         CALL OKU
+0049   3002           00099         MOVLW 0X02
+004A   20AF           00100         CALL KOMUT_YAZ
+                      00101         
+004B   3053           00102         MOVLW 'S'               ;LCD nin ilk satýrýna adc den gelecek sýcaklýk deðeri Sýcaklýk: þeklinde
+                            ki metni yazýradaðýz
+004C   20BB           00103         CALL VERI_YAZ           ;her adýmda bir harf yazdýrabildiðimiz için harf harf yazmak zorundayýz
+004D   3049           00104         MOVLW 'I'
+004E   20BB           00105         CALL VERI_YAZ
+004F   3043           00106         MOVLW 'C'
+0050   20BB           00107         CALL VERI_YAZ
+0051   3041           00108         MOVLW 'A'
+0052   20BB           00109         CALL VERI_YAZ
+0053   304B           00110         MOVLW 'K'
+0054   20BB           00111         CALL VERI_YAZ
+0055   304C           00112         MOVLW 'L'
+0056   20BB           00113         CALL VERI_YAZ
+0057   3049           00114         MOVLW 'I'
+0058   20BB           00115         CALL VERI_YAZ
+0059   304B           00116         MOVLW 'K'
+005A   20BB           00117         CALL VERI_YAZ
+005B   303A           00118         MOVLW ':'
+005C   20BB           00119         CALL VERI_YAZ
+                      00120 
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+005D   0825           00121         MOVF YUZLER,W           ;Sýcaklýk: yazdýrdýktan sonra yanýna sýcaklýk deðerini yazmamýz gerekmek
+                            tedir
+005E   20BB           00122         CALL VERI_YAZ                   ;yuzler onlar birler basamaðýna gelen deðerleri sýrayla yazarak 
+                            3 basamaklý sýcaklýk ölçme deðerini yazmýþ olacaðýz
+                      00123                                                 ;ancak ben çalýþmada hedef sýcaklýðý 0-99 derece arasýnd
+                            a tuttum daha ust sýcaklýk deðerleri normal þartlarda görmeyeceðimiz için kod kalabalýðý yapmada
+005F   0824           00124         MOVF ONLAR,W            
+0060   20BB           00125         CALL VERI_YAZ
+                      00126 
+0061   0823           00127         MOVF BIRLER,W
+0062   20BB           00128         CALL VERI_YAZ
+                      00129 
+0063   3020           00130         MOVLW ' '
+0064   20BB           00131         CALL VERI_YAZ
+0065   30DF           00132         MOVLW 0XDF
+0066   20BB           00133         CALL VERI_YAZ
+0067   3043           00134         MOVLW 'C'               ;C harfi Derece nin Sembolik Ýfadesi Olan C dir 
+0068   20BB           00135         CALL VERI_YAZ
+0069   20CE           00136         CALL GECIKME2
+                      00137 
+006A   3006           00138         MOVLW 0X06              ;2.satýra geçmeden önce 0x06 deðerini workinge atarak iþe baþlýyoruz
+006B   20AF           00139         CALL KOMUT_YAZ  ;belki farklý 2.satýra geçme deðerleride vardýr
+006C   20C8           00140         CALL SATIR2             ;ancak yaptýðým birçok araþtýrmadan sonra bu deðeri buldum ve kullandým
+006D   3048           00141         MOVLW 'H'
+006E   20BB           00142         CALL VERI_YAZ
+006F   3045           00143         MOVLW 'E'
+0070   20BB           00144         CALL VERI_YAZ
+0071   3044           00145         MOVLW 'D'
+0072   20BB           00146         CALL VERI_YAZ
+0073   3045           00147         MOVLW 'E'
+0074   20BB           00148         CALL VERI_YAZ
+0075   3046           00149         MOVLW 'F'
+0076   20BB           00150         CALL VERI_YAZ
+0077   303A           00151         MOVLW ':'
+0078   20BB           00152         CALL VERI_YAZ
+                      00153 
+0079   0828           00154         MOVF HEDEFONLAR,W               ;hedef deðerimizi 2 basamaklý olarak yazacaðýmýz için onlar ve b
+                            irler basamaklarýndan oluþmaktadýr 
+007A   20BB           00155         CALL VERI_YAZ
+                      00156 
+007B   0827           00157         MOVF HEDEFBIRLER,W 
+007C   20BB           00158         CALL VERI_YAZ
+                      00159 
+007D   3020           00160         MOVLW ' '
+007E   20BB           00161         CALL VERI_YAZ
+007F   30DF           00162         MOVLW 0XDF
+0080   20BB           00163         CALL VERI_YAZ
+0081   3043           00164         MOVLW 'C'
+0082   20BB           00165         CALL VERI_YAZ
+0083   3020           00166         MOVLW ' '
+0084   20BB           00167         CALL VERI_YAZ
+                      00168 
+                      00169 
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0085   20CE           00170         CALL GECIKME2
+0086   2825           00171         GOTO DONUSTUR
+                      00172 
+                      00173 
+0087                  00174 OKU
+0087   01A5           00175         CLRF YUZLER
+0088   01A4           00176         CLRF ONLAR
+0089   01A3           00177         CLRF BIRLER
+008A   0186           00178         CLRF PORTB
+                      00179 
+008B   0826           00180         MOVF OKUNAN_DEGER,W
+008C   1283 1303      00181         BANKSEL PORTC
+008E   0087           00182         MOVWF PORTC
+008F   00A6           00183         MOVWF OKUNAN_DEGER
+                      00184         
+                      00185         
+0090                  00186 YUZLER_ARTIR
+0090   3064           00187         MOVLW D'100'                                    ;okunan deðer 100 den buyuk mu status carry biti
+                            ne baktýðýmýzda aritmetik iþlem sonucu negatif yada pozitif olarak deðerlenir ve carry biti buna
+0091   0226           00188         SUBWF OKUNAN_DEGER,W            ;okunan deðerimiz kontrol etiketi altýndaki adresl nin deðeridir
+0092   1C03           00189         BTFSS STATUS,C  ;C=1 MÝ ARITMETIK SONUC + MI POZÝTÝF MÝ ?
+0093   2897           00190         GOTO ONLAR_ARTIR                        ;iþlem sonucu negatif ise carry biti 0 deðerini alýr poz
+                            itif ise 1 deðerini alýr        
+0094   00A6           00191         MOVWF OKUNAN_DEGER
+0095   0AA5           00192         INCF YUZLER,F
+0096   2890           00193         GOTO YUZLER_ARTIR
+0097                  00194 ONLAR_ARTIR                                     ;okunan deðerimiz örneðin 55 biz burda her 10 eksilttiði
+                            mizde onlar basamðý deðerini 1 arttýracaðýz
+0097   300A           00195         MOVLW D'10'                             ;54-10 = 44 onlar deðeri 1 oldu
+0098   0226           00196         SUBWF OKUNAN_DEGER,W    ;44-10 = 34 onlar deðeri 2 oldu
+0099   1C03           00197         BTFSS STATUS,C                          ;34-10 = 24 ... 24-10=14 ... 14-10=4 onlar deðeri 5 kere
+                             artmýþ oldu
+009A   289E           00198         GOTO BIRLER_ARTIR                       ;elimizde kalan deðer 4 oldu onlar basamðýnndan arta kal
+                            an 
+009B   00A6           00199         MOVWF OKUNAN_DEGER              ;kalan deðeride direk birler basamaðýna yazýlýr
+009C   0AA4           00200         INCF ONLAR,F                            
+009D   2897           00201         GOTO ONLAR_ARTIR
+009E                  00202 BIRLER_ARTIR
+009E   0826           00203         MOVF OKUNAN_DEGER,W
+009F   00A3           00204         MOVWF BIRLER
+                      00205         
+00A0   3030           00206         MOVLW 0X30                      ;ex-or iþlemi yaparak lcd panelde hesaplanan deðerleri yazmasýný
+                             saðlýyoruz
+00A1   04A5           00207         IORWF YUZLER,F
+00A2   04A4           00208         IORWF ONLAR,F
+00A3   04A3           00209         IORWF BIRLER,F
+                      00210 
+00A4                  00211 ESITLIKBIRLER                                   ;bu kýsýmda ust teki adc nen okunan deðer gibi hedef deð
+                            eri için oluþturulmuþ satýrlardýr
+00A4   0827           00212         MOVF HEDEFBIRLER,W ;0X35
+00A5   0223           00213         SUBWF BIRLER,W ;BIRLER-HEDEFBIRLER
+00A6   1903           00214         BTFSC STATUS,Z ;Z=1
+00A7   28AA           00215         GOTO ESITLIKONLAR
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00A8   1608           00216         BSF PORTD,4
+Warning[203]: Found opcode in column 1. (RETURN)
+00A9   0008           00217 RETURN
+00AA                  00218 ESITLIKONLAR
+00AA   0828           00219         MOVF HEDEFONLAR,W
+00AB   0224           00220         SUBWF ONLAR,W ;BIRLER-HEDEFBIRLER
+00AC   1903           00221         BTFSC STATUS,Z ;Z=1
+00AD   1208           00222         BCF PORTD,4
+Warning[203]: Found opcode in column 1. (RETURN)
+00AE   0008           00223 RETURN
+                      00224 
+00AF                  00225 KOMUT_YAZ
+00AF   00A2           00226         MOVWF TEMP
+00B0   0E22           00227         SWAPF TEMP,W ;EN ANLAMLI 4 BÝT ÝLE EN ANLAMSIZ 4 BÝTÝ DEÐÝÞTÝR
+00B1   20B5           00228         CALL KOMUT_GONDER       ;swap yapma amacýmýz 4 bit çalýþtýðýmýz içindir
+00B2   0822           00229         MOVF TEMP,W
+00B3   20B5           00230         CALL KOMUT_GONDER
+00B4   0008           00231         RETURN
+                      00232 
+00B5                  00233 KOMUT_GONDER                    ;komut yaz komut gönder temelde aynýdýr
+00B5   0086           00234         MOVWF PORTB                     ;port üzerinden gelen veriyi iþler
+00B6   1206           00235         BCF PORTB,4                     ;harf gönderirsek harf yazdýracaðý
+00B7   1686           00236         BSF PORTB,5                     ;komut gönderirsek komut yazdýracaðý ayarlamasý
+00B8   20D1           00237         CALL GECIKME                    ;RS piniyle yapýlýr (PortB,4.pin)
+00B9   1286           00238         BCF PORTB,5                     ;RS pinini clear yaparsak 0 gönderirsek komut iþler
+00BA   0008           00239         RETURN                          ;RS pinini 1 yaparsak Karekter iþler
+                      00240                                                 ;karekter dediðimiz iþlem Asci tablosundaki herhangi bir
+00BB                  00241 VERI_YAZ                                        ;sembolun LCD üzerine yazmaktýr
+00BB   00A2           00242         MOVWF TEMP                      ;komut iþleme olayý ise
+00BC   0E22           00243         SWAPF TEMP,W            ;lcd yi silmek --- lcd de imleci baþa getirmek
+00BD   20C1           00244         CALL VERI_GONDER                ;lcd de 2.satýra geçmek --- bunlar komuttur.
+00BE   0822           00245         MOVF TEMP,W
+00BF   20C1           00246         CALL VERI_GONDER
+00C0   0008           00247         RETURN
+                      00248 
+00C1                  00249 VERI_GONDER
+Message[305]: Using default destination of 1 (file).
+00C1   058F           00250         ANDWF 0X0F
+00C2   0086           00251         MOVWF PORTB
+00C3   1606           00252         BSF PORTB,4
+00C4   1686           00253         BSF PORTB,5             ;LCD de yaptýðýmýz iþlemlerin tamamlanmasý için E pinini
+00C5   20D1           00254         CALL GECIKME            ;RB,5 pini olmaktadýr set edip bekleyip sonra clear etmemiz gerekmetedir
+00C6   1286           00255         BCF PORTB,5             ;E pini içinde en az 450 NanoSaniye beklememiz gerekmektedir
+00C7   0008           00256         RETURN
+                      00257 
+00C8                  00258 SATIR2
+00C8   30C0           00259         MOVLW 0XC0                      ;2.satýrýn baþlamasý için gerekli komut
+00C9   20AF           00260         CALL KOMUT_YAZ
+00CA   3014           00261         MOVLW 0X14
+00CB   20AF           00262         CALL KOMUT_YAZ
+00CC   3014           00263         MOVLW 0X14
+00CD   0008           00264         RETURN
+                      00265 
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00CE                  00266 GECIKME2                                ;lcd nin komut veya karekter iþlemesi için gerekli gecikme ayarl
+                            amalarý
+00CE   30FF           00267         MOVLW 0XFF              ;19,72 mikro saniyeyi yaklaþýk olarak tutturmaya çalýþýyoruz
+00CF   00A0           00268         MOVWF DEGER             ;8mhz hýzýnda çalýþýyoruz farklý deðerlerde farklý gecikme alýnabilir
+00D0   28D3           00269         GOTO DON
+00D1                  00270 GECIKME
+00D1   3004           00271         MOVLW 0X04 
+00D2   00A0           00272         MOVWF DEGER
+00D3                  00273 DON
+00D3   308F           00274         MOVLW 0X8F 
+00D4   00A1           00275         MOVWF DEGER2
+00D5                  00276 DON2
+00D5   0BA1           00277         DECFSZ DEGER2,1
+00D6   28D5           00278         GOTO DON2
+00D7   0BA0           00279         DECFSZ DEGER,1
+00D8   28D3           00280         GOTO DON
+00D9   0008           00281         RETURN                          ; ~~ WWW.mikroislemcim.com ~~
+Warning[205]: Found directive in column 1. (END)
+                      00282 END
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+ARTTIR                            00000035
+AZALT                             0000003F
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BIRLER                            00000023
+BIRLER_ARTIR                      0000009E
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DEGER                             00000020
+DEGER2                            00000021
+DON                               000000D3
+DON2                              000000D5
+DONUSTUR                          00000025
+D_A                               00000005
+D_NOT_A                           00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+ESITLIKBIRLER                     000000A4
+ESITLIKONLAR                      000000AA
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GECIKME                           000000D1
+GECIKME2                          000000CE
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+HEDEFBIRLER                       00000027
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+HEDEFONLAR                        00000028
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+KOMUT_GONDER                      000000B5
+KOMUT_YAZ                         000000AF
+KONTROL                           00000029
+LOOP                              00000048
+MAIN                              00000001
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OKU                               00000087
+OKUNAN_DEGER                      00000026
+ONLAR                             00000024
+ONLAR_ARTIR                       00000097
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SATIR2                            000000C8
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TEMIZLE                           0000001D
+TEMP                              00000022
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+VERI_GONDER                       000000C1
+VERI_YAZ                          000000BB
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+YUZLER                            00000025
+YUZLER_ARTIR                      00000090
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+MPASM  5.51                      ADC_LM35.ASM   9-21-2018  21:05:02         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877                          00000001
+__DEBUG                           1
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXX------ ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   218
+Program Memory Words Free:  7974
+
+
+Errors   :     0
+Warnings :    13 reported,     0 suppressed
+Messages :    12 reported,     0 suppressed
+
+

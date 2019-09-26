@@ -1,0 +1,74 @@
+MPLINK 4.49, Linker
+Linker Map File - Created Fri Sep 21 21:05:03 2018
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x0001b4
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x0000d9      
+            218 out of 8454 program addresses used, program memory utilization is 2%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   ARTTIR   0x000035    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                    AZALT   0x00003f    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             BIRLER_ARTIR   0x00009e    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                      DON   0x0000d3    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                     DON2   0x0000d5    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                 DONUSTUR   0x000025    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+            ESITLIKBIRLER   0x0000a4    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             ESITLIKONLAR   0x0000aa    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                  GECIKME   0x0000d1    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                 GECIKME2   0x0000ce    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             KOMUT_GONDER   0x0000b5    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                KOMUT_YAZ   0x0000af    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                  KONTROL   0x000029    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                     LOOP   0x000048    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                     MAIN   0x000001    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                      OKU   0x000087    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+              ONLAR_ARTIR   0x000097    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                   SATIR2   0x0000c8    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                  TEMIZLE   0x00001d    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+              VERI_GONDER   0x0000c1    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                 VERI_YAZ   0x0000bb    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             YUZLER_ARTIR   0x000090    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     MAIN   0x000001    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                  TEMIZLE   0x00001d    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                 DONUSTUR   0x000025    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                  KONTROL   0x000029    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                   ARTTIR   0x000035    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                    AZALT   0x00003f    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                     LOOP   0x000048    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                      OKU   0x000087    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             YUZLER_ARTIR   0x000090    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+              ONLAR_ARTIR   0x000097    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             BIRLER_ARTIR   0x00009e    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+            ESITLIKBIRLER   0x0000a4    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             ESITLIKONLAR   0x0000aa    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                KOMUT_YAZ   0x0000af    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+             KOMUT_GONDER   0x0000b5    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                 VERI_YAZ   0x0000bb    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+              VERI_GONDER   0x0000c1    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                   SATIR2   0x0000c8    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                 GECIKME2   0x0000ce    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                  GECIKME   0x0000d1    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                      DON   0x0000d3    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+                     DON2   0x0000d5    program     static C:\Users\erdog\OneDrive\Masaüstü\Adc\Adc_Lm35.asm
+
+

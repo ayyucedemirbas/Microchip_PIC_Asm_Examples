@@ -1,0 +1,84 @@
+MPLINK 4.43, Linker
+Linker Map File - Created Wed Nov 14 18:34:38 2012
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000166
+                   .cinit    romdata   0x0000b3    program   0x000004
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x0000b4      
+            181 out of 8454 program addresses used, program memory utilization is 2%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 Delay100   0x00008a    program     static D:\lcd4bit\lcd.asm       
+                  Delay20   0x00008e    program     static D:\lcd4bit\lcd.asm       
+                 Delay255   0x000088    program     static D:\lcd4bit\lcd.asm       
+                   Delay5   0x000090    program     static D:\lcd4bit\lcd.asm       
+                  Delay50   0x00008c    program     static D:\lcd4bit\lcd.asm       
+                  Delay_0   0x000096    program     static D:\lcd4bit\lcd.asm       
+                 LCD_Char   0x000066    program     static D:\lcd4bit\lcd.asm       
+                LCD_CharD   0x000065    program     static D:\lcd4bit\lcd.asm       
+                  LCD_Clr   0x000085    program     static D:\lcd4bit\lcd.asm       
+                  LCD_Cmd   0x000058    program     static D:\lcd4bit\lcd.asm       
+               LCD_CurOff   0x000082    program     static D:\lcd4bit\lcd.asm       
+                LCD_CurOn   0x00007f    program     static D:\lcd4bit\lcd.asm       
+                 LCD_Init   0x000039    program     static D:\lcd4bit\lcd.asm       
+                LCD_Line1   0x000073    program     static D:\lcd4bit\lcd.asm       
+               LCD_Line1W   0x000079    program     static D:\lcd4bit\lcd.asm       
+                LCD_Line2   0x000076    program     static D:\lcd4bit\lcd.asm       
+               LCD_Line2W   0x00007c    program     static D:\lcd4bit\lcd.asm       
+                     Next   0x00002a    program     static D:\lcd4bit\lcd.asm       
+                    Next2   0x000033    program     static D:\lcd4bit\lcd.asm       
+                  Pulse_e   0x00009d    program     static D:\lcd4bit\lcd.asm       
+                   Satir1   0x0000a0    program     static D:\lcd4bit\lcd.asm       
+                   Satir2   0x0000a9    program     static D:\lcd4bit\lcd.asm       
+                     Stop   0x000038    program     static D:\lcd4bit\lcd.asm       
+             _.org_0_0097   0x000097    program     static D:\lcd4bit\lcd.asm       
+                      ara   0x000030    program     static D:\lcd4bit\lcd.asm       
+                       d0   0x000091    program     static D:\lcd4bit\lcd.asm       
+                       d1   0x000092    program     static D:\lcd4bit\lcd.asm       
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     Next   0x00002a    program     static D:\lcd4bit\lcd.asm       
+                      ara   0x000030    program     static D:\lcd4bit\lcd.asm       
+                    Next2   0x000033    program     static D:\lcd4bit\lcd.asm       
+                     Stop   0x000038    program     static D:\lcd4bit\lcd.asm       
+                 LCD_Init   0x000039    program     static D:\lcd4bit\lcd.asm       
+                  LCD_Cmd   0x000058    program     static D:\lcd4bit\lcd.asm       
+                LCD_CharD   0x000065    program     static D:\lcd4bit\lcd.asm       
+                 LCD_Char   0x000066    program     static D:\lcd4bit\lcd.asm       
+                LCD_Line1   0x000073    program     static D:\lcd4bit\lcd.asm       
+                LCD_Line2   0x000076    program     static D:\lcd4bit\lcd.asm       
+               LCD_Line1W   0x000079    program     static D:\lcd4bit\lcd.asm       
+               LCD_Line2W   0x00007c    program     static D:\lcd4bit\lcd.asm       
+                LCD_CurOn   0x00007f    program     static D:\lcd4bit\lcd.asm       
+               LCD_CurOff   0x000082    program     static D:\lcd4bit\lcd.asm       
+                  LCD_Clr   0x000085    program     static D:\lcd4bit\lcd.asm       
+                 Delay255   0x000088    program     static D:\lcd4bit\lcd.asm       
+                 Delay100   0x00008a    program     static D:\lcd4bit\lcd.asm       
+                  Delay50   0x00008c    program     static D:\lcd4bit\lcd.asm       
+                  Delay20   0x00008e    program     static D:\lcd4bit\lcd.asm       
+                   Delay5   0x000090    program     static D:\lcd4bit\lcd.asm       
+                       d0   0x000091    program     static D:\lcd4bit\lcd.asm       
+                       d1   0x000092    program     static D:\lcd4bit\lcd.asm       
+                  Delay_0   0x000096    program     static D:\lcd4bit\lcd.asm       
+             _.org_0_0097   0x000097    program     static D:\lcd4bit\lcd.asm       
+                  Pulse_e   0x00009d    program     static D:\lcd4bit\lcd.asm       
+                   Satir1   0x0000a0    program     static D:\lcd4bit\lcd.asm       
+                   Satir2   0x0000a9    program     static D:\lcd4bit\lcd.asm       
+
+

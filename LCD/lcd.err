@@ -1,0 +1,4 @@
+Message[302] D:\LCD4BIT\LCD.ASM 39 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] D:\LCD4BIT\LCD.ASM 91 : Using default destination of 1 (file).
+Message[305] D:\LCD4BIT\LCD.ASM 101 : Using default destination of 1 (file).
+Message[305] D:\LCD4BIT\LCD.ASM 107 : Using default destination of 1 (file).

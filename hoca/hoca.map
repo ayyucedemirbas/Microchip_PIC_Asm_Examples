@@ -1,0 +1,66 @@
+MPLINK 4.40, Linker
+Linker Map File - Created Sun Nov 18 15:29:47 2012
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000108
+                   .cinit    romdata   0x000084    program   0x000004
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000085      
+            134 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 Gecikme1   0x00007e    program     static D:\Mikro LCD\hoca\hoca.asm
+                 Gecikme2   0x000081    program     static D:\Mikro LCD\hoca\hoca.asm
+                 LCD_Char   0x000059    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_CharD   0x000058    program     static D:\Mikro LCD\hoca\hoca.asm
+                  LCD_Clr   0x000078    program     static D:\Mikro LCD\hoca\hoca.asm
+                  LCD_Cmd   0x00004b    program     static D:\Mikro LCD\hoca\hoca.asm
+               LCD_CurOff   0x000075    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_CurOn   0x000072    program     static D:\Mikro LCD\hoca\hoca.asm
+                 LCD_Init   0x000038    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_Line1   0x000066    program     static D:\Mikro LCD\hoca\hoca.asm
+               LCD_Line1W   0x00006c    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_Line2   0x000069    program     static D:\Mikro LCD\hoca\hoca.asm
+               LCD_Line2W   0x00006f    program     static D:\Mikro LCD\hoca\hoca.asm
+                     Next   0x000029    program     static D:\Mikro LCD\hoca\hoca.asm
+                    Next2   0x000032    program     static D:\Mikro LCD\hoca\hoca.asm
+                  Pulse_e   0x00007b    program     static D:\Mikro LCD\hoca\hoca.asm
+                     Stop   0x000037    program     static D:\Mikro LCD\hoca\hoca.asm
+                      ara   0x00002f    program     static D:\Mikro LCD\hoca\hoca.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     Next   0x000029    program     static D:\Mikro LCD\hoca\hoca.asm
+                      ara   0x00002f    program     static D:\Mikro LCD\hoca\hoca.asm
+                    Next2   0x000032    program     static D:\Mikro LCD\hoca\hoca.asm
+                     Stop   0x000037    program     static D:\Mikro LCD\hoca\hoca.asm
+                 LCD_Init   0x000038    program     static D:\Mikro LCD\hoca\hoca.asm
+                  LCD_Cmd   0x00004b    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_CharD   0x000058    program     static D:\Mikro LCD\hoca\hoca.asm
+                 LCD_Char   0x000059    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_Line1   0x000066    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_Line2   0x000069    program     static D:\Mikro LCD\hoca\hoca.asm
+               LCD_Line1W   0x00006c    program     static D:\Mikro LCD\hoca\hoca.asm
+               LCD_Line2W   0x00006f    program     static D:\Mikro LCD\hoca\hoca.asm
+                LCD_CurOn   0x000072    program     static D:\Mikro LCD\hoca\hoca.asm
+               LCD_CurOff   0x000075    program     static D:\Mikro LCD\hoca\hoca.asm
+                  LCD_Clr   0x000078    program     static D:\Mikro LCD\hoca\hoca.asm
+                  Pulse_e   0x00007b    program     static D:\Mikro LCD\hoca\hoca.asm
+                 Gecikme1   0x00007e    program     static D:\Mikro LCD\hoca\hoca.asm
+                 Gecikme2   0x000081    program     static D:\Mikro LCD\hoca\hoca.asm
+
+

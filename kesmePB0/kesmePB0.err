@@ -1,0 +1,7 @@
+Warning[207] C:\USERS\YUCEL\DESKTOP\PICPROJECT\KESMEPB0\KESMEPB0.ASM 3 : Found label after column 1. (DEGER)
+Warning[207] C:\USERS\YUCEL\DESKTOP\PICPROJECT\KESMEPB0\KESMEPB0.ASM 4 : Found label after column 1. (DEGER2)
+Message[302] C:\USERS\YUCEL\DESKTOP\PICPROJECT\KESMEPB0\KESMEPB0.ASM 19 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\YUCEL\DESKTOP\PICPROJECT\KESMEPB0\KESMEPB0.ASM 20 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[203] C:\USERS\YUCEL\DESKTOP\PICPROJECT\KESMEPB0\KESMEPB0.ASM 27 : Found opcode in column 1. (RETURN)
+Warning[203] C:\USERS\YUCEL\DESKTOP\PICPROJECT\KESMEPB0\KESMEPB0.ASM 48 : Found opcode in column 1. (RETURN)
+Warning[205] C:\USERS\YUCEL\DESKTOP\PICPROJECT\KESMEPB0\KESMEPB0.ASM 62 : Found directive in column 1. (END)
