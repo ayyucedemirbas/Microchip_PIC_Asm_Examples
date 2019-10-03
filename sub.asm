@@ -1,4 +1,4 @@
-LIST P = 16F87A
+LIST P = 16F87A ;Kullanacagimiz PIC
 CLRF A
 CLRF B
 A EQU d'4' ;A=5
